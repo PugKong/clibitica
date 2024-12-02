@@ -1,3 +1,7 @@
+[![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](http://unlicense.org/)
+[![Workflow: tests](https://github.com/PugKong/clibitica/actions/workflows/tests.yml/badge.svg)](https://github.com/PugKong/clibitica/actions/workflows/tests.yml)
+[![Coverage Status](https://coveralls.io/repos/github/PugKong/clibitica/badge.svg?branch=main)](https://coveralls.io/github/PugKong/clibitica?branch=main)
+
 # clibitica
 
 **clibitica** is a command-line interface (CLI) tool for interacting with [Habitica](https://habitica.com),
