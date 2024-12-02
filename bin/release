@@ -1,0 +1,88 @@
+#!/bin/bash
+
+set -e
+
+# Check if a version argument is provided
+if [ -z "$1" ]; then
+    echo "Usage: $0 <version>"
+    exit 1
+fi
+
+VERSION="$1"
+PHP="8.3.14"
+DIST_DIR="dist"
+PHAR_FILE="clibitica.phar"
+OUTPUT_PHAR="${DIST_DIR}/clibitica-${VERSION}.phar"
+
+# Ensure the dist directory exists
+mkdir -p "$DIST_DIR"
+
+# Step 1: Compile the PHP archive
+echo "Compiling ${PHAR_FILE}..."
+box compile
+mv "${DIST_DIR}/${PHAR_FILE}" "${OUTPUT_PHAR}"
+
+# Define target platforms
+LINUX_ARCHES=("x86_64" "aarch64")
+MACOS_ARCHES=("x86_64" "aarch64")
+WINDOWS_ARCHES=("x86_64")
+
+# Function to handle binary building
+build_binary() {
+    local os=$1
+    local arch=$2
+    local sfx_url=$3
+
+    # Determine the output archive format
+    local archive_ext="tar.gz"
+    [[ "$os" == "windows" ]] && archive_ext="zip"
+    local archive_name="${DIST_DIR}/clibitica-${VERSION}-${os}-${arch}.${archive_ext}"
+
+    echo "Building binary for ${os}-${arch}..."
+
+    # Download and extract micro.sfx
+    local tmp_dir=$(mktemp -d)
+    if [[ "$sfx_url" == *.zip ]]; then
+        curl -L -o "$tmp_dir/micro.zip" "$sfx_url"
+        unzip -q "$tmp_dir/micro.zip" -d "$tmp_dir"
+        sfx_path="$tmp_dir/micro.sfx"
+    else
+        curl -L -o "$tmp_dir/micro.tar.gz" "$sfx_url"
+        tar -xzf "$tmp_dir/micro.tar.gz" -C "$tmp_dir"
+        sfx_path="$tmp_dir/micro.sfx"
+    fi
+
+    # Create the binary
+    local binary_name="clibitica"
+    if [[ "$os" == "windows" ]]; then
+        binary_name="clibitica.exe"
+    fi
+    cat "$sfx_path" "$OUTPUT_PHAR" > "$tmp_dir/$binary_name"
+    chmod +x "$tmp_dir/$binary_name"
+
+    # Package into the appropriate format
+    if [[ "$os" == "windows" ]]; then
+        zip -j "$archive_name" "$tmp_dir/$binary_name" >/dev/null
+    else
+        tar -czf "$archive_name" -C "$tmp_dir" "$binary_name"
+    fi
+
+    # Clean up
+    rm -rf "$tmp_dir"
+}
+
+# Step 2: Build binaries for Linux and macOS
+for arch in "${LINUX_ARCHES[@]}"; do
+    build_binary "linux" "$arch" "https://dl.static-php.dev/static-php-cli/common/php-${PHP}-micro-linux-${arch}.tar.gz"
+done
+
+for arch in "${MACOS_ARCHES[@]}"; do
+    build_binary "macos" "$arch" "https://dl.static-php.dev/static-php-cli/common/php-${PHP}-micro-macos-${arch}.tar.gz"
+done
+
+# Step 3: Build binary for Windows
+for arch in "${WINDOWS_ARCHES[@]}"; do
+    build_binary "windows" "$arch" "https://dl.static-php.dev/static-php-cli/windows/spc-max/php-${PHP}-micro-win.zip"
+done
+
+echo "All binaries have been built successfully."

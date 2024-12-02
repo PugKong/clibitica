@@ -2,8 +2,7 @@
 .phpactor.json
 
 vendor
+dist
 
 .phpunit.cache
 .php-cs-fixer.cache
-
-clibitica.phar
