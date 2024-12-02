@@ -1,5 +1,6 @@
 [![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](http://unlicense.org/)
 [![Workflow: tests](https://github.com/PugKong/clibitica/actions/workflows/tests.yml/badge.svg)](https://github.com/PugKong/clibitica/actions/workflows/tests.yml)
+[![Workflow: release](https://github.com/PugKong/clibitica/actions/workflows/release.yml/badge.svg)](https://github.com/PugKong/clibitica/actions/workflows/release.yml)
 [![Coverage Status](https://coveralls.io/repos/github/PugKong/clibitica/badge.svg?branch=main)](https://coveralls.io/github/PugKong/clibitica?branch=main)
 
 # clibitica
@@ -10,25 +11,17 @@ of your Habitica account directly from the terminal.
 
 ## Features
 
-- **Task Management**
-  - Create tasks
-  - List tasks
-  - Delete tasks
-- **Tag Management**
-  - Create tags
-  - List tags
-  - Delete tags
+- **Task Management** (create, delete and list)
+- **Tag Management** (create, delete and list)
 - Shell completion support for popular shells
-
-## Status
-
-WIP
 
 ## Installation
 
-WIP
+Download the prebuilt binary from [Releases](https://github.com/PugKong/clibitica/releases) page.
 
 ## Usage
+
+Set the `CLIBITICA_API_KEY` and `CLIBITICA_API_USER` environment variables.
 
 Run `clibitica` to see the available commands:
 
