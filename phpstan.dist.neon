@@ -1,0 +1,10 @@
+parameters:
+    level: 9
+    paths:
+        - bin/clibitica
+        - src
+        - tests
+    ignoreErrors:
+        -
+            identifier: property.uninitializedReadonly
+            path: src/Habitica/*Request.php

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.4/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
+         cacheDirectory=".phpunit.cache"
+         executionOrder="depends,defects"
+         beStrictAboutCoverageMetadata="true"
+         beStrictAboutOutputDuringTests="true"
+         displayDetailsOnPhpunitDeprecations="true"
+         failOnPhpunitDeprecation="true"
+         failOnRisky="true"
+         failOnWarning="true">
+    <php>
+        <env name="CLIBITICA_DEV" value="" force="true"/>
+        <env name="CLIBITICA_BASE_URL" value="http://localhost:8080" force="true"/>
+        <env name="CLIBITICA_API_KEY" value="api key" force="true"/>
+        <env name="CLIBITICA_API_USER" value="49de7a0b-cad8-4788-830b-8299c34e96a1" force="true"/>
+    </php>
+    <testsuites>
+        <testsuite name="default">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+    <source restrictNotices="true" restrictWarnings="true" ignoreIndirectDeprecations="true">
+        <include>
+            <directory>src</directory>
+        </include>
+        <exclude>
+            <directory>src/WireMock</directory>
+            <directory>src/Command/WireMock</directory>
+        </exclude>
+    </source>
+</phpunit>

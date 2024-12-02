@@ -1,0 +1,51 @@
+{
+  "id": "49a38a85-d2a1-49fe-abc7-c1ac5277cf3b",
+  "name": "task/create/habit",
+  "request": {
+    "url": "/api/v3/tasks/user",
+    "method": "POST",
+    "headers": {
+      "Accept": { "equalTo": "application/json", "caseInsensitive": true },
+      "Content-Type": { "equalTo": "application/json", "caseInsensitive": true },
+      "X-Client": { "equalTo": "49de7a0b-cad8-4788-830b-8299c34e96a1 - clibitica", "caseInsensitive": true },
+      "X-Api-Key": { "equalTo": "api key", "caseInsensitive": true },
+      "X-Api-User": { "equalTo": "49de7a0b-cad8-4788-830b-8299c34e96a1", "caseInsensitive": true }
+    },
+    "bodyPatterns": [{ "equalToJson": { "type": "habit", "text": "habit" } }]
+  },
+  "response": {
+    "status": 201,
+    "headers": { "Content-Type": "application/json; charset=utf-8" },
+    "jsonBody": {
+      "success": true,
+      "data": {
+        "up": true,
+        "down": true,
+        "counterUp": 0,
+        "counterDown": 0,
+        "frequency": "daily",
+        "history": [],
+        "type": "habit",
+        "text": "habit",
+        "notes": "",
+        "tags": [],
+        "value": 0,
+        "priority": 1,
+        "attribute": "str",
+        "challenge": [],
+        "group": { "completedBy": [], "assignedUsers": [] },
+        "byHabitica": false,
+        "reminders": [],
+        "_id": "22c23065-84c1-4f4f-aede-2509a692eeb5",
+        "createdAt": "2024-11-27T16:02:23.548Z",
+        "updatedAt": "2024-11-27T16:02:23.548Z",
+        "userId": "49de7a0b-cad8-4788-830b-8299c34e96a1",
+        "id": "22c23065-84c1-4f4f-aede-2509a692eeb5"
+      },
+      "notifications": [],
+      "userV": 2570,
+      "appVersion": "5.31.1"
+    }
+  },
+  "uuid": "49a38a85-d2a1-49fe-abc7-c1ac5277cf3b"
+}

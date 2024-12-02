@@ -1,0 +1,57 @@
+{
+  "id": "821020e6-184d-4ee0-8301-cabd59c7a80a",
+  "name": "task/create/collapse",
+  "request": {
+    "url": "/api/v3/tasks/user",
+    "method": "POST",
+    "headers": {
+      "Accept": { "equalTo": "application/json", "caseInsensitive": true },
+      "Content-Type": { "equalTo": "application/json", "caseInsensitive": true },
+      "X-Client": { "equalTo": "49de7a0b-cad8-4788-830b-8299c34e96a1 - clibitica", "caseInsensitive": true },
+      "X-Api-Key": { "equalTo": "api key", "caseInsensitive": true },
+      "X-Api-User": { "equalTo": "49de7a0b-cad8-4788-830b-8299c34e96a1", "caseInsensitive": true }
+    },
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "type": "todo",
+          "text": "collapse",
+          "checklist": [{ "text": "collapse", "completed": false }],
+          "collapseChecklist": true
+        }
+      }
+    ]
+  },
+  "response": {
+    "status": 201,
+    "headers": { "Content-Type": "application/json; charset=utf-8" },
+    "jsonBody": {
+      "success": true,
+      "data": {
+        "completed": false,
+        "collapseChecklist": true,
+        "checklist": [{ "completed": false, "text": "collapse", "id": "a95e2d15-ea0a-4bff-bb0c-5d0eaee78940" }],
+        "type": "todo",
+        "text": "collapse",
+        "notes": "",
+        "tags": [],
+        "value": 0,
+        "priority": 1,
+        "attribute": "str",
+        "challenge": [],
+        "group": { "completedBy": [], "assignedUsers": [] },
+        "byHabitica": false,
+        "reminders": [],
+        "_id": "2cbc0e47-08fb-439a-83de-3be9042a48a4",
+        "createdAt": "2024-11-28T17:30:05.072Z",
+        "updatedAt": "2024-11-28T17:30:05.072Z",
+        "userId": "49de7a0b-cad8-4788-830b-8299c34e96a1",
+        "id": "2cbc0e47-08fb-439a-83de-3be9042a48a4"
+      },
+      "notifications": [],
+      "userV": 2621,
+      "appVersion": "5.31.1"
+    }
+  },
+  "uuid": "821020e6-184d-4ee0-8301-cabd59c7a80a"
+}

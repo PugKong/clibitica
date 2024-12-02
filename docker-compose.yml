@@ -1,0 +1,7 @@
+services:
+  wiremock:
+    image: wiremock/wiremock:latest
+    user: "1000:1000"
+    ports: ["8080:8080"]
+    volumes:
+      - ./wiremock/mappings:/home/wiremock/mappings

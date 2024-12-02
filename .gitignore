@@ -1,0 +1,9 @@
+.idea
+.phpactor.json
+
+vendor
+
+.phpunit.cache
+.php-cs-fixer.cache
+
+clibitica.phar

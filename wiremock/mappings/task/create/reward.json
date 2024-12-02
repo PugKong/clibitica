@@ -1,0 +1,45 @@
+{
+  "id": "e8f6eba8-f647-430a-bf5e-ccc8eff6f2bc",
+  "name": "task/create/reward",
+  "request": {
+    "url": "/api/v3/tasks/user",
+    "method": "POST",
+    "headers": {
+      "Accept": { "equalTo": "application/json", "caseInsensitive": true },
+      "Content-Type": { "equalTo": "application/json", "caseInsensitive": true },
+      "X-Client": { "equalTo": "49de7a0b-cad8-4788-830b-8299c34e96a1 - clibitica", "caseInsensitive": true },
+      "X-Api-Key": { "equalTo": "api key", "caseInsensitive": true },
+      "X-Api-User": { "equalTo": "49de7a0b-cad8-4788-830b-8299c34e96a1", "caseInsensitive": true }
+    },
+    "bodyPatterns": [{ "equalToJson": { "type": "reward", "text": "reward" } }]
+  },
+  "response": {
+    "status": 201,
+    "headers": { "Content-Type": "application/json; charset=utf-8" },
+    "jsonBody": {
+      "success": true,
+      "data": {
+        "type": "reward",
+        "text": "reward",
+        "notes": "",
+        "tags": [],
+        "value": 0,
+        "priority": 1,
+        "attribute": "str",
+        "challenge": [],
+        "group": { "completedBy": [], "assignedUsers": [] },
+        "byHabitica": false,
+        "reminders": [],
+        "_id": "60d8c0ae-07d2-44f1-8d48-4bdf57e6f59e",
+        "createdAt": "2024-11-28T06:05:59.779Z",
+        "updatedAt": "2024-11-28T06:05:59.779Z",
+        "userId": "49de7a0b-cad8-4788-830b-8299c34e96a1",
+        "id": "60d8c0ae-07d2-44f1-8d48-4bdf57e6f59e"
+      },
+      "notifications": [],
+      "userV": 2582,
+      "appVersion": "5.31.1"
+    }
+  },
+  "uuid": "e8f6eba8-f647-430a-bf5e-ccc8eff6f2bc"
+}
