@@ -40,6 +40,11 @@ final readonly class Habitica
         return $this->deserialize($response, Task\List\Response::class);
     }
 
+    public function scoreTask(string $id, Task\ScoreDirection $direction): void
+    {
+        $this->do('POST', sprintf('api/v3/tasks/%s/score/%s', rawurlencode($id), $direction->value), 200);
+    }
+
     public function createTag(Tag\Create\Request $request): Tag\Create\Response
     {
         $response = $this->do('POST', 'api/v3/tags', 201, [
