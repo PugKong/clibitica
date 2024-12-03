@@ -9,12 +9,6 @@
 a gamified task management and productivity platform. With clibitica, you can manage tasks, tags, and other features
 of your Habitica account directly from the terminal.
 
-## Features
-
-- **Task Management** (create, delete and list)
-- **Tag Management** (create, delete and list)
-- Shell completion support for popular shells
-
 ## Installation
 
 Download the prebuilt binary from [Releases](https://github.com/PugKong/clibitica/releases) page.
@@ -26,6 +20,7 @@ Set the `CLIBITICA_API_KEY` and `CLIBITICA_API_USER` environment variables.
 Run `clibitica` to see the available commands:
 
 ```bash
+$ clibitica
 clibitica 0.0.1
 
 Usage:
@@ -64,4 +59,14 @@ This project is licensed under the Unlicense License. See the [LICENSE](LICENSE)
 
 ## Acknowledgments
 
-- Inspired by the productivity features of [Habitica](https://habitica.com).
+This project would not have been possible without the outstanding tools and libraries created by the open-source
+community. I would like to extend my gratitude to the following projects and their maintainers for their invaluable
+contributions:
+
+- **[Symfony Components](https://symfony.com/components)**: For providing a robust and modular foundation to build this CLI tool
+- **[PHPUnit](https://phpunit.de/)**: For providing a reliable and feature-rich framework for testing
+- **[PHP-CS-Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer)**: For maintaining code style and ensuring consistency across the project
+- **[PHPStan](https://phpstan.org/)**: For catching bugs early through static analysis and enforcing code quality
+- **[Box Project](https://github.com/box-project/box)**: For simplifying the creation of PHAR files, making distribution effortless
+- **[Static PHP CLI](https://github.com/crazywhalecc/static-php-cli)**: For enabling the building of standalone binaries, ensuring seamless deployment
+- **[ChatGPT](https://openai.com/chatgpt)**: For assisting with writing bash scripts and offering guidance during development
