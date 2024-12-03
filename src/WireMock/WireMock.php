@@ -24,7 +24,7 @@ final readonly class WireMock
     {
         $response = $this->client->request('POST', '__admin/recordings/start', [
             'json' => [
-                'targetBaseUrl' => 'https://habatica.com',
+                'targetBaseUrl' => 'https://habitica.com',
                 'captureHeaders' => [
                     'Accept' => ['caseInsensitive' => true],
                     'Content-Type' => ['caseInsensitive' => true],
