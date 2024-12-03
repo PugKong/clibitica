@@ -13,9 +13,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'wiremock:recording:start', description: 'Start recording')]
 final class StartCommand extends Command
 {
-    public function __construct(private readonly WireMock $wireMock)
+    public function __construct(private readonly WireMock $wireMock, bool $hidden)
     {
         parent::__construct();
+
+        $this->setHidden($hidden);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

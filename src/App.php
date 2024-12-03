@@ -37,7 +37,7 @@ final class App
 
     private function commandLoader(): FactoryCommandLoader
     {
-        $factories = [
+        return new FactoryCommandLoader([
             'task:create' => fn () => new Command\Task\CreateCommand($this->habitica(), $this->suggestions()),
             'task:delete' => fn () => new Command\Task\DeleteCommand($this->habitica(), $this->suggestions()),
             'task:list' => fn () => new Command\Task\ListCommand($this->habitica()),
@@ -47,21 +47,21 @@ final class App
             'tag:create' => fn () => new Command\Tag\CreateCommand($this->habitica()),
             'tag:delete' => fn () => new Command\Tag\DeleteCommand($this->habitica(), $this->suggestions()),
             'tag:list' => fn () => new Command\Tag\ListCommand($this->habitica()),
-        ];
 
-        if ($this->config->dev) {
-            $factories = [
-                ...$factories,
-                'wiremock:reset' => fn () => new Command\WireMock\ResetCommand($this->wireMock()),
-
-                'wiremock:recording:start' => fn () => new Command\WireMock\Recording\StartCommand($this->wireMock()),
-                'wiremock:recording:stop' => fn () => new Command\WireMock\Recording\StopCommand($this->wireMock()),
-
-                'wiremock:mapping:fix' => fn () => new Command\WireMock\Mapping\FixCommand($this->mappingFixer()),
-            ];
-        }
-
-        return new FactoryCommandLoader($factories);
+            'wiremock:reset' => fn () => new Command\WireMock\ResetCommand($this->wireMock(), !$this->config->dev),
+            'wiremock:recording:start' => fn () => new Command\WireMock\Recording\StartCommand(
+                $this->wireMock(),
+                !$this->config->dev,
+            ),
+            'wiremock:recording:stop' => fn () => new Command\WireMock\Recording\StopCommand(
+                $this->wireMock(),
+                !$this->config->dev,
+            ),
+            'wiremock:mapping:fix' => fn () => new Command\WireMock\Mapping\FixCommand(
+                $this->mappingFixer(),
+                !$this->config->dev,
+            ),
+        ]);
     }
 
     private ?Habitica\Habitica $habitica = null;

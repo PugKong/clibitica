@@ -20,9 +20,11 @@ use const JSON_UNESCAPED_SLASHES;
 #[AsCommand(name: 'wiremock:mapping:fix', description: 'Fix mapping files')]
 final class FixCommand extends Command
 {
-    public function __construct(private readonly Fixer $fixer)
+    public function __construct(private readonly Fixer $fixer, bool $hidden)
     {
         parent::__construct();
+
+        $this->setHidden($hidden);
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int
