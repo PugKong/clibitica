@@ -13,7 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'wiremock:recording:start', description: 'Start recording')]
 final class StartCommand extends Command
 {
-    public function __construct(private WireMock $wireMock)
+    public function __construct(private readonly WireMock $wireMock)
     {
         parent::__construct();
     }

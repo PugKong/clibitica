@@ -13,7 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'wiremock:reset', description: 'Reset wiremock')]
 final class ResetCommand extends Command
 {
-    public function __construct(private WireMock $wireMock)
+    public function __construct(private readonly WireMock $wireMock)
     {
         parent::__construct();
     }

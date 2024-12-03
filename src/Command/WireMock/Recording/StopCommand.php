@@ -13,7 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'wiremock:recording:stop', description: 'Stop recording')]
 final class StopCommand extends Command
 {
-    public function __construct(private WireMock $wireMock)
+    public function __construct(private readonly WireMock $wireMock)
     {
         parent::__construct();
     }
