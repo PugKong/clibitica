@@ -11,7 +11,7 @@
       "X-Api-Key": { "equalTo": "api key", "caseInsensitive": true },
       "X-Api-User": { "equalTo": "49de7a0b-cad8-4788-830b-8299c34e96a1", "caseInsensitive": true }
     },
-    "bodyPatterns": [{ "equalToJson": { "type": "todo", "text": "trivial", "priority": "0.1" } }]
+    "bodyPatterns": [{ "equalToJson": { "type": "todo", "text": "trivial", "priority": 0.1 } }]
   },
   "response": {
     "status": 201,

@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace App\Habitica\Task;
 
-enum Priority: string
+final readonly class Priority
 {
-    case TRIVIAL = '0.1';
-    case EASY = '1';
-    case MEDIUM = '1.5';
-    case HARD = '2';
+    public const float TRIVIAL = 0.1;
+    public const int EASY = 1;
+    public const float MEDIUM = 1.5;
+    public const int HARD = 2;
+
+    private function __construct()
+    {
+    }
 }

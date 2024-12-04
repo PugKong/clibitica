@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Habitica\Task\Create;
 
-use App\Habitica\Task\Priority;
 use App\Habitica\Task\Type;
 
 use function count;
@@ -19,7 +18,7 @@ final readonly class Request
         public Type $type,
         public string $text,
         array $tags = [],
-        ?Priority $priority = null,
+        int|float|null $priority = null,
         ?float $value = null,
         ?string $notes = null,
         ?string $date = null,
@@ -57,7 +56,7 @@ final readonly class Request
 
     /** @var string[] */
     public array $tags;
-    public Priority $priority;
+    public int|float|null $priority;
     public float $value;
     public string $notes;
     public string $date;

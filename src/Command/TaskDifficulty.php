@@ -13,7 +13,7 @@ enum TaskDifficulty: string
     case MEDIUM = 'medium';
     case HARD = 'hard';
 
-    public function toPriority(): Priority
+    public function toPriority(): int|float
     {
         return match ($this) {
             self::TRIVIAL => Priority::TRIVIAL,
