@@ -28,7 +28,12 @@ final readonly class Suggestions
      */
     public function taskDifficulty(): array
     {
-        return array_map(fn (TaskDifficulty $difficulty) => $difficulty->value, TaskDifficulty::cases());
+        $suggestions = [];
+        foreach (TaskDifficulty::known() as $difficulty) {
+            $suggestions[] = $difficulty->value;
+        }
+
+        return $suggestions;
     }
 
     /**

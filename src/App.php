@@ -13,6 +13,7 @@ use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
 use Symfony\Component\Serializer\Normalizer\BackedEnumNormalizer;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
@@ -40,7 +41,7 @@ final class App
         return new FactoryCommandLoader([
             'task:create' => fn () => new Command\Task\CreateCommand($this->habitica(), $this->suggestions()),
             'task:delete' => fn () => new Command\Task\DeleteCommand($this->habitica(), $this->suggestions()),
-            'task:list' => fn () => new Command\Task\ListCommand($this->habitica()),
+            'task:list' => fn () => new Command\Task\ListCommand($this->habitica(), $this->suggestions()),
             'task:score:up' => fn () => new Command\Task\ScoreUpCommand($this->habitica(), $this->suggestions()),
             'task:score:down' => fn () => new Command\Task\ScoreDownCommand($this->habitica(), $this->suggestions()),
 
@@ -82,6 +83,7 @@ final class App
             $serializer = new Serializer(
                 normalizers: [
                     new ArrayDenormalizer(),
+                    new DateTimeNormalizer(),
                     new BackedEnumNormalizer(),
                     new ObjectNormalizer(propertyTypeExtractor: new PhpDocExtractor()),
                 ],
