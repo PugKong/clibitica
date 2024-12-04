@@ -2,6 +2,7 @@
 [![Workflow: tests](https://github.com/PugKong/clibitica/actions/workflows/tests.yml/badge.svg)](https://github.com/PugKong/clibitica/actions/workflows/tests.yml)
 [![Workflow: release](https://github.com/PugKong/clibitica/actions/workflows/release.yml/badge.svg)](https://github.com/PugKong/clibitica/actions/workflows/release.yml)
 [![Coverage Status](https://coveralls.io/repos/github/PugKong/clibitica/badge.svg?branch=main)](https://coveralls.io/github/PugKong/clibitica?branch=main)
+[![GitHub Release](https://img.shields.io/github/release/PugKong/clibitica.svg?style=flat)](https://github.com/PugKong/clibitica/releases/latest)
 
 # clibitica
 
