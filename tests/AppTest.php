@@ -16,7 +16,7 @@ final class AppTest extends AppTestCase
 
         self::assertSame(
             <<<'EOF'
-                clibitica 0.0.2
+                clibitica 0.0.3
 
                 Usage:
                   command [options] [arguments]
