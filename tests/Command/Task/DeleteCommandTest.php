@@ -6,6 +6,7 @@ namespace App\Tests\Command\Task;
 
 use App\Tests\AppTestCase;
 use App\Tests\CommandTester;
+use App\WireMock\Request\List\ResponseRequest;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Console\Command\Command;
 
@@ -13,12 +14,23 @@ final class DeleteCommandTest extends AppTestCase
 {
     public function testSuccess(): void
     {
-        $tester = CommandTester::command('task:delete', ['id' => '60d8c0ae-07d2-44f1-8d48-4bdf57e6f59e']);
+        $tester = CommandTester::command('task:delete', ['id' => $id = '60d8c0ae-07d2-44f1-8d48-4bdf57e6f59e']);
 
         $exitCode = $tester->run();
 
         self::assertSame('', $tester->output());
         self::assertSame(Command::SUCCESS, $exitCode);
+
+        self::assertSame(
+            [['method' => 'DELETE', 'url' => "/api/v3/tasks/$id"]],
+            array_map(
+                fn (ResponseRequest $request) => [
+                    'method' => $request->request->method,
+                    'url' => $request->request->url,
+                ],
+                $this->wireMock->listRequests()->requests,
+            ),
+        );
     }
 
     #[DataProvider('suggestIdProvider')]

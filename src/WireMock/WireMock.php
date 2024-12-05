@@ -47,4 +47,12 @@ final readonly class WireMock
             ->fetch()
         ;
     }
+
+    public function listRequests(): Request\List\Response
+    {
+        return $this->http
+            ->get('__admin/requests')
+            ->fetchJson(Request\List\Response::class)
+        ;
+    }
 }

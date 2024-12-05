@@ -120,7 +120,10 @@ final class App
             ]);
 
             $serializer = new Serializer(
-                normalizers: [],
+                normalizers: [
+                    new ArrayDenormalizer(),
+                    new ObjectNormalizer(propertyTypeExtractor: new PhpDocExtractor()),
+                ],
                 encoders: [new JsonEncoder()],
             );
 

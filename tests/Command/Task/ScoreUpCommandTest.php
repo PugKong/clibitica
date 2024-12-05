@@ -6,6 +6,7 @@ namespace App\Tests\Command\Task;
 
 use App\Tests\AppTestCase;
 use App\Tests\CommandTester;
+use App\WireMock\Request\List\ResponseRequest;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Console\Command\Command;
 
@@ -13,12 +14,23 @@ class ScoreUpCommandTest extends AppTestCase
 {
     public function testSuccess(): void
     {
-        $tester = CommandTester::command('task:score:up', ['id' => '7f2d8f8d-36f2-48f1-8e85-6366b0ab4903']);
+        $tester = CommandTester::command('task:score:up', ['id' => $id = '7f2d8f8d-36f2-48f1-8e85-6366b0ab4903']);
 
         $exitCode = $tester->run();
 
         self::assertSame('', $tester->output());
         self::assertSame(Command::SUCCESS, $exitCode);
+
+        self::assertSame(
+            [['method' => 'POST', 'url' => "/api/v3/tasks/$id/score/up"]],
+            array_map(
+                fn (ResponseRequest $request) => [
+                    'method' => $request->request->method,
+                    'url' => $request->request->url,
+                ],
+                $this->wireMock->listRequests()->requests,
+            ),
+        );
     }
 
     #[DataProvider('suggestIdProvider')]

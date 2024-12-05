@@ -6,6 +6,7 @@ namespace App\Tests\Command\Tag;
 
 use App\Tests\AppTestCase;
 use App\Tests\CommandTester;
+use App\WireMock\Request\List\ResponseRequest;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Console\Command\Command;
 
@@ -13,12 +14,23 @@ final class DeleteCommandTest extends AppTestCase
 {
     public function testSuccess(): void
     {
-        $tester = CommandTester::command('tag:delete', ['id' => '103dffda-0c51-49b8-bc25-6a387b5e28e8']);
+        $tester = CommandTester::command('tag:delete', ['id' => $id = '103dffda-0c51-49b8-bc25-6a387b5e28e8']);
 
         $exitCode = $tester->run();
 
         self::assertSame('', $tester->output());
         self::assertSame(Command::SUCCESS, $exitCode);
+
+        self::assertSame(
+            [['method' => 'DELETE', 'url' => "/api/v3/tags/$id"]],
+            array_map(
+                fn (ResponseRequest $request) => [
+                    'method' => $request->request->method,
+                    'url' => $request->request->url,
+                ],
+                $this->wireMock->listRequests()->requests,
+            ),
+        );
     }
 
     #[DataProvider('suggestIdProvider')]
