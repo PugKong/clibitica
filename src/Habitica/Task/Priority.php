@@ -10,8 +10,4 @@ final readonly class Priority
     public const int EASY = 1;
     public const float MEDIUM = 1.5;
     public const int HARD = 2;
-
-    private function __construct()
-    {
-    }
 }
