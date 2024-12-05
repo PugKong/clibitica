@@ -6,6 +6,12 @@ namespace App\WireMock;
 
 use App\Http\Http;
 use RuntimeException;
+use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 use function sprintf;
 
@@ -13,6 +19,26 @@ final readonly class WireMock
 {
     public function __construct(private Http $http)
     {
+    }
+
+    public static function create(string $baseUrl): self
+    {
+        $client = HttpClient::createForBaseUri($baseUrl, [
+            'headers' => [
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+            ],
+        ]);
+
+        $serializer = new Serializer(
+            normalizers: [
+                new ArrayDenormalizer(),
+                new ObjectNormalizer(propertyTypeExtractor: new PhpDocExtractor()),
+            ],
+            encoders: [new JsonEncoder()],
+        );
+
+        return new self(new Http($client, $serializer));
     }
 
     public function reset(): void

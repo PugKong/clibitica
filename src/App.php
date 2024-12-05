@@ -8,14 +8,6 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Console\CommandLoader\FactoryCommandLoader;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\HttpClient\HttpClient;
-use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
-use Symfony\Component\Serializer\Normalizer\BackedEnumNormalizer;
-use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 
 final class App
 {
@@ -70,27 +62,11 @@ final class App
     private function habitica(): Habitica\Habitica
     {
         if (null === $this->habitica) {
-            $client = HttpClient::createForBaseUri($this->config->habiticaBaseUrl, [
-                'headers' => [
-                    'Accept' => 'application/json',
-                    'Content-Type' => 'application/json',
-                    'X-Client' => '49de7a0b-cad8-4788-830b-8299c34e96a1 - clibitica',
-                    'X-Api-Key' => $this->config->habiticaApiKey,
-                    'X-Api-User' => $this->config->habiticaApiUser,
-                ],
-            ]);
-
-            $serializer = new Serializer(
-                normalizers: [
-                    new ArrayDenormalizer(),
-                    new DateTimeNormalizer(),
-                    new BackedEnumNormalizer(),
-                    new ObjectNormalizer(propertyTypeExtractor: new PhpDocExtractor()),
-                ],
-                encoders: [new JsonEncoder()],
+            $this->habitica = Habitica\Habitica::create(
+                baseUrl: $this->config->habiticaBaseUrl,
+                apiKey: $this->config->habiticaApiKey,
+                apiUser: $this->config->habiticaApiUser,
             );
-
-            $this->habitica = new Habitica\Habitica(new Http\Http($client, $serializer));
         }
 
         return $this->habitica;
@@ -112,22 +88,7 @@ final class App
     private function wireMock(): WireMock\WireMock
     {
         if (null === $this->wireMock) {
-            $client = HttpClient::createForBaseUri($this->config->wireMockBaseUrl, [
-                'headers' => [
-                    'Accept' => 'application/json',
-                    'Content-Type' => 'application/json',
-                ],
-            ]);
-
-            $serializer = new Serializer(
-                normalizers: [
-                    new ArrayDenormalizer(),
-                    new ObjectNormalizer(propertyTypeExtractor: new PhpDocExtractor()),
-                ],
-                encoders: [new JsonEncoder()],
-            );
-
-            $this->wireMock = new WireMock\WireMock(new Http\Http($client, $serializer));
+            $this->wireMock = WireMock\WireMock::create($this->config->wireMockBaseUrl);
         }
 
         return $this->wireMock;
