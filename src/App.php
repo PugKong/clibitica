@@ -70,7 +70,7 @@ final class App
     private function habitica(): Habitica\Habitica
     {
         if (null === $this->habitica) {
-            $httpClient = HttpClient::createForBaseUri($this->config->habiticaBaseUrl, [
+            $client = HttpClient::createForBaseUri($this->config->habiticaBaseUrl, [
                 'headers' => [
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
@@ -90,10 +90,7 @@ final class App
                 encoders: [new JsonEncoder()],
             );
 
-            $this->habitica = new Habitica\Habitica(
-                client: $httpClient,
-                serializer: $serializer,
-            );
+            $this->habitica = new Habitica\Habitica(new Http\Http($client, $serializer));
         }
 
         return $this->habitica;
@@ -115,14 +112,19 @@ final class App
     private function wireMock(): WireMock\WireMock
     {
         if (null === $this->wireMock) {
-            $httpClient = HttpClient::createForBaseUri($this->config->wireMockBaseUrl, [
+            $client = HttpClient::createForBaseUri($this->config->wireMockBaseUrl, [
                 'headers' => [
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
                 ],
             ]);
 
-            $this->wireMock = new WireMock\WireMock($httpClient);
+            $serializer = new Serializer(
+                normalizers: [],
+                encoders: [new JsonEncoder()],
+            );
+
+            $this->wireMock = new WireMock\WireMock(new Http\Http($client, $serializer));
         }
 
         return $this->wireMock;

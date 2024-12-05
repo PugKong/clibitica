@@ -4,26 +4,27 @@ declare(strict_types=1);
 
 namespace App\WireMock;
 
-use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Webmozart\Assert\Assert;
+use App\Http\Http;
 
 final readonly class WireMock
 {
-    public function __construct(private HttpClientInterface $client)
+    public function __construct(private Http $http)
     {
     }
 
     public function reset(): void
     {
-        $response = $this->client->request('POST', '__admin/reset');
-
-        Assert::same($response->getStatusCode(), 200);
+        $this->http
+            ->post('__admin/reset')
+            ->fetch()
+        ;
     }
 
     public function startRecording(): void
     {
-        $response = $this->client->request('POST', '__admin/recordings/start', [
-            'json' => [
+        $this->http
+            ->post('__admin/recordings/start')
+            ->bodyJson([
                 'targetBaseUrl' => 'https://habitica.com',
                 'captureHeaders' => [
                     'Accept' => ['caseInsensitive' => true],
@@ -34,16 +35,16 @@ final readonly class WireMock
                 ],
                 'requestBodyPattern' => ['matcher' => 'equalToJso'],
                 'repeatsAsScenarios' => false,
-            ],
-        ]);
-
-        Assert::same($response->getStatusCode(), 200, $response->getContent(false));
+            ])
+            ->fetch()
+        ;
     }
 
     public function stopRecording(): void
     {
-        $response = $this->client->request('POST', '__admin/recordings/stop', []);
-
-        Assert::same($response->getStatusCode(), 200, $response->getContent(false));
+        $this->http
+            ->post('__admin/recordings/stop')
+            ->fetch()
+        ;
     }
 }
