@@ -1,6 +1,6 @@
 services:
   wiremock:
-    image: wiremock/wiremock:latest
+    image: wiremock/wiremock:3.10.0
     user: "1000:1000"
     ports: ["8080:8080"]
     volumes:

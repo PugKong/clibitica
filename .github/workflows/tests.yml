@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       wiremock:
-        image: wiremock/wiremock:latest
+        image: wiremock/wiremock:3.10.0
         ports: ["8080:8080"]
     steps:
       - uses: actions/checkout@v4
