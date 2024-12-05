@@ -33,7 +33,7 @@ final readonly class WireMock
                     'X-Api-Key' => ['caseInsensitive' => true],
                     'X-Api-User' => ['caseInsensitive' => true],
                 ],
-                'requestBodyPattern' => ['matcher' => 'equalToJso'],
+                'requestBodyPattern' => ['matcher' => 'equalToJson'],
                 'repeatsAsScenarios' => false,
             ])
             ->fetch()
