@@ -14,6 +14,8 @@ final class DeleteCommandTest extends AppTestCase
 {
     public function testSuccess(): void
     {
+        $this->wireMock->addMappingFromFile(__DIR__.'/wiremock/delete.json');
+
         $tester = CommandTester::command('tag:delete', ['id' => $id = '103dffda-0c51-49b8-bc25-6a387b5e28e8']);
 
         $exitCode = $tester->run();
@@ -36,6 +38,8 @@ final class DeleteCommandTest extends AppTestCase
     #[DataProvider('suggestIdProvider')]
     public function testSuggestId(string $input, string $output): void
     {
+        $this->wireMock->addMappingFromFile(__DIR__.'/wiremock/list.json');
+
         $tester = CommandTester::completion('tag:delete', 2, [$input]);
 
         $exitCode = $tester->run();

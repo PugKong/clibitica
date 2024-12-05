@@ -6,6 +6,10 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    services:
+      wiremock:
+        image: wiremock/wiremock:latest
+        ports: ["8080:8080"]
     steps:
       - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
@@ -15,6 +19,5 @@ jobs:
       - run: vendor/bin/phpstan --no-progress
       - run: vendor/bin/php-cs-fixer check --show-progress=none
       - run: npx prettier --check .
-      - run: docker compose up --wait --quiet-pull
       - run: vendor/bin/phpunit --coverage-clover coverage.xml
       - uses: coverallsapp/github-action@v2

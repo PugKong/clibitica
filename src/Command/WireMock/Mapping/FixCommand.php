@@ -13,6 +13,7 @@ use Symfony\Component\Finder\Finder;
 use Webmozart\Assert\Assert;
 
 use function sprintf;
+use function strlen;
 
 use const JSON_THROW_ON_ERROR;
 use const JSON_UNESCAPED_SLASHES;
@@ -29,14 +30,21 @@ final class FixCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        $mappingsDir = 'wiremock/mappings';
-
         $finder = new Finder();
-        $finder->in($mappingsDir)->name('*.json');
+        $finder->in('tests')->name('*.json');
         foreach ($finder as $file) {
+            if (!str_contains($file->getPathname(), '/wiremock/')) {
+                continue;
+            }
+
             $oldConfig = json_decode($file->getContents(), true, flags: JSON_THROW_ON_ERROR);
             Assert::isMap($oldConfig);
 
+            $mappingsDir = substr(
+                string: $file->getPathname(),
+                offset: 0,
+                length: strpos($file->getPathname(), '/wiremock/') + strlen('/wiremock'),
+            );
             $newConfig = $this->fixer->fix($mappingsDir, $file->getPathname(), $oldConfig);
 
             if ($oldConfig !== $newConfig) {

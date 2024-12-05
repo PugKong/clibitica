@@ -12,6 +12,8 @@ final class ListCommandTest extends AppTestCase
 {
     public function testSuccess(): void
     {
+        $this->wireMock->addMappingFromFile(__DIR__.'/wiremock/list.json');
+
         $tester = CommandTester::command('tag:list');
 
         $exitCode = $tester->run();

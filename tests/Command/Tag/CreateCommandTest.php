@@ -14,6 +14,9 @@ final class CreateCommandTest extends AppTestCase
     #[DataProvider('successProvider')]
     public function testSuccess(string $name, string $id): void
     {
+        $this->wireMock->addMappingFromFile(__DIR__.'/wiremock/create/first.json');
+        $this->wireMock->addMappingFromFile(__DIR__.'/wiremock/create/second.json');
+
         $tester = CommandTester::command('tag:create', ['name' => $name]);
 
         $exitCode = $tester->run();

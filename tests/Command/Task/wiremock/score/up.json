@@ -1,0 +1,64 @@
+{
+  "id": "f775f8b7-ecbb-4233-888c-a4b945a4d09b",
+  "name": "score/up",
+  "request": {
+    "url": "/api/v3/tasks/7f2d8f8d-36f2-48f1-8e85-6366b0ab4903/score/up",
+    "method": "POST",
+    "headers": {
+      "Accept": { "equalTo": "application/json", "caseInsensitive": true },
+      "Content-Type": { "equalTo": "application/json", "caseInsensitive": true },
+      "X-Client": { "equalTo": "49de7a0b-cad8-4788-830b-8299c34e96a1 - clibitica", "caseInsensitive": true },
+      "X-Api-Key": { "equalTo": "api key", "caseInsensitive": true },
+      "X-Api-User": { "equalTo": "49de7a0b-cad8-4788-830b-8299c34e96a1", "caseInsensitive": true }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": { "Content-Type": "application/json; charset=utf-8" },
+    "jsonBody": {
+      "success": true,
+      "data": {
+        "delta": 3.357912955854373,
+        "_tmp": {
+          "quest": { "progressDelta": 4.701078138196122 },
+          "drop": {
+            "target": "CottonCandyBlue",
+            "value": 1,
+            "key": "CottonCandyBlue",
+            "canDrop": true,
+            "type": "Food",
+            "dialog": "You've found Blue Cotton Candy!"
+          }
+        },
+        "buffs": {
+          "str": 14,
+          "int": 14,
+          "per": 14,
+          "con": 14,
+          "stealth": 0,
+          "streaks": false,
+          "seafoam": false,
+          "shinySeed": false,
+          "snowball": false,
+          "spookySparkles": false
+        },
+        "training": { "int": 0, "per": 0, "str": 29.045115704382322, "con": 0 },
+        "hp": 50,
+        "mp": 84,
+        "exp": 322,
+        "gp": 723.3026128648081,
+        "lvl": 27,
+        "class": "warrior",
+        "points": 0,
+        "str": 17,
+        "con": 10,
+        "int": 0,
+        "per": 0
+      },
+      "notifications": [],
+      "userV": 2671,
+      "appVersion": "5.31.1"
+    }
+  },
+  "uuid": "f775f8b7-ecbb-4233-888c-a4b945a4d09b"
+}

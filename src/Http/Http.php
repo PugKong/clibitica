@@ -70,6 +70,14 @@ final class Http
         return $copy;
     }
 
+    public function body(string $body): self
+    {
+        $copy = clone $this;
+        $copy->body = $body;
+
+        return $copy;
+    }
+
     public function bodyJson(mixed $json): self
     {
         $copy = clone $this;

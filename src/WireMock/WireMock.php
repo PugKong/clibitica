@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\WireMock;
 
 use App\Http\Http;
+use RuntimeException;
+
+use function sprintf;
 
 final readonly class WireMock
 {
@@ -53,6 +56,21 @@ final readonly class WireMock
         return $this->http
             ->get('__admin/requests')
             ->fetchJson(Request\List\Response::class)
+        ;
+    }
+
+    public function addMappingFromFile(string $filename): void
+    {
+        $content = file_get_contents($filename);
+        if (false === $content) {
+            throw new RuntimeException(sprintf('Failed to open "%s" file', $filename));
+        }
+
+        $this->http
+            ->post('__admin/mappings')
+            ->status(201)
+            ->body($content)
+            ->fetch()
         ;
     }
 }

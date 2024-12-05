@@ -14,6 +14,8 @@ class ScoreUpCommandTest extends AppTestCase
 {
     public function testSuccess(): void
     {
+        $this->wireMock->addMappingFromFile(__DIR__.'/wiremock/score/up.json');
+
         $tester = CommandTester::command('task:score:up', ['id' => $id = '7f2d8f8d-36f2-48f1-8e85-6366b0ab4903']);
 
         $exitCode = $tester->run();
@@ -36,6 +38,8 @@ class ScoreUpCommandTest extends AppTestCase
     #[DataProvider('suggestIdProvider')]
     public function testSuggestId(string $input, string $output): void
     {
+        $this->wireMock->addMappingFromFile(__DIR__.'/wiremock/list.json');
+
         $tester = CommandTester::completion('task:score:up', 2, [$input]);
 
         $exitCode = $tester->run();
