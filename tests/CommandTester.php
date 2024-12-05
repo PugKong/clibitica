@@ -13,30 +13,20 @@ use const PHP_EOL;
 
 final readonly class CommandTester
 {
-    private BufferedOutput $output;
-
     /**
      * @param array<string, mixed> $args
      */
-    private function __construct(private string $command, private array $args)
+    public static function command(string $command, array $args = []): CommandResult
     {
-        $this->output = new BufferedOutput();
-    }
-
-    /**
-     * @param array<string, mixed> $args
-     */
-    public static function command(string $command, array $args = []): self
-    {
-        return new self(command: $command, args: $args);
+        return self::run(command: $command, args: $args);
     }
 
     /**
      * @param string[] $input
      */
-    public static function completion(string $command, int $current, array $input = []): self
+    public static function completion(string $command, int $current, array $input = []): CommandResult
     {
-        return new self(
+        return self::run(
             command: '_complete',
             args: [
                 '--shell' => 'zsh',
@@ -47,24 +37,28 @@ final readonly class CommandTester
         );
     }
 
-    public function run(): int
+    /**
+     * @param array<string, mixed> $args
+     */
+    private static function run(string $command, array $args): CommandResult
     {
         $app = new App(Config::fromEnv());
+        $buffer = new BufferedOutput();
 
-        return $app->run(
-            input: new ArrayInput(['command' => $this->command, ...$this->args]),
-            output: $this->output,
+        $code = $app->run(
+            input: new ArrayInput(['command' => $command, ...$args]),
+            output: $buffer,
             autoExit: false,
         );
-    }
 
-    public function output(): string
-    {
-        $output = explode(PHP_EOL, $this->output->fetch());
-        foreach ($output as $i => $line) {
-            $output[$i] = rtrim($line);
-        }
+        $output = implode(
+            PHP_EOL,
+            array_map(
+                fn (string $line) => rtrim($line),
+                explode(PHP_EOL, $buffer->fetch()),
+            ),
+        );
 
-        return implode(PHP_EOL, $output);
+        return new CommandResult($code, $output);
     }
 }

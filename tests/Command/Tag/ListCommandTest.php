@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\Command\Tag;
 
 use App\Tests\AppTestCase;
+use App\Tests\CommandResult;
 use App\Tests\CommandTester;
-use Symfony\Component\Console\Command\Command;
 
 final class ListCommandTest extends AppTestCase
 {
@@ -14,12 +14,10 @@ final class ListCommandTest extends AppTestCase
     {
         $this->wireMock->addMappingFromFile(__DIR__.'/wiremock/list.json');
 
-        $tester = CommandTester::command('tag:list');
+        $actual = CommandTester::command('tag:list');
 
-        $exitCode = $tester->run();
-
-        self::assertSame(
-            <<<'EOF'
+        $expected = new CommandResult(
+            output: <<<'EOF'
                  -------------------------------------- --------
                   id                                     name
                  -------------------------------------- --------
@@ -29,8 +27,8 @@ final class ListCommandTest extends AppTestCase
 
 
                 EOF,
-            $tester->output(),
         );
-        self::assertSame(Command::SUCCESS, $exitCode);
+
+        self::assertEquals($expected, $actual);
     }
 }

@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Tests\Command\Tag;
 
 use App\Tests\AppTestCase;
+use App\Tests\CommandResult;
 use App\Tests\CommandTester;
 use App\WireMock\Request\List\ResponseRequest;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Symfony\Component\Console\Command\Command;
 
 final class DeleteCommandTest extends AppTestCase
 {
@@ -16,13 +16,9 @@ final class DeleteCommandTest extends AppTestCase
     {
         $this->wireMock->addMappingFromFile(__DIR__.'/wiremock/delete.json');
 
-        $tester = CommandTester::command('tag:delete', ['id' => $id = '103dffda-0c51-49b8-bc25-6a387b5e28e8']);
+        $actual = CommandTester::command('tag:delete', ['id' => $id = '103dffda-0c51-49b8-bc25-6a387b5e28e8']);
 
-        $exitCode = $tester->run();
-
-        self::assertSame('', $tester->output());
-        self::assertSame(Command::SUCCESS, $exitCode);
-
+        self::assertEquals(new CommandResult(), $actual);
         self::assertSame(
             [['method' => 'DELETE', 'url' => "/api/v3/tags/$id"]],
             array_map(
@@ -40,12 +36,9 @@ final class DeleteCommandTest extends AppTestCase
     {
         $this->wireMock->addMappingFromFile(__DIR__.'/wiremock/list.json');
 
-        $tester = CommandTester::completion('tag:delete', 2, [$input]);
+        $actual = CommandTester::completion('tag:delete', 2, [$input]);
 
-        $exitCode = $tester->run();
-
-        self::assertSame($output, $tester->output());
-        self::assertSame(Command::SUCCESS, $exitCode);
+        self::assertEquals(new CommandResult(output: $output), $actual);
     }
 
     /**

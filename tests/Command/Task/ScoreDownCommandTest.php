@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Tests\Command\Task;
 
 use App\Tests\AppTestCase;
+use App\Tests\CommandResult;
 use App\Tests\CommandTester;
 use App\WireMock\Request\List\ResponseRequest;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Symfony\Component\Console\Command\Command;
 
 class ScoreDownCommandTest extends AppTestCase
 {
@@ -16,13 +16,9 @@ class ScoreDownCommandTest extends AppTestCase
     {
         $this->wireMock->addMappingFromFile(__DIR__.'/wiremock/score/down.json');
 
-        $tester = CommandTester::command('task:score:down', ['id' => $id = '7f2d8f8d-36f2-48f1-8e85-6366b0ab4903']);
+        $actual = CommandTester::command('task:score:down', ['id' => $id = '7f2d8f8d-36f2-48f1-8e85-6366b0ab4903']);
 
-        $exitCode = $tester->run();
-
-        self::assertSame('', $tester->output());
-        self::assertSame(Command::SUCCESS, $exitCode);
-
+        self::assertEquals(new CommandResult(), $actual);
         self::assertSame(
             [['method' => 'POST', 'url' => "/api/v3/tasks/$id/score/down"]],
             array_map(
@@ -40,12 +36,9 @@ class ScoreDownCommandTest extends AppTestCase
     {
         $this->wireMock->addMappingFromFile(__DIR__.'/wiremock/list.json');
 
-        $tester = CommandTester::completion('task:score:down', 2, [$input]);
+        $actual = CommandTester::completion('task:score:down', 2, [$input]);
 
-        $exitCode = $tester->run();
-
-        self::assertSame($output, $tester->output());
-        self::assertSame(Command::SUCCESS, $exitCode);
+        self::assertEquals(new CommandResult(output: $output), $actual);
     }
 
     /**

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Tests\Command\Tag;
 
 use App\Tests\AppTestCase;
+use App\Tests\CommandResult;
 use App\Tests\CommandTester;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Symfony\Component\Console\Command\Command;
 
 final class CreateCommandTest extends AppTestCase
 {
@@ -17,18 +17,16 @@ final class CreateCommandTest extends AppTestCase
         $this->wireMock->addMappingFromFile(__DIR__.'/wiremock/create/first.json');
         $this->wireMock->addMappingFromFile(__DIR__.'/wiremock/create/second.json');
 
-        $tester = CommandTester::command('tag:create', ['name' => $name]);
+        $actual = CommandTester::command('tag:create', ['name' => $name]);
 
-        $exitCode = $tester->run();
-
-        self::assertSame(
-            <<<EOF
+        $expected = new CommandResult(
+            output: <<<EOF
                 {$id}
 
                 EOF,
-            $tester->output(),
         );
-        self::assertSame(Command::SUCCESS, $exitCode);
+
+        self::assertEquals($expected, $actual);
     }
 
     /**

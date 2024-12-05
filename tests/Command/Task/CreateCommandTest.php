@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Tests\Command\Task;
 
 use App\Tests\AppTestCase;
+use App\Tests\CommandResult;
 use App\Tests\CommandTester;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Symfony\Component\Console\Command\Command;
 
 final class CreateCommandTest extends AppTestCase
 {
@@ -19,18 +19,16 @@ final class CreateCommandTest extends AppTestCase
     {
         $this->wireMock->addMappingFromFile($fixture);
 
-        $tester = CommandTester::command('task:create', $args);
+        $actual = CommandTester::command('task:create', $args);
 
-        $exitCode = $tester->run();
-
-        self::assertSame(
-            <<<EOF
+        $expected = new CommandResult(
+            output: <<<EOF
                 {$uuid}
 
                 EOF,
-            $tester->output(),
         );
-        self::assertSame(Command::SUCCESS, $exitCode);
+
+        self::assertEquals($expected, $actual);
     }
 
     /**
@@ -131,40 +129,36 @@ final class CreateCommandTest extends AppTestCase
 
     public function testSuggestType(): void
     {
-        $tester = CommandTester::completion('task:create', 2, ['--type']);
+        $actual = CommandTester::completion('task:create', 2, ['--type']);
 
-        $exitCode = $tester->run();
-
-        self::assertSame(
-            <<<'EOF'
+        $expected = new CommandResult(
+            output: <<<'EOF'
                 habit
                 daily
                 todo
                 reward
 
                 EOF,
-            $tester->output(),
         );
-        self::assertSame(Command::SUCCESS, $exitCode);
+
+        self::assertEquals($expected, $actual);
     }
 
     public function testSuggestDifficulty(): void
     {
-        $tester = CommandTester::completion('task:create', 2, ['--difficulty']);
+        $actual = CommandTester::completion('task:create', 2, ['--difficulty']);
 
-        $exitCode = $tester->run();
-
-        self::assertSame(
-            <<<'EOF'
+        $expected = new CommandResult(
+            output: <<<'EOF'
                 trivial
                 easy
                 medium
                 hard
 
                 EOF,
-            $tester->output(),
         );
-        self::assertSame(Command::SUCCESS, $exitCode);
+
+        self::assertEquals($expected, $actual);
     }
 
     #[DataProvider('suggestTagIdProvider')]
@@ -172,12 +166,9 @@ final class CreateCommandTest extends AppTestCase
     {
         $this->wireMock->addMappingFromFile(__DIR__.'/wiremock/tag/list.json');
 
-        $tester = CommandTester::completion('task:create', 3, ['--tags', $input]);
+        $actual = CommandTester::completion('task:create', 3, ['--tags', $input]);
 
-        $exitCode = $tester->run();
-
-        self::assertSame($output, $tester->output());
-        self::assertSame(Command::SUCCESS, $exitCode);
+        self::assertEquals(new CommandResult(output: $output), $actual);
     }
 
     /**

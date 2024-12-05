@@ -4,18 +4,14 @@ declare(strict_types=1);
 
 namespace App\Tests;
 
-use Symfony\Component\Console\Command\Command;
-
 final class AppTest extends AppTestCase
 {
     public function testUsage(): void
     {
-        $tester = CommandTester::command('');
+        $actual = CommandTester::command('');
 
-        $exitCode = $tester->run();
-
-        self::assertSame(
-            <<<'EOF'
+        $expected = new CommandResult(
+            output: <<<'EOF'
                 clibitica 0.0.3
 
                 Usage:
@@ -46,8 +42,8 @@ final class AppTest extends AppTestCase
                   task:score:up    Score task up
 
                 EOF,
-            $tester->output(),
         );
-        self::assertSame(Command::SUCCESS, $exitCode);
+
+        self::assertEquals($expected, $actual);
     }
 }
