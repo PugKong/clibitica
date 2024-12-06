@@ -44,12 +44,10 @@ final readonly class Suggestions
         $response = $this->habitica->listTags();
 
         $suggestions = [];
-        foreach ($response->data as $item) {
-            $haystack = mb_strtolower($item->name);
+        foreach ($response->data as $tag) {
             $needle = mb_strtolower($input->getCompletionValue());
-
-            if (str_contains($haystack, $needle)) {
-                $suggestions[] = new Suggestion($item->id, $item->name);
+            if (str_contains(mb_strtolower($tag->id), $needle) || str_contains(mb_strtolower($tag->name), $needle)) {
+                $suggestions[] = new Suggestion($tag->id, $tag->name);
             }
         }
 
@@ -64,12 +62,10 @@ final readonly class Suggestions
         $response = $this->habitica->listTasks();
 
         $suggestions = [];
-        foreach ($response->data as $item) {
-            $haystack = mb_strtolower($item->text);
+        foreach ($response->data as $task) {
             $needle = mb_strtolower($input->getCompletionValue());
-
-            if (str_contains($haystack, $needle)) {
-                $suggestions[] = new Suggestion($item->id, $item->text);
+            if (str_contains(mb_strtolower($task->id), $needle) || str_contains(mb_strtolower($task->text), $needle)) {
+                $suggestions[] = new Suggestion($task->id, $task->text);
             }
         }
 

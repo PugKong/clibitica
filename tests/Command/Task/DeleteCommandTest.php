@@ -58,11 +58,17 @@ final class DeleteCommandTest extends AppTestCase
 
                     EOF,
             ],
-            '"e" filter' => [
-                'e',
+            '"re" filter' => [
+                're',
                 <<<'EOF'
-                    594980f9-f9da-4087-9bea-d7c48bb9ced1	default
                     60d8c0ae-07d2-44f1-8d48-4bdf57e6f59e	reward
+
+                    EOF,
+            ],
+            '"e3e8614c" filter' => [
+                'e3e8614c',
+                <<<'EOF'
+                    e3e8614c-9758-4b78-b154-067586e7a06f	todo
 
                     EOF,
             ],

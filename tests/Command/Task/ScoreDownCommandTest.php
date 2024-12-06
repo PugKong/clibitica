@@ -58,13 +58,17 @@ class ScoreDownCommandTest extends AppTestCase
 
                     EOF,
             ],
-            '"a" filter' => [
-                'a',
+            '"ai" filter' => [
+                'ai',
                 <<<'EOF'
-                    22c23065-84c1-4f4f-aede-2509a692eeb5	habit
                     bda4bfdd-c38b-493b-8b2a-5dcad06034ba	daily
-                    594980f9-f9da-4087-9bea-d7c48bb9ced1	default
-                    60d8c0ae-07d2-44f1-8d48-4bdf57e6f59e	reward
+
+                    EOF,
+            ],
+            '"bda4bfdd" filter' => [
+                'bda4bfdd',
+                <<<'EOF'
+                    bda4bfdd-c38b-493b-8b2a-5dcad06034ba	daily
 
                     EOF,
             ],

@@ -65,6 +65,13 @@ class ScoreUpCommandTest extends AppTestCase
 
                     EOF,
             ],
+            '"60d8c0ae" filter' => [
+                '60d8c0ae',
+                <<<'EOF'
+                    60d8c0ae-07d2-44f1-8d48-4bdf57e6f59e	reward
+
+                    EOF,
+            ],
         ];
     }
 }

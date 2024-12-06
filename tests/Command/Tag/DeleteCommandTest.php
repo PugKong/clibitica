@@ -62,6 +62,13 @@ final class DeleteCommandTest extends AppTestCase
 
                     EOF,
             ],
+            '"b0f04338" filter' => [
+                'b0f04338',
+                <<<'EOF'
+                    b0f04338-8666-4db8-8d0b-faa375748cf7	first
+
+                    EOF,
+            ],
         ];
     }
 }

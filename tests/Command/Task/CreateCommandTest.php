@@ -186,9 +186,16 @@ final class CreateCommandTest extends AppTestCase
                     EOF,
             ],
             '"con" filter' => [
-                'con',
+                'second',
                 <<<'EOF'
                     103dffda-0c51-49b8-bc25-6a387b5e28e8	second
+
+                    EOF,
+            ],
+            '"b0f04338" filter' => [
+                'b0f04338',
+                <<<'EOF'
+                    b0f04338-8666-4db8-8d0b-faa375748cf7	first
 
                     EOF,
             ],
