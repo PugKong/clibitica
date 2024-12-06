@@ -17,7 +17,7 @@ final class ListCommandTest extends AppTestCase
     #[DataProvider('successProvider')]
     public function testSuccess(array $args, string $output): void
     {
-        $this->wireMock->addMappingFromFile(__DIR__.'/wiremock/list.json');
+        $this->wireMock->addMappingFromFile(__DIR__.'/wiremock/list/list.json');
         $this->wireMock->addMappingFromFile(__DIR__.'/wiremock/tag/list.json');
 
         $actual = CommandTester::command('task:list', $args);
@@ -31,14 +31,31 @@ final class ListCommandTest extends AppTestCase
     public static function successProvider(): array
     {
         return [
-            'all' => [
+            'default' => [
                 [],
+                <<<'EOF'
+                     ---------- ------- ------------ ------------ --------------- ---------
+                      id         type    difficulty   due          tags            text
+                     ---------- ------- ------------ ------------ --------------- ---------
+                      22c23065   habit   trivial                                   habit
+                      bda4bfdd   daily   easy                                      daily
+                      e3e8614c   todo    medium       2024-12-28   first, second   todo
+                      594980f9   todo    hard                                      default
+                     ---------- ------- ------------ ------------ --------------- ---------
+
+
+                    EOF,
+            ],
+            'all' => [
+                ['--all' => true],
                 <<<'EOF'
                      ---------- -------- ------------ ------------ --------------- ---------
                       id         type     difficulty   due          tags            text
                      ---------- -------- ------------ ------------ --------------- ---------
                       22c23065   habit    trivial                                   habit
                       bda4bfdd   daily    easy                                      daily
+                      967371bc   daily    easy                                      done
+                      6694402e   daily    easy                                      not due
                       e3e8614c   todo     medium       2024-12-28   first, second   todo
                       594980f9   todo     hard                                      default
                       60d8c0ae   reward   easy                                      reward
@@ -67,6 +84,20 @@ final class ListCommandTest extends AppTestCase
                      ---------- ------- ------------ ----- ------ -------
                       bda4bfdd   daily   easy                      daily
                      ---------- ------- ------------ ----- ------ -------
+
+
+                    EOF,
+            ],
+            'all daily' => [
+                ['--type' => 'daily', '--all' => true],
+                <<<'EOF'
+                     ---------- ------- ------------ ----- ------ ---------
+                      id         type    difficulty   due   tags   text
+                     ---------- ------- ------------ ----- ------ ---------
+                      bda4bfdd   daily   easy                      daily
+                      967371bc   daily   easy                      done
+                      6694402e   daily   easy                      not due
+                     ---------- ------- ------------ ----- ------ ---------
 
 
                     EOF,

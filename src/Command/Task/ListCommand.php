@@ -7,7 +7,6 @@ namespace App\Command\Task;
 use App\Command\Suggestions;
 use App\Command\TaskDifficulty;
 use App\Habitica\Habitica;
-use App\Habitica\Task\List\ResponseData;
 use App\Habitica\Task\Type;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -35,11 +34,19 @@ final class ListCommand extends Command
             description: 'Task type, options are: "habit", "daily", "todo", "reward"',
             suggestedValues: $this->suggestions->taskType(),
         );
+
+        $this->addOption(
+            name: 'all',
+            mode: InputOption::VALUE_NONE,
+            description: 'TODO',
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         Assert::nullOrString($type = $input->getOption('type'));
+        Assert::boolean($all = $input->getOption('all'));
+
         if (null !== $type) {
             $type = Type::from($type);
         }
@@ -49,10 +56,27 @@ final class ListCommand extends Command
             $tags[$tag->id] = $tag->name;
         }
 
-        $tasks = $this->habitica->listTasks();
-        $tasks = $tasks->data;
-        if (null !== $type) {
-            $tasks = array_filter($tasks, fn (ResponseData $data) => $data->type === $type);
+        $tasks = [];
+        foreach ($this->habitica->listTasks()->data as $task) {
+            if (Type::REWARD === $type && Type::REWARD === $task->type) {
+                $tasks[] = $task;
+
+                continue;
+            }
+
+            if (null !== $type && $type !== $task->type) {
+                continue;
+            }
+
+            if (!$all && Type::REWARD === $task->type) {
+                continue;
+            }
+
+            if (!$all && Type::DAILY === $task->type && ($task->completed || false === $task->isDue)) {
+                continue;
+            }
+
+            $tasks[] = $task;
         }
 
         $headers = ['id', 'type', 'difficulty', 'due', 'tags', 'text'];

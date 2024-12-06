@@ -17,6 +17,8 @@ final readonly class ResponseData
         public ?DateTimeInterface $date = null,
         /** @var string[] */
         public array $tags = [],
+        public ?bool $isDue = null,
+        public ?bool $completed = null,
     ) {
     }
 }
