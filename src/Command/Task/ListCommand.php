@@ -38,7 +38,7 @@ final class ListCommand extends Command
         $this->addOption(
             name: 'all',
             mode: InputOption::VALUE_NONE,
-            description: 'TODO',
+            description: 'Include rewards and not due daily task',
         );
     }
 
