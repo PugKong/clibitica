@@ -22,7 +22,7 @@ Run `clibitica` to see the available commands:
 
 ```bash
 $ clibitica
-clibitica 0.0.3
+clibitica 0.0.4
 
 Usage:
   command [options] [arguments]
