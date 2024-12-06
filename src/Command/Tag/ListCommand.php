@@ -25,7 +25,7 @@ final class ListCommand extends Command
 
         $rows = [];
         foreach ($response->data as $tag) {
-            $rows[] = [$tag->id, $tag->name];
+            $rows[] = [substr($tag->id, 0, 8), $tag->name];
         }
 
         $io = new SymfonyStyle($input, $output);
