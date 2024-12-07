@@ -12,7 +12,7 @@ final class AppTest extends AppTestCase
 
         $expected = new CommandResult(
             output: <<<'EOF'
-                clibitica 0.0.4
+                clibitica 0.0.5
 
                 Usage:
                   command [options] [arguments]
