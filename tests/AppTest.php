@@ -40,6 +40,7 @@ final class AppTest extends AppTestCase
                   task:list        List tasks
                   task:score:down  Score task down
                   task:score:up    Score task up
+                  task:tag:add     Add a tag to a task
 
                 EOF,
         );
