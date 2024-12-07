@@ -87,6 +87,14 @@ final readonly class Habitica
         ;
     }
 
+    public function deleteTagFromTask(string $taskId, string $tagId): void
+    {
+        $this->http
+            ->delete('api/v3/tasks/{taskId}/tags/{tagId}', ['taskId' => $taskId, 'tagId' => $tagId])
+            ->fetch()
+        ;
+    }
+
     public function createTag(Tag\Create\Request $request): Tag\Create\Response
     {
         return $this->http
