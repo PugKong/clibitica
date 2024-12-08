@@ -43,6 +43,8 @@ final class App
             'tag:delete' => fn () => new Command\Tag\DeleteCommand($this->habitica(), $this->suggestions()),
             'tag:list' => fn () => new Command\Tag\ListCommand($this->habitica()),
 
+            'user:stats' => fn () => new Command\User\StatsCommand($this->habitica()),
+
             'wiremock:reset' => fn () => new Command\WireMock\ResetCommand($this->wireMock(), !$this->config->dev),
             'wiremock:recording:start' => fn () => new Command\WireMock\Recording\StartCommand(
                 $this->wireMock(),

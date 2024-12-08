@@ -120,4 +120,12 @@ final readonly class Habitica
             ->fetchJson(Tag\List\Response::class)
         ;
     }
+
+    public function getUser(): User\Get\Response
+    {
+        return $this->http
+            ->get('api/v3/user')
+            ->fetchJson(User\Get\Response::class)
+        ;
+    }
 }

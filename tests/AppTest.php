@@ -42,6 +42,8 @@ final class AppTest extends AppTestCase
                   task:score:up    Score task up
                   task:tag:add     Add a tag to a task
                   task:tag:delete  Remove a tag from a task
+                 user
+                  user:stats       Show user stats
 
                 EOF,
         );
