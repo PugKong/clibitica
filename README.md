@@ -22,7 +22,7 @@ Run `clibitica` to see the available commands:
 
 ```bash
 $ clibitica
-clibitica 0.0.5
+clibitica 0.0.6
 
 Usage:
   command [options] [arguments]
@@ -52,6 +52,8 @@ Available commands:
   task:score:up    Score task up
   task:tag:add     Add a tag to a task
   task:tag:delete  Remove a tag from a task
+ user
+  user:stats       Show user stats
 ```
 
 ## Contributing
