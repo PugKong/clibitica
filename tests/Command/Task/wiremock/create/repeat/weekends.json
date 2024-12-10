@@ -1,0 +1,75 @@
+{
+  "id": "275d4549-a67f-4cb6-872a-10b19d72bf52",
+  "name": "create/repeat/weekends",
+  "request": {
+    "url": "/api/v3/tasks/user",
+    "method": "POST",
+    "headers": {
+      "Accept": { "equalTo": "application/json", "caseInsensitive": true },
+      "Content-Type": { "equalTo": "application/json", "caseInsensitive": true },
+      "X-Client": { "equalTo": "49de7a0b-cad8-4788-830b-8299c34e96a1 - clibitica", "caseInsensitive": true },
+      "X-Api-Key": { "equalTo": "api key", "caseInsensitive": true },
+      "X-Api-User": { "equalTo": "49de7a0b-cad8-4788-830b-8299c34e96a1", "caseInsensitive": true }
+    },
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "type": "daily",
+          "text": "weekends",
+          "frequency": "weekly",
+          "repeat": { "su": true, "m": false, "t": false, "w": false, "th": false, "f": false, "s": true }
+        }
+      }
+    ]
+  },
+  "response": {
+    "status": 201,
+    "headers": { "Content-Type": "application/json; charset=utf-8" },
+    "jsonBody": {
+      "success": true,
+      "data": {
+        "frequency": "weekly",
+        "everyX": 1,
+        "repeat": { "m": false, "t": false, "w": false, "th": false, "f": false, "s": true, "su": true },
+        "streak": 0,
+        "nextDue": [
+          "2024-12-13T21:00:00.000Z",
+          "2024-12-14T21:00:00.000Z",
+          "2024-12-20T21:00:00.000Z",
+          "2024-12-21T21:00:00.000Z",
+          "2024-12-27T21:00:00.000Z",
+          "2025-01-03T21:00:00.000Z"
+        ],
+        "yesterDaily": true,
+        "history": [],
+        "completed": false,
+        "collapseChecklist": false,
+        "type": "daily",
+        "text": "weekends",
+        "notes": "",
+        "tags": [],
+        "value": 0,
+        "priority": 1,
+        "attribute": "str",
+        "challenge": [],
+        "group": { "completedBy": [], "assignedUsers": [] },
+        "byHabitica": false,
+        "startDate": "2024-12-09T21:00:00.000Z",
+        "daysOfMonth": [],
+        "weeksOfMonth": [],
+        "checklist": [],
+        "reminders": [],
+        "_id": "3b4f6fbe-86da-43a8-bf86-9e3c5db44bf7",
+        "createdAt": "2024-12-10T12:41:41.461Z",
+        "updatedAt": "2024-12-10T12:41:41.461Z",
+        "userId": "49de7a0b-cad8-4788-830b-8299c34e96a1",
+        "isDue": false,
+        "id": "3b4f6fbe-86da-43a8-bf86-9e3c5db44bf7"
+      },
+      "notifications": [],
+      "userV": 2773,
+      "appVersion": "5.31.1"
+    }
+  },
+  "uuid": "275d4549-a67f-4cb6-872a-10b19d72bf52"
+}

@@ -10,6 +10,7 @@ use App\Habitica\Habitica;
 use App\Habitica\Task\Attribute;
 use App\Habitica\Task\Create\Request;
 use App\Habitica\Task\Create\RequestChecklist;
+use App\Habitica\Task\Create\RequestRepeat;
 use App\Habitica\Task\Frequency;
 use App\Habitica\Task\Type;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -20,9 +21,14 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Webmozart\Assert\Assert;
 
+use function count;
+use function in_array;
+
 #[AsCommand(name: 'task:create', description: 'Create a new task')]
 final class CreateCommand extends Command
 {
+    private const array REPEAT = ['su', 'mo', 'tu', 'we', 'th', 'fr', 'sa'];
+
     public function __construct(private readonly Habitica $habitica, private readonly Suggestions $suggestions)
     {
         parent::__construct();
@@ -108,6 +114,13 @@ final class CreateCommand extends Command
             ]),
             suggestedValues: $this->suggestions->frequency(...),
         );
+
+        $this->addOption(
+            name: 'repeat',
+            mode: InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
+            description: 'Only valid for type "daily". Value of frequency must be "weekly". Days are: '.implode(', ', self::REPEAT),
+            suggestedValues: self::REPEAT,
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -138,10 +151,31 @@ final class CreateCommand extends Command
             collapseChecklist: $checklistCollapse,
             attribute: null !== $attribute ? Attribute::from($attribute) : null,
             frequency: null !== $frequency ? Frequency::from($frequency) : null,
+            repeat: $this->getRepeat($input),
         ));
 
         $output->writeln($response->data->id);
 
         return self::SUCCESS;
+    }
+
+    private function getRepeat(InputInterface $input): ?RequestRepeat
+    {
+        Assert::isArray($repeat = $input->getOption('repeat'));
+        if (0 === count($repeat)) {
+            return null;
+        }
+
+        Assert::allInArray($repeat, self::REPEAT);
+
+        return new RequestRepeat(
+            su: in_array('su', $repeat, true),
+            m: in_array('mo', $repeat, true),
+            t: in_array('tu', $repeat, true),
+            w: in_array('we', $repeat, true),
+            th: in_array('th', $repeat, true),
+            f: in_array('fr', $repeat, true),
+            s: in_array('sa', $repeat, true),
+        );
     }
 }

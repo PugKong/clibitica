@@ -166,6 +166,22 @@ final class CreateCommandTest extends AppTestCase
                 ['text' => 'yearly', '--type' => 'daily', '--frequency' => 'yearly'],
                 '8d0ac4b1-e1fd-4396-a978-692e0dc41b1a',
             ],
+
+            'weekdays' => [
+                __DIR__.'/wiremock/create/repeat/weekdays.json',
+                [
+                    'text' => 'weekdays',
+                    '--type' => 'daily',
+                    '--frequency' => 'weekly',
+                    '--repeat' => ['mo', 'tu', 'we', 'th', 'fr'],
+                ],
+                '53a280e8-293c-4890-9e55-390398db60a2',
+            ],
+            'weekends' => [
+                __DIR__.'/wiremock/create/repeat/weekends.json',
+                ['text' => 'weekends', '--type' => 'daily', '--frequency' => 'weekly', '--repeat' => ['su', 'sa']],
+                '3b4f6fbe-86da-43a8-bf86-9e3c5db44bf7',
+            ],
         ];
     }
 
@@ -271,6 +287,26 @@ final class CreateCommandTest extends AppTestCase
                 weekly
                 monthly
                 yearly
+
+                EOF,
+        );
+
+        self::assertEquals($expected, $actual);
+    }
+
+    public function testSuggestRepeat(): void
+    {
+        $actual = CommandTester::completion('task:create', 3, ['--repeat']);
+
+        $expected = new CommandResult(
+            output: <<<'EOF'
+                su
+                mo
+                tu
+                we
+                th
+                fr
+                sa
 
                 EOF,
         );

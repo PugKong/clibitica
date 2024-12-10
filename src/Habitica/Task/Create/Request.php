@@ -28,6 +28,7 @@ final readonly class Request
         ?bool $collapseChecklist = null,
         ?Attribute $attribute = null,
         ?Frequency $frequency = null,
+        ?RequestRepeat $repeat = null,
     ) {
         if (count($tags) > 0) {
             $this->tags = $tags;
@@ -64,6 +65,10 @@ final readonly class Request
         if (null !== $frequency) {
             $this->frequency = $frequency;
         }
+
+        if (null !== $repeat) {
+            $this->repeat = $repeat;
+        }
     }
 
     /** @var string[] */
@@ -77,4 +82,5 @@ final readonly class Request
     public bool $collapseChecklist;
     public Attribute $attribute;
     public Frequency $frequency;
+    public RequestRepeat $repeat;
 }
