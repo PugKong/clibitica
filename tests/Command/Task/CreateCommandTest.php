@@ -209,6 +209,12 @@ final class CreateCommandTest extends AppTestCase
                 ],
                 '8b19d29f-3db2-4981-8294-b4b594cb3854',
             ],
+
+            'start' => [
+                __DIR__.'/wiremock/create/start.json',
+                ['text' => 'start date', '--type' => 'daily', '--start-date' => '2024-12-13'],
+                '25d41837-14eb-4c62-9cf8-39e259c76260',
+            ],
         ];
     }
 

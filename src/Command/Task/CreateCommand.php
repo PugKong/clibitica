@@ -139,6 +139,12 @@ final class CreateCommand extends Command
             mode: InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
             description: 'Weeks of month. Only valid for "monthly" frequency',
         );
+
+        $this->addOption(
+            name: 'start-date',
+            mode: InputOption::VALUE_OPTIONAL,
+            description: 'Date in Y-m-d format when the task will first become available. Only valid for type "daily"',
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -161,6 +167,7 @@ final class CreateCommand extends Command
         Assert::allNumeric($daysOfMonth);
         Assert::isArray($weeksOfMonth = $input->getOption('weeks-of-month'));
         Assert::allNumeric($weeksOfMonth);
+        Assert::nullOrString($startDate = $input->getOption('start-date'));
 
         $response = $this->habitica->createTask(new Request(
             type: Type::from($type),
@@ -178,6 +185,7 @@ final class CreateCommand extends Command
             everyX: null !== $every ? (int) $every : null,
             daysOfMonth: array_map(fn ($day) => (int) $day, $daysOfMonth),
             weeksOfMonth: array_map(fn ($week) => (int) $week, $weeksOfMonth),
+            startDate: $startDate,
         ));
 
         $output->writeln($response->data->id);

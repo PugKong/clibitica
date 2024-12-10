@@ -34,6 +34,7 @@ final readonly class Request
         ?int $everyX = null,
         array $daysOfMonth = [],
         array $weeksOfMonth = [],
+        ?string $startDate = null,
     ) {
         if (count($tags) > 0) {
             $this->tags = $tags;
@@ -86,6 +87,10 @@ final readonly class Request
         if (count($weeksOfMonth) > 0) {
             $this->weeksOfMonth = $weeksOfMonth;
         }
+
+        if (null !== $startDate) {
+            $this->startDate = $startDate;
+        }
     }
 
     /** @var string[] */
@@ -105,4 +110,5 @@ final readonly class Request
     public array $daysOfMonth;
     /** @var int[] */
     public array $weeksOfMonth;
+    public string $startDate;
 }

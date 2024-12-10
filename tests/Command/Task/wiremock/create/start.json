@@ -1,0 +1,66 @@
+{
+  "id": "33c1270a-dfe5-4901-b006-8761a1398089",
+  "name": "create/start",
+  "request": {
+    "url": "/api/v3/tasks/user",
+    "method": "POST",
+    "headers": {
+      "Accept": { "equalTo": "application/json", "caseInsensitive": true },
+      "Content-Type": { "equalTo": "application/json", "caseInsensitive": true },
+      "X-Client": { "equalTo": "49de7a0b-cad8-4788-830b-8299c34e96a1 - clibitica", "caseInsensitive": true },
+      "X-Api-Key": { "equalTo": "api key", "caseInsensitive": true },
+      "X-Api-User": { "equalTo": "49de7a0b-cad8-4788-830b-8299c34e96a1", "caseInsensitive": true }
+    },
+    "bodyPatterns": [{ "equalToJson": { "type": "daily", "text": "start date", "startDate": "2024-12-13" } }]
+  },
+  "response": {
+    "status": 201,
+    "headers": { "Content-Type": "application/json; charset=utf-8" },
+    "jsonBody": {
+      "success": true,
+      "data": {
+        "frequency": "weekly",
+        "everyX": 1,
+        "startDate": "2024-12-12T21:00:00.000Z",
+        "repeat": { "m": true, "t": true, "w": true, "th": true, "f": true, "s": true, "su": true },
+        "streak": 0,
+        "nextDue": [
+          "2024-12-10T21:00:00.000Z",
+          "2024-12-11T21:00:00.000Z",
+          "2024-12-12T21:00:00.000Z",
+          "2024-12-13T21:00:00.000Z",
+          "2024-12-15T21:00:00.000Z",
+          "2024-12-16T21:00:00.000Z"
+        ],
+        "yesterDaily": true,
+        "history": [],
+        "completed": false,
+        "collapseChecklist": false,
+        "type": "daily",
+        "text": "start date",
+        "notes": "",
+        "tags": [],
+        "value": 0,
+        "priority": 1,
+        "attribute": "str",
+        "challenge": [],
+        "group": { "completedBy": [], "assignedUsers": [] },
+        "byHabitica": false,
+        "daysOfMonth": [],
+        "weeksOfMonth": [],
+        "checklist": [],
+        "reminders": [],
+        "_id": "25d41837-14eb-4c62-9cf8-39e259c76260",
+        "createdAt": "2024-12-10T15:37:48.376Z",
+        "updatedAt": "2024-12-10T15:37:48.376Z",
+        "userId": "49de7a0b-cad8-4788-830b-8299c34e96a1",
+        "isDue": false,
+        "id": "25d41837-14eb-4c62-9cf8-39e259c76260"
+      },
+      "notifications": [],
+      "userV": 2798,
+      "appVersion": "5.31.1"
+    }
+  },
+  "uuid": "33c1270a-dfe5-4901-b006-8761a1398089"
+}
