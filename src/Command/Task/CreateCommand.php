@@ -121,6 +121,12 @@ final class CreateCommand extends Command
             description: 'Only valid for type "daily". Value of frequency must be "weekly". Days are: '.implode(', ', self::REPEAT),
             suggestedValues: self::REPEAT,
         );
+
+        $this->addOption(
+            name: 'every',
+            mode: InputOption::VALUE_OPTIONAL,
+            description: 'Value of frequency must be "daily", the number of days until this daily task is available again',
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -138,6 +144,7 @@ final class CreateCommand extends Command
         Assert::nullOrBoolean($checklistCollapse = $input->getOption('checklist-collapse'));
         Assert::nullOrString($attribute = $input->getOption('attribute'));
         Assert::nullOrString($frequency = $input->getOption('frequency'));
+        Assert::nullOrNumeric($every = $input->getOption('every'));
 
         $response = $this->habitica->createTask(new Request(
             type: Type::from($type),
@@ -152,6 +159,7 @@ final class CreateCommand extends Command
             attribute: null !== $attribute ? Attribute::from($attribute) : null,
             frequency: null !== $frequency ? Frequency::from($frequency) : null,
             repeat: $this->getRepeat($input),
+            everyX: null !== $every ? (int) $every : null,
         ));
 
         $output->writeln($response->data->id);

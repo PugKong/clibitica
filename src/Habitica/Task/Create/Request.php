@@ -29,6 +29,7 @@ final readonly class Request
         ?Attribute $attribute = null,
         ?Frequency $frequency = null,
         ?RequestRepeat $repeat = null,
+        ?int $everyX = null,
     ) {
         if (count($tags) > 0) {
             $this->tags = $tags;
@@ -69,6 +70,10 @@ final readonly class Request
         if (null !== $repeat) {
             $this->repeat = $repeat;
         }
+
+        if (null !== $everyX) {
+            $this->everyX = $everyX;
+        }
     }
 
     /** @var string[] */
@@ -83,4 +88,5 @@ final readonly class Request
     public Attribute $attribute;
     public Frequency $frequency;
     public RequestRepeat $repeat;
+    public int $everyX;
 }
