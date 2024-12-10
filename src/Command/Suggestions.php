@@ -45,6 +45,14 @@ final readonly class Suggestions
     }
 
     /**
+     * @return list<string>
+     */
+    public function frequency(): array
+    {
+        return array_map(fn (Task\Frequency $frequency) => $frequency->value, Task\Frequency::cases());
+    }
+
+    /**
      * @return list<Suggestion>
      */
     public function tagId(CompletionInput $input): array

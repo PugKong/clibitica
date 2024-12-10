@@ -145,6 +145,27 @@ final class CreateCommandTest extends AppTestCase
                 ['text' => 'str', '--attribute' => 'str'],
                 'a99b7f21-ef88-433f-9ac7-3eefffb1b041',
             ],
+
+            'freq daily' => [
+                __DIR__.'/wiremock/create/frequency/daily.json',
+                ['text' => 'daily', '--type' => 'daily', '--frequency' => 'daily'],
+                'f773a4c1-fac2-4a42-b401-ae7e6ab314c0',
+            ],
+            'freq monthly' => [
+                __DIR__.'/wiremock/create/frequency/monthly.json',
+                ['text' => 'monthly', '--type' => 'daily', '--frequency' => 'monthly'],
+                '82081c22-498c-47c4-b56f-dc30f64d237e',
+            ],
+            'freq weekly' => [
+                __DIR__.'/wiremock/create/frequency/weekly.json',
+                ['text' => 'weekly', '--type' => 'daily', '--frequency' => 'weekly'],
+                'ad24bb4c-faab-405f-9880-62813f51704c',
+            ],
+            'freq yearly' => [
+                __DIR__.'/wiremock/create/frequency/yearly.json',
+                ['text' => 'yearly', '--type' => 'daily', '--frequency' => 'yearly'],
+                '8d0ac4b1-e1fd-4396-a978-692e0dc41b1a',
+            ],
         ];
     }
 
@@ -233,6 +254,23 @@ final class CreateCommandTest extends AppTestCase
                 int
                 per
                 con
+
+                EOF,
+        );
+
+        self::assertEquals($expected, $actual);
+    }
+
+    public function testSuggestFrequency(): void
+    {
+        $actual = CommandTester::completion('task:create', 3, ['--frequency']);
+
+        $expected = new CommandResult(
+            output: <<<'EOF'
+                daily
+                weekly
+                monthly
+                yearly
 
                 EOF,
         );

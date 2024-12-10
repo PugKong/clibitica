@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Habitica\Task\Create;
 
 use App\Habitica\Task\Attribute;
+use App\Habitica\Task\Frequency;
 use App\Habitica\Task\Type;
 
 use function count;
@@ -26,6 +27,7 @@ final readonly class Request
         array $checklist = [],
         ?bool $collapseChecklist = null,
         ?Attribute $attribute = null,
+        ?Frequency $frequency = null,
     ) {
         if (count($tags) > 0) {
             $this->tags = $tags;
@@ -58,6 +60,10 @@ final readonly class Request
         if (null !== $attribute) {
             $this->attribute = $attribute;
         }
+
+        if (null !== $frequency) {
+            $this->frequency = $frequency;
+        }
     }
 
     /** @var string[] */
@@ -70,4 +76,5 @@ final readonly class Request
     public array $checklist;
     public bool $collapseChecklist;
     public Attribute $attribute;
+    public Frequency $frequency;
 }

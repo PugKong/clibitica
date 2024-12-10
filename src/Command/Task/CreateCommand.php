@@ -10,6 +10,7 @@ use App\Habitica\Habitica;
 use App\Habitica\Task\Attribute;
 use App\Habitica\Task\Create\Request;
 use App\Habitica\Task\Create\RequestChecklist;
+use App\Habitica\Task\Frequency;
 use App\Habitica\Task\Type;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -95,6 +96,18 @@ final class CreateCommand extends Command
             description: 'User\'s attribute to use, options are: "str", "int", "per", "con"',
             suggestedValues: $this->suggestions->attribute(...),
         );
+
+        $this->addOption(
+            name: 'frequency',
+            mode: InputOption::VALUE_OPTIONAL,
+            description: implode(' ', [
+                'Values "weekly" and "monthly" enable use of the "--repeat" flag.',
+                'All frequency values enable use of the "--every" flag.',
+                'Value "monthly" enables use of the "--weeks-of-month" and "days-of-month" flags.',
+                'Frequency is only valid for type "daily"',
+            ]),
+            suggestedValues: $this->suggestions->frequency(...),
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -111,6 +124,7 @@ final class CreateCommand extends Command
         Assert::allString($checklist);
         Assert::nullOrBoolean($checklistCollapse = $input->getOption('checklist-collapse'));
         Assert::nullOrString($attribute = $input->getOption('attribute'));
+        Assert::nullOrString($frequency = $input->getOption('frequency'));
 
         $response = $this->habitica->createTask(new Request(
             type: Type::from($type),
@@ -123,6 +137,7 @@ final class CreateCommand extends Command
             checklist: array_map(fn (string $text) => new RequestChecklist($text), $checklist),
             collapseChecklist: $checklistCollapse,
             attribute: null !== $attribute ? Attribute::from($attribute) : null,
+            frequency: null !== $frequency ? Frequency::from($frequency) : null,
         ));
 
         $output->writeln($response->data->id);
