@@ -199,6 +199,16 @@ final class CreateCommandTest extends AppTestCase
                 ],
                 '064de3cd-5acf-48a2-b739-a8c3c6c6d6b7',
             ],
+            'weeks' => [
+                __DIR__.'/wiremock/create/weeks.json',
+                [
+                    'text' => 'weeks of month',
+                    '--type' => 'daily',
+                    '--frequency' => 'monthly',
+                    '--weeks-of-month' => [1, 2],
+                ],
+                '8b19d29f-3db2-4981-8294-b4b594cb3854',
+            ],
         ];
     }
 

@@ -133,6 +133,12 @@ final class CreateCommand extends Command
             mode: InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
             description: 'Days of month. Only valid for "monthly" frequency',
         );
+
+        $this->addOption(
+            name: 'weeks-of-month',
+            mode: InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
+            description: 'Weeks of month. Only valid for "monthly" frequency',
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -153,6 +159,8 @@ final class CreateCommand extends Command
         Assert::nullOrNumeric($every = $input->getOption('every'));
         Assert::isArray($daysOfMonth = $input->getOption('days-of-month'));
         Assert::allNumeric($daysOfMonth);
+        Assert::isArray($weeksOfMonth = $input->getOption('weeks-of-month'));
+        Assert::allNumeric($weeksOfMonth);
 
         $response = $this->habitica->createTask(new Request(
             type: Type::from($type),
@@ -169,6 +177,7 @@ final class CreateCommand extends Command
             repeat: $this->getRepeat($input),
             everyX: null !== $every ? (int) $every : null,
             daysOfMonth: array_map(fn ($day) => (int) $day, $daysOfMonth),
+            weeksOfMonth: array_map(fn ($week) => (int) $week, $weeksOfMonth),
         ));
 
         $output->writeln($response->data->id);

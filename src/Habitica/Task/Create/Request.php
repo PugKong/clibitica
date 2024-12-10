@@ -16,6 +16,7 @@ final readonly class Request
      * @param string[]           $tags
      * @param RequestChecklist[] $checklist
      * @param int[]              $daysOfMonth
+     * @param int[]              $weeksOfMonth
      */
     public function __construct(
         public Type $type,
@@ -32,6 +33,7 @@ final readonly class Request
         ?RequestRepeat $repeat = null,
         ?int $everyX = null,
         array $daysOfMonth = [],
+        array $weeksOfMonth = [],
     ) {
         if (count($tags) > 0) {
             $this->tags = $tags;
@@ -80,6 +82,10 @@ final readonly class Request
         if (count($daysOfMonth) > 0) {
             $this->daysOfMonth = $daysOfMonth;
         }
+
+        if (count($weeksOfMonth) > 0) {
+            $this->weeksOfMonth = $weeksOfMonth;
+        }
     }
 
     /** @var string[] */
@@ -97,4 +103,6 @@ final readonly class Request
     public int $everyX;
     /** @var int[] */
     public array $daysOfMonth;
+    /** @var int[] */
+    public array $weeksOfMonth;
 }
