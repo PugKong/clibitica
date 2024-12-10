@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Habitica\Task\Create;
 
+use App\Habitica\Task\Attribute;
 use App\Habitica\Task\Type;
 
 use function count;
@@ -24,6 +25,7 @@ final readonly class Request
         ?string $date = null,
         array $checklist = [],
         ?bool $collapseChecklist = null,
+        ?Attribute $attribute = null,
     ) {
         if (count($tags) > 0) {
             $this->tags = $tags;
@@ -52,6 +54,10 @@ final readonly class Request
         if (null !== $collapseChecklist) {
             $this->collapseChecklist = $collapseChecklist;
         }
+
+        if (null !== $attribute) {
+            $this->attribute = $attribute;
+        }
     }
 
     /** @var string[] */
@@ -63,4 +69,5 @@ final readonly class Request
     /** @var RequestChecklist[] */
     public array $checklist;
     public bool $collapseChecklist;
+    public Attribute $attribute;
 }

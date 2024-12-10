@@ -1,0 +1,48 @@
+{
+  "id": "8988dfa6-2c54-445f-aefc-74cf0f14affc",
+  "name": "create/attribute/per",
+  "request": {
+    "url": "/api/v3/tasks/user",
+    "method": "POST",
+    "headers": {
+      "Accept": { "equalTo": "application/json", "caseInsensitive": true },
+      "Content-Type": { "equalTo": "application/json", "caseInsensitive": true },
+      "X-Client": { "equalTo": "49de7a0b-cad8-4788-830b-8299c34e96a1 - clibitica", "caseInsensitive": true },
+      "X-Api-Key": { "equalTo": "api key", "caseInsensitive": true },
+      "X-Api-User": { "equalTo": "49de7a0b-cad8-4788-830b-8299c34e96a1", "caseInsensitive": true }
+    },
+    "bodyPatterns": [{ "equalToJson": { "type": "todo", "text": "per", "attribute": "per" } }]
+  },
+  "response": {
+    "status": 201,
+    "headers": { "Content-Type": "application/json; charset=utf-8" },
+    "jsonBody": {
+      "success": true,
+      "data": {
+        "completed": false,
+        "collapseChecklist": false,
+        "type": "todo",
+        "text": "per",
+        "notes": "",
+        "tags": [],
+        "value": 0,
+        "priority": 1,
+        "attribute": "per",
+        "challenge": [],
+        "group": { "completedBy": [], "assignedUsers": [] },
+        "byHabitica": false,
+        "checklist": [],
+        "reminders": [],
+        "_id": "c1e094ff-383e-4ea2-993d-12713d2f1656",
+        "createdAt": "2024-12-10T08:59:31.138Z",
+        "updatedAt": "2024-12-10T08:59:31.138Z",
+        "userId": "49de7a0b-cad8-4788-830b-8299c34e96a1",
+        "id": "c1e094ff-383e-4ea2-993d-12713d2f1656"
+      },
+      "notifications": [],
+      "userV": 2756,
+      "appVersion": "5.31.1"
+    }
+  },
+  "uuid": "8988dfa6-2c54-445f-aefc-74cf0f14affc"
+}

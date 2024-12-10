@@ -124,6 +124,27 @@ final class CreateCommandTest extends AppTestCase
                 ['text' => 'no-collapse', '--checklist' => ['no-collapse'], '--no-checklist-collapse' => true],
                 'cd9f7af4-66bb-4af6-b40b-389cfdf62097',
             ],
+
+            'con' => [
+                __DIR__.'/wiremock/create/attribute/const.json',
+                ['text' => 'con', '--attribute' => 'con'],
+                '93e5d93e-97e1-49bf-ac81-6542d479b5b4',
+            ],
+            'int' => [
+                __DIR__.'/wiremock/create/attribute/int.json',
+                ['text' => 'int', '--attribute' => 'int'],
+                '370ce498-65c0-466f-845e-6e3b91314f47',
+            ],
+            'per' => [
+                __DIR__.'/wiremock/create/attribute/per.json',
+                ['text' => 'per', '--attribute' => 'per'],
+                'c1e094ff-383e-4ea2-993d-12713d2f1656',
+            ],
+            'str' => [
+                __DIR__.'/wiremock/create/attribute/str.json',
+                ['text' => 'str', '--attribute' => 'str'],
+                'a99b7f21-ef88-433f-9ac7-3eefffb1b041',
+            ],
         ];
     }
 
@@ -200,5 +221,22 @@ final class CreateCommandTest extends AppTestCase
                     EOF,
             ],
         ];
+    }
+
+    public function testSuggestAttribute(): void
+    {
+        $actual = CommandTester::completion('task:create', 3, ['--attribute']);
+
+        $expected = new CommandResult(
+            output: <<<'EOF'
+                str
+                int
+                per
+                con
+
+                EOF,
+        );
+
+        self::assertEquals($expected, $actual);
     }
 }

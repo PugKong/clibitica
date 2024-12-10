@@ -1,0 +1,48 @@
+{
+  "id": "e6d72ffe-2741-4b98-8602-96a819457b0a",
+  "name": "create/attribute/str",
+  "request": {
+    "url": "/api/v3/tasks/user",
+    "method": "POST",
+    "headers": {
+      "Accept": { "equalTo": "application/json", "caseInsensitive": true },
+      "Content-Type": { "equalTo": "application/json", "caseInsensitive": true },
+      "X-Client": { "equalTo": "49de7a0b-cad8-4788-830b-8299c34e96a1 - clibitica", "caseInsensitive": true },
+      "X-Api-Key": { "equalTo": "api key", "caseInsensitive": true },
+      "X-Api-User": { "equalTo": "49de7a0b-cad8-4788-830b-8299c34e96a1", "caseInsensitive": true }
+    },
+    "bodyPatterns": [{ "equalToJson": { "type": "todo", "text": "str", "attribute": "str" } }]
+  },
+  "response": {
+    "status": 201,
+    "headers": { "Content-Type": "application/json; charset=utf-8" },
+    "jsonBody": {
+      "success": true,
+      "data": {
+        "completed": false,
+        "collapseChecklist": false,
+        "type": "todo",
+        "text": "str",
+        "notes": "",
+        "tags": [],
+        "value": 0,
+        "priority": 1,
+        "attribute": "str",
+        "challenge": [],
+        "group": { "completedBy": [], "assignedUsers": [] },
+        "byHabitica": false,
+        "checklist": [],
+        "reminders": [],
+        "_id": "a99b7f21-ef88-433f-9ac7-3eefffb1b041",
+        "createdAt": "2024-12-10T08:59:11.628Z",
+        "updatedAt": "2024-12-10T08:59:11.628Z",
+        "userId": "49de7a0b-cad8-4788-830b-8299c34e96a1",
+        "id": "a99b7f21-ef88-433f-9ac7-3eefffb1b041"
+      },
+      "notifications": [],
+      "userV": 2753,
+      "appVersion": "5.31.1"
+    }
+  },
+  "uuid": "e6d72ffe-2741-4b98-8602-96a819457b0a"
+}

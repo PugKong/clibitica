@@ -37,6 +37,14 @@ final readonly class Suggestions
     }
 
     /**
+     * @return list<string>
+     */
+    public function attribute(): array
+    {
+        return array_map(fn (Task\Attribute $attribute) => $attribute->value, Task\Attribute::cases());
+    }
+
+    /**
      * @return list<Suggestion>
      */
     public function tagId(CompletionInput $input): array

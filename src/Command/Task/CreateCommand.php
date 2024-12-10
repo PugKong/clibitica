@@ -7,6 +7,7 @@ namespace App\Command\Task;
 use App\Command\Suggestions;
 use App\Command\TaskDifficulty;
 use App\Habitica\Habitica;
+use App\Habitica\Task\Attribute;
 use App\Habitica\Task\Create\Request;
 use App\Habitica\Task\Create\RequestChecklist;
 use App\Habitica\Task\Type;
@@ -87,6 +88,13 @@ final class CreateCommand extends Command
             mode: InputOption::VALUE_NEGATABLE,
             description: 'Determines if a checklist will be displayed',
         );
+
+        $this->addOption(
+            name: 'attribute',
+            mode: InputOption::VALUE_OPTIONAL,
+            description: 'User\'s attribute to use, options are: "str", "int", "per", "con"',
+            suggestedValues: $this->suggestions->attribute(...),
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -102,6 +110,7 @@ final class CreateCommand extends Command
         Assert::isArray($checklist = $input->getOption('checklist'));
         Assert::allString($checklist);
         Assert::nullOrBoolean($checklistCollapse = $input->getOption('checklist-collapse'));
+        Assert::nullOrString($attribute = $input->getOption('attribute'));
 
         $response = $this->habitica->createTask(new Request(
             type: Type::from($type),
@@ -113,6 +122,7 @@ final class CreateCommand extends Command
             date: $date,
             checklist: array_map(fn (string $text) => new RequestChecklist($text), $checklist),
             collapseChecklist: $checklistCollapse,
+            attribute: null !== $attribute ? Attribute::from($attribute) : null,
         ));
 
         $output->writeln($response->data->id);
