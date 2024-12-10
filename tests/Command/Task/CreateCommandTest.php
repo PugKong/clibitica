@@ -188,6 +188,17 @@ final class CreateCommandTest extends AppTestCase
                 ['text' => 'every', '--type' => 'daily', '--frequency' => 'daily', '--every' => 10],
                 'e3968034-f267-4fba-8c20-d4478e44f218',
             ],
+
+            'days' => [
+                __DIR__.'/wiremock/create/days.json',
+                [
+                    'text' => 'days of month',
+                    '--type' => 'daily',
+                    '--frequency' => 'monthly',
+                    '--days-of-month' => [1, 10],
+                ],
+                '064de3cd-5acf-48a2-b739-a8c3c6c6d6b7',
+            ],
         ];
     }
 
