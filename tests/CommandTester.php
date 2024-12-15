@@ -8,6 +8,7 @@ use App\App;
 use App\Config;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Filesystem\Filesystem;
 
 use const PHP_EOL;
 
@@ -42,14 +43,20 @@ final readonly class CommandTester
      */
     private static function run(string $command, array $args): CommandResult
     {
-        $app = new App(Config::fromEnv());
+        $cacheDir = sys_get_temp_dir().'/clibitica-test/';
+        $app = new App(Config::fromEnv('Linux', ['XDG_CACHE_HOME' => $cacheDir]));
         $buffer = new BufferedOutput();
 
-        $code = $app->run(
-            input: new ArrayInput(['command' => $command, ...$args]),
-            output: $buffer,
-            autoExit: false,
-        );
+        try {
+            $code = $app->run(
+                input: new ArrayInput(['command' => $command, ...$args]),
+                output: $buffer,
+                autoExit: false,
+            );
+        } finally {
+            $fs = new Filesystem();
+            $fs->remove($cacheDir);
+        }
 
         $output = implode(
             PHP_EOL,

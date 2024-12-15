@@ -70,6 +70,7 @@ final class App
                 baseUrl: $this->config->habiticaBaseUrl,
                 apiKey: $this->config->habiticaApiKey,
                 apiUser: $this->config->habiticaApiUser,
+                cacheDir: $this->config->cacheDirectory.'/habitica',
             );
         }
 

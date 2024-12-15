@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http;
 
+use Symfony\Component\RateLimiter\LimiterInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
@@ -18,6 +19,7 @@ final class Http
     public function __construct(
         private readonly HttpClientInterface $client,
         private readonly SerializerInterface $serializer,
+        private readonly ?LimiterInterface $limiter = null,
     ) {
     }
 
@@ -107,6 +109,8 @@ final class Http
         if (null !== $this->body) {
             $options['body'] = $this->body;
         }
+
+        $this->limiter?->reserve()->wait();
 
         $response = $this->client->request($this->method, $this->path, $options);
         if ($response->getStatusCode() !== $this->status) {

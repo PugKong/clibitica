@@ -5,8 +5,14 @@ declare(strict_types=1);
 namespace App\Habitica;
 
 use App\Http\Http;
+use DateInterval;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\Lock\LockFactory;
+use Symfony\Component\Lock\Store\FlockStore;
 use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
+use Symfony\Component\RateLimiter\Policy\FixedWindowLimiter;
+use Symfony\Component\RateLimiter\Storage\CacheStorage;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
 use Symfony\Component\Serializer\Normalizer\BackedEnumNormalizer;
@@ -20,7 +26,7 @@ final readonly class Habitica
     {
     }
 
-    public static function create(string $baseUrl, string $apiKey, string $apiUser): self
+    public static function create(string $baseUrl, string $apiKey, string $apiUser, ?string $cacheDir = null): self
     {
         $client = HttpClient::createForBaseUri($baseUrl, [
             'headers' => [
@@ -42,7 +48,17 @@ final readonly class Habitica
             encoders: [new JsonEncoder()],
         );
 
-        return new self(new Http($client, $serializer));
+        $lockFactory = new LockFactory(new FlockStore($cacheDir.'/lock'));
+
+        $rateLimiter = new FixedWindowLimiter(
+            id: 'api',
+            limit: 30,
+            interval: new DateInterval('PT1M'),
+            storage: new CacheStorage(new FilesystemAdapter(directory: $cacheDir.'/rate-limiter-storage')),
+            lock: $lockFactory->createLock('api'),
+        );
+
+        return new self(new Http($client, $serializer, $rateLimiter));
     }
 
     public function createTask(Task\Create\Request $request): Task\Create\Response
