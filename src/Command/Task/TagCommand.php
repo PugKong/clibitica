@@ -13,9 +13,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Webmozart\Assert\Assert;
 
-#[AsCommand(name: 'task:tag:add', description: 'Add a tag to a task')]
-final class TagAddCommand extends Command
+#[AsCommand(name: 'task:tag', description: 'Manage tags for a task')]
+final class TagCommand extends Command
 {
+    private const array ACTIONS = ['add', 'delete'];
+
     public function __construct(private readonly Habitica $habitica, private readonly Suggestions $suggestions)
     {
         parent::__construct();
@@ -24,6 +26,13 @@ final class TagAddCommand extends Command
     protected function configure(): void
     {
         parent::configure();
+
+        $this->addArgument(
+            name: 'action',
+            mode: InputArgument::REQUIRED,
+            description: 'Action "add" or "delete"',
+            suggestedValues: self::ACTIONS,
+        );
 
         $this->addArgument(
             name: 'task',
@@ -42,10 +51,15 @@ final class TagAddCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        Assert::oneOf($action = $input->getArgument('action'), self::ACTIONS);
         Assert::string($taskId = $input->getArgument('task'));
         Assert::string($tagId = $input->getArgument('tag'));
 
-        $this->habitica->addTagToTask($taskId, $tagId);
+        if ('add' === $action) {
+            $this->habitica->addTagToTask($taskId, $tagId);
+        } else {
+            $this->habitica->deleteTagFromTask($taskId, $tagId);
+        }
 
         return self::SUCCESS;
     }

@@ -9,13 +9,37 @@ use App\Tests\CommandResult;
 use App\Tests\CommandTester;
 use App\WireMock\Request\List\ResponseRequest;
 
-class TagDeleteCommandTest extends AppTestCase
+final class TagCommandTest extends AppTestCase
 {
-    public function testSuccess(): void
+    public function testAdd(): void
+    {
+        $this->wireMock->addMappingFromFile(__DIR__.'/wiremock/tag/add.json');
+
+        $actual = CommandTester::command('task:tag', [
+            'action' => 'add',
+            'task' => $task = '0e2f79f8-26e6-49da-bd63-f83326179dd3',
+            'tag' => $tag = '8a43dcd2-ed0a-44c9-80e0-cf8dd122f631',
+        ]);
+
+        self::assertEquals(new CommandResult(), $actual);
+        self::assertSame(
+            [['method' => 'POST', 'url' => "/api/v3/tasks/$task/tags/$tag"]],
+            array_map(
+                fn (ResponseRequest $request) => [
+                    'method' => $request->request->method,
+                    'url' => $request->request->url,
+                ],
+                $this->wireMock->listRequests()->requests,
+            ),
+        );
+    }
+
+    public function testDelete(): void
     {
         $this->wireMock->addMappingFromFile(__DIR__.'/wiremock/tag/delete.json');
 
-        $actual = CommandTester::command('task:tag:delete', [
+        $actual = CommandTester::command('task:tag', [
+            'action' => 'delete',
             'task' => $task = '0e2f79f8-26e6-49da-bd63-f83326179dd3',
             'tag' => $tag = '8a43dcd2-ed0a-44c9-80e0-cf8dd122f631',
         ]);
@@ -33,11 +57,26 @@ class TagDeleteCommandTest extends AppTestCase
         );
     }
 
+    public function testSuggestAction(): void
+    {
+        $actual = CommandTester::completion('task:tag', 2);
+
+        $expected = new CommandResult(
+            output: <<<'EOF'
+                add
+                delete
+
+                EOF,
+        );
+
+        self::assertEquals($expected, $actual);
+    }
+
     public function testSuggestTaskId(): void
     {
         $this->wireMock->addMappingFromFile(__DIR__.'/wiremock/list.json');
 
-        $actual = CommandTester::completion('task:tag:delete', 2);
+        $actual = CommandTester::completion('task:tag', 3, ['']);
 
         $expected = new CommandResult(
             output: <<<'EOF'
@@ -57,7 +96,7 @@ class TagDeleteCommandTest extends AppTestCase
     {
         $this->wireMock->addMappingFromFile(__DIR__.'/wiremock/tag/list.json');
 
-        $actual = CommandTester::completion('task:tag:delete', 3, ['']);
+        $actual = CommandTester::completion('task:tag', 4, ['', '']);
 
         $expected = new CommandResult(
             output: <<<'EOF'

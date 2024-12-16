@@ -36,8 +36,7 @@ final class App
             'task:list' => fn () => new Command\Task\ListCommand($this->habitica(), $this->suggestions()),
             'task:score:up' => fn () => new Command\Task\ScoreUpCommand($this->habitica(), $this->suggestions()),
             'task:score:down' => fn () => new Command\Task\ScoreDownCommand($this->habitica(), $this->suggestions()),
-            'task:tag:add' => fn () => new Command\Task\TagAddCommand($this->habitica(), $this->suggestions()),
-            'task:tag:delete' => fn () => new Command\Task\TagDeleteCommand($this->habitica(), $this->suggestions()),
+            'task:tag' => fn () => new Command\Task\TagCommand($this->habitica(), $this->suggestions()),
 
             'tag:create' => fn () => new Command\Tag\CreateCommand($this->habitica()),
             'tag:delete' => fn () => new Command\Tag\DeleteCommand($this->habitica(), $this->suggestions()),
