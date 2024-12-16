@@ -37,22 +37,21 @@ Options:
   -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
 
 Available commands:
-  completion       Dump the shell completion script
-  help             Display help for a command
-  list             List commands
+  completion   Dump the shell completion script
+  help         Display help for a command
+  list         List commands
  tag
-  tag:create       Create a new tag
-  tag:delete       Delete a tag
-  tag:list         Get tags
+  tag:create   Create a new tag
+  tag:delete   Delete a tag
+  tag:list     Get tags
  task
-  task:create      Create a new task
-  task:delete      Delete a task
-  task:list        List tasks
-  task:score:down  Score task down
-  task:score:up    Score task up
-  task:tag         Manage tags for a task
+  task:create  Create a new task
+  task:delete  Delete a task
+  task:list    List tasks
+  task:score   Score task up or down
+  task:tag     Manage tags for a task
  user
-  user:stats       Show user stats
+  user:stats   Show user stats
 ```
 
 ## Contributing
