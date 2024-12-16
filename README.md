@@ -22,7 +22,7 @@ Run `clibitica` to see the available commands:
 
 ```
 $ clibitica
-clibitica 0.0.8
+clibitica 0.0.9
 
 Usage:
   command [options] [arguments]
