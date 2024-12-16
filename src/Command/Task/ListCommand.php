@@ -7,7 +7,8 @@ namespace App\Command\Task;
 use App\Command\Suggestions;
 use App\Command\TaskDifficulty;
 use App\Habitica\Habitica;
-use App\Habitica\Task\Type;
+use App\Habitica\Tag;
+use App\Habitica\Task;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -44,22 +45,54 @@ final class ListCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $tasks = $this->filterTasks($input, $this->habitica->listTasks()->data);
+        $tags = $this->makeTagsMap($this->habitica->listTags()->data);
+
+        $headers = ['id', 'type', 'difficulty', 'due', 'tags', 'text'];
+        $rows = [];
+        foreach ($tasks as $task) {
+            $rows[] = $this->makeRow($tags, $task);
+        }
+
+        $io = new SymfonyStyle($input, $output);
+        $io->table($headers, $rows);
+
+        return self::SUCCESS;
+    }
+
+    /**
+     * @param Tag\List\ResponseData[] $tags
+     *
+     * @return array<string, string>
+     */
+    private function makeTagsMap(array $tags): array
+    {
+        $result = [];
+        foreach ($tags as $tag) {
+            $result[$tag->id] = $tag->name;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param Task\List\ResponseData[] $tasks
+     *
+     * @return Task\List\ResponseData[]
+     */
+    private function filterTasks(InputInterface $input, array $tasks): array
+    {
         Assert::nullOrString($type = $input->getOption('type'));
         Assert::boolean($all = $input->getOption('all'));
 
         if (null !== $type) {
-            $type = Type::from($type);
+            $type = Task\Type::from($type);
         }
 
-        $tags = [];
-        foreach ($this->habitica->listTags()->data as $tag) {
-            $tags[$tag->id] = $tag->name;
-        }
-
-        $tasks = [];
-        foreach ($this->habitica->listTasks()->data as $task) {
-            if (Type::REWARD === $type && Type::REWARD === $task->type) {
-                $tasks[] = $task;
+        $result = [];
+        foreach ($tasks as $task) {
+            if (Task\Type::REWARD === $type && Task\Type::REWARD === $task->type) {
+                $result[] = $task;
 
                 continue;
             }
@@ -68,35 +101,43 @@ final class ListCommand extends Command
                 continue;
             }
 
-            if (!$all && Type::REWARD === $task->type) {
+            if (!$all && Task\Type::REWARD === $task->type) {
                 continue;
             }
 
-            if (!$all && Type::DAILY === $task->type && ($task->completed || false === $task->isDue)) {
+            if (!$all && Task\Type::DAILY === $task->type && ($task->completed || false === $task->isDue)) {
                 continue;
             }
 
-            $tasks[] = $task;
+            $result[] = $task;
         }
 
-        $headers = ['id', 'type', 'difficulty', 'due', 'tags', 'text'];
-        $rows = [];
-        foreach ($tasks as $task) {
-            $row = [];
+        return $result;
+    }
 
-            $row[] = substr($task->id, 0, 8);
-            $row[] = $task->type->value;
-            $row[] = TaskDifficulty::fromPriority($task->priority)->value;
-            $row[] = $task->date?->format('Y-m-d');
-            $row[] = implode(', ', array_map(fn (string $id) => $tags[$id] ?? $id, $task->tags));
-            $row[] = $task->text;
+    /**
+     * @param array<string, string> $tags
+     *
+     * @return mixed[]
+     */
+    private function makeRow(array $tags, Task\List\ResponseData $task): array
+    {
+        $row = [];
 
-            $rows[] = $row;
+        $row[] = substr($task->id, 0, 8);
+        $row[] = $task->type->value;
+        $row[] = TaskDifficulty::fromPriority($task->priority)->value;
+        $row[] = $task->date?->format('Y-m-d');
+        $row[] = implode(', ', array_map(fn (string $id) => $tags[$id] ?? $id, $task->tags));
+
+        $text = $task->text;
+        if (Task\Type::HABIT === $task->type) {
+            $text .= " (up: $task->counterUp; down: $task->counterDown)";
+        } elseif (Task\Type::DAILY === $task->type) {
+            $text .= " (streak: $task->streak)";
         }
+        $row[] = $text;
 
-        $io = new SymfonyStyle($input, $output);
-        $io->table($headers, $rows);
-
-        return self::SUCCESS;
+        return $row;
     }
 }

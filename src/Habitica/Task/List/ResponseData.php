@@ -19,6 +19,9 @@ final readonly class ResponseData
         public array $tags = [],
         public ?bool $isDue = null,
         public ?bool $completed = null,
+        public ?int $counterUp = null,
+        public ?int $counterDown = null,
+        public ?int $streak = null,
     ) {
     }
 }

@@ -34,14 +34,14 @@ final class ListCommandTest extends AppTestCase
             'default' => [
                 [],
                 <<<'EOF'
-                     ---------- ------- ------------ ------------ --------------- ---------
+                     ---------- ------- ------------ ------------ --------------- -------------------------
                       id         type    difficulty   due          tags            text
-                     ---------- ------- ------------ ------------ --------------- ---------
-                      22c23065   habit   trivial                                   habit
-                      bda4bfdd   daily   easy                                      daily
+                     ---------- ------- ------------ ------------ --------------- -------------------------
+                      22c23065   habit   trivial                                   habit (up: 10; down: 5)
+                      bda4bfdd   daily   easy                                      daily (streak: 10)
                       e3e8614c   todo    medium       2024-12-28   first, second   todo
                       594980f9   todo    hard                                      default
-                     ---------- ------- ------------ ------------ --------------- ---------
+                     ---------- ------- ------------ ------------ --------------- -------------------------
 
 
                     EOF,
@@ -49,17 +49,17 @@ final class ListCommandTest extends AppTestCase
             'all' => [
                 ['--all' => true],
                 <<<'EOF'
-                     ---------- -------- ------------ ------------ --------------- ---------
+                     ---------- -------- ------------ ------------ --------------- -------------------------
                       id         type     difficulty   due          tags            text
-                     ---------- -------- ------------ ------------ --------------- ---------
-                      22c23065   habit    trivial                                   habit
-                      bda4bfdd   daily    easy                                      daily
-                      967371bc   daily    easy                                      done
-                      6694402e   daily    easy                                      not due
+                     ---------- -------- ------------ ------------ --------------- -------------------------
+                      22c23065   habit    trivial                                   habit (up: 10; down: 5)
+                      bda4bfdd   daily    easy                                      daily (streak: 10)
+                      967371bc   daily    easy                                      done (streak: 0)
+                      6694402e   daily    easy                                      not due (streak: 0)
                       e3e8614c   todo     medium       2024-12-28   first, second   todo
                       594980f9   todo     hard                                      default
                       60d8c0ae   reward   easy                                      reward
-                     ---------- -------- ------------ ------------ --------------- ---------
+                     ---------- -------- ------------ ------------ --------------- -------------------------
 
 
                     EOF,
@@ -67,11 +67,11 @@ final class ListCommandTest extends AppTestCase
             'habit' => [
                 ['--type' => 'habit'],
                 <<<'EOF'
-                     ---------- ------- ------------ ----- ------ -------
+                     ---------- ------- ------------ ----- ------ -------------------------
                       id         type    difficulty   due   tags   text
-                     ---------- ------- ------------ ----- ------ -------
-                      22c23065   habit   trivial                   habit
-                     ---------- ------- ------------ ----- ------ -------
+                     ---------- ------- ------------ ----- ------ -------------------------
+                      22c23065   habit   trivial                   habit (up: 10; down: 5)
+                     ---------- ------- ------------ ----- ------ -------------------------
 
 
                     EOF,
@@ -79,11 +79,11 @@ final class ListCommandTest extends AppTestCase
             'daily' => [
                 ['--type' => 'daily'],
                 <<<'EOF'
-                     ---------- ------- ------------ ----- ------ -------
+                     ---------- ------- ------------ ----- ------ --------------------
                       id         type    difficulty   due   tags   text
-                     ---------- ------- ------------ ----- ------ -------
-                      bda4bfdd   daily   easy                      daily
-                     ---------- ------- ------------ ----- ------ -------
+                     ---------- ------- ------------ ----- ------ --------------------
+                      bda4bfdd   daily   easy                      daily (streak: 10)
+                     ---------- ------- ------------ ----- ------ --------------------
 
 
                     EOF,
@@ -91,13 +91,13 @@ final class ListCommandTest extends AppTestCase
             'all daily' => [
                 ['--type' => 'daily', '--all' => true],
                 <<<'EOF'
-                     ---------- ------- ------------ ----- ------ ---------
+                     ---------- ------- ------------ ----- ------ ---------------------
                       id         type    difficulty   due   tags   text
-                     ---------- ------- ------------ ----- ------ ---------
-                      bda4bfdd   daily   easy                      daily
-                      967371bc   daily   easy                      done
-                      6694402e   daily   easy                      not due
-                     ---------- ------- ------------ ----- ------ ---------
+                     ---------- ------- ------------ ----- ------ ---------------------
+                      bda4bfdd   daily   easy                      daily (streak: 10)
+                      967371bc   daily   easy                      done (streak: 0)
+                      6694402e   daily   easy                      not due (streak: 0)
+                     ---------- ------- ------------ ----- ------ ---------------------
 
 
                     EOF,
