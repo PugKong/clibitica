@@ -1,0 +1,48 @@
+{
+  "id": "e7e948d6-5af3-46b4-9cb3-758fad6f0ea9",
+  "name": "info/todo",
+  "request": {
+    "url": "/api/v3/tasks/09fd9cd1-448d-4c7a-9d20-46f8cd6f7fca",
+    "method": "GET",
+    "headers": {
+      "Accept": { "equalTo": "application/json", "caseInsensitive": true },
+      "Content-Type": { "equalTo": "application/json", "caseInsensitive": true },
+      "X-Client": { "equalTo": "49de7a0b-cad8-4788-830b-8299c34e96a1 - clibitica", "caseInsensitive": true },
+      "X-Api-Key": { "equalTo": "api key", "caseInsensitive": true },
+      "X-Api-User": { "equalTo": "49de7a0b-cad8-4788-830b-8299c34e96a1", "caseInsensitive": true }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": { "Content-Type": "application/json; charset=utf-8" },
+    "jsonBody": {
+      "success": true,
+      "data": {
+        "challenge": [],
+        "group": { "completedBy": [], "assignedUsers": [] },
+        "_id": "09fd9cd1-448d-4c7a-9d20-46f8cd6f7fca",
+        "completed": false,
+        "collapseChecklist": false,
+        "date": "2024-12-28T00:00:00.000Z",
+        "checklist": [],
+        "type": "todo",
+        "text": "todo",
+        "notes": "",
+        "tags": [],
+        "value": 0,
+        "priority": 2,
+        "attribute": "con",
+        "reminders": [],
+        "byHabitica": false,
+        "createdAt": "2024-12-18T12:52:32.007Z",
+        "updatedAt": "2024-12-18T12:52:32.007Z",
+        "userId": "49de7a0b-cad8-4788-830b-8299c34e96a1",
+        "id": "09fd9cd1-448d-4c7a-9d20-46f8cd6f7fca"
+      },
+      "notifications": [],
+      "userV": 2872,
+      "appVersion": "5.32.0"
+    }
+  },
+  "uuid": "e7e948d6-5af3-46b4-9cb3-758fad6f0ea9"
+}

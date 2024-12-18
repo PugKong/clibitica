@@ -58,7 +58,7 @@ final class ListCommandTest extends AppTestCase
                       6694402e   daily    easy                                      not due (streak: 0)
                       e3e8614c   todo     medium       2024-12-28   first, second   todo
                       594980f9   todo     hard                                      default
-                      60d8c0ae   reward   easy                                      reward
+                      60d8c0ae   reward                                             reward
                      ---------- -------- ------------ ------------ --------------- -------------------------
 
 
@@ -121,7 +121,7 @@ final class ListCommandTest extends AppTestCase
                      ---------- -------- ------------ ----- ------ --------
                       id         type     difficulty   due   tags   text
                      ---------- -------- ------------ ----- ------ --------
-                      60d8c0ae   reward   easy                      reward
+                      60d8c0ae   reward                             reward
                      ---------- -------- ------------ ----- ------ --------
 
 

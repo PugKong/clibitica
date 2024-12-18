@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Habitica\Task\Create;
+namespace App\Habitica\Task\Get;
 
 use App\Habitica\Task\Item;
 

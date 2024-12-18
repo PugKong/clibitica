@@ -1,0 +1,65 @@
+{
+  "id": "a32a9953-ccaf-4fe5-8c39-e0a76bf3175e",
+  "name": "info/weeks-of-month",
+  "request": {
+    "url": "/api/v3/tasks/2d0ddf10-69fa-4ce2-b38b-617bf5d6ce55",
+    "method": "GET",
+    "headers": {
+      "Accept": { "equalTo": "application/json", "caseInsensitive": true },
+      "Content-Type": { "equalTo": "application/json", "caseInsensitive": true },
+      "X-Client": { "equalTo": "49de7a0b-cad8-4788-830b-8299c34e96a1 - clibitica", "caseInsensitive": true },
+      "X-Api-Key": { "equalTo": "api key", "caseInsensitive": true },
+      "X-Api-User": { "equalTo": "49de7a0b-cad8-4788-830b-8299c34e96a1", "caseInsensitive": true }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": { "Content-Type": "application/json; charset=utf-8" },
+    "jsonBody": {
+      "success": true,
+      "data": {
+        "repeat": { "m": false, "t": false, "w": false, "th": true, "f": false, "s": false, "su": false },
+        "challenge": [],
+        "group": { "completedBy": [], "assignedUsers": [] },
+        "_id": "2d0ddf10-69fa-4ce2-b38b-617bf5d6ce55",
+        "frequency": "monthly",
+        "everyX": 1,
+        "startDate": "2024-12-18T21:00:00.000Z",
+        "streak": 0,
+        "daysOfMonth": [],
+        "weeksOfMonth": [2],
+        "nextDue": [
+          "2025-01-15T21:00:00.000Z",
+          "2025-02-19T21:00:00.000Z",
+          "2025-03-19T21:00:00.000Z",
+          "2025-04-16T21:00:00.000Z",
+          "2025-05-14T21:00:00.000Z",
+          "2025-06-18T21:00:00.000Z"
+        ],
+        "yesterDaily": true,
+        "history": [],
+        "completed": false,
+        "collapseChecklist": false,
+        "checklist": [],
+        "type": "daily",
+        "text": "weeks of month",
+        "notes": "",
+        "tags": [],
+        "value": 0,
+        "priority": 1,
+        "attribute": "str",
+        "reminders": [],
+        "byHabitica": false,
+        "createdAt": "2024-12-19T14:15:25.198Z",
+        "updatedAt": "2024-12-19T14:15:43.642Z",
+        "userId": "49de7a0b-cad8-4788-830b-8299c34e96a1",
+        "isDue": true,
+        "id": "2d0ddf10-69fa-4ce2-b38b-617bf5d6ce55"
+      },
+      "notifications": [],
+      "userV": 2886,
+      "appVersion": "5.32.0"
+    }
+  },
+  "uuid": "a32a9953-ccaf-4fe5-8c39-e0a76bf3175e"
+}

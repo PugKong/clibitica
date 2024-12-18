@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Command\Task;
 
 use App\Command\Suggestions;
-use App\Command\TaskDifficulty;
 use App\Habitica\Habitica;
 use App\Habitica\Tag;
 use App\Habitica\Task;
@@ -76,9 +75,9 @@ final class ListCommand extends Command
     }
 
     /**
-     * @param Task\List\ResponseData[] $tasks
+     * @param Task\Item[] $tasks
      *
-     * @return Task\List\ResponseData[]
+     * @return Task\Item[]
      */
     private function filterTasks(InputInterface $input, array $tasks): array
     {
@@ -105,7 +104,7 @@ final class ListCommand extends Command
                 continue;
             }
 
-            if (!$all && Task\Type::DAILY === $task->type && ($task->completed || false === $task->isDue)) {
+            if (!$all && $task instanceof Task\Daily && ($task->completed || false === $task->isDue)) {
                 continue;
             }
 
@@ -120,23 +119,20 @@ final class ListCommand extends Command
      *
      * @return mixed[]
      */
-    private function makeRow(array $tags, Task\List\ResponseData $task): array
+    private function makeRow(array $tags, Task\Item $task): array
     {
         $row = [];
 
         $row[] = substr($task->id, 0, 8);
         $row[] = $task->type->value;
-        $row[] = TaskDifficulty::fromPriority($task->priority)->value;
-        $row[] = $task->date?->format('Y-m-d');
+        $row[] = $task instanceof Task\Task ? $task->difficulty->value : null;
+        $row[] = $task instanceof Task\Todo ? $task->date?->format('Y-m-d') : null;
         $row[] = implode(', ', array_map(fn (string $id) => $tags[$id] ?? $id, $task->tags));
-
-        $text = $task->text;
-        if (Task\Type::HABIT === $task->type) {
-            $text .= " (up: $task->counterUp; down: $task->counterDown)";
-        } elseif (Task\Type::DAILY === $task->type) {
-            $text .= " (streak: $task->streak)";
-        }
-        $row[] = $text;
+        $row[] = $task->text.match ($task::class) {
+            Task\Habit::class => " (up: $task->counterUp; down: $task->counterDown)",
+            Task\Daily::class => " (streak: $task->streak)",
+            default => '',
+        };
 
         return $row;
     }

@@ -15,6 +15,10 @@ use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
 use Symfony\Component\RateLimiter\Policy\FixedWindowLimiter;
 use Symfony\Component\RateLimiter\Storage\CacheStorage;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Mapping\ClassDiscriminatorFromClassMetadata;
+use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
+use Symfony\Component\Serializer\Mapping\Loader\AttributeLoader;
+use Symfony\Component\Serializer\NameConverter\MetadataAwareNameConverter;
 use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
 use Symfony\Component\Serializer\Normalizer\BackedEnumNormalizer;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
@@ -43,12 +47,20 @@ final readonly class Habitica
             ],
         ]);
 
+        $classMetadataFactory = new ClassMetadataFactory(new AttributeLoader());
+
         $serializer = new Serializer(
             normalizers: [
+                new Task\DifficultyNormalizer(),
                 new ArrayDenormalizer(),
                 new DateTimeNormalizer(),
                 new BackedEnumNormalizer(),
-                new ObjectNormalizer(propertyTypeExtractor: new PhpDocExtractor()),
+                new ObjectNormalizer(
+                    classMetadataFactory: $classMetadataFactory,
+                    nameConverter: new MetadataAwareNameConverter($classMetadataFactory),
+                    propertyTypeExtractor: new PhpDocExtractor(),
+                    classDiscriminatorResolver: new ClassDiscriminatorFromClassMetadata($classMetadataFactory),
+                ),
             ],
             encoders: [new JsonEncoder()],
         );
@@ -105,6 +117,14 @@ final readonly class Habitica
                 ->fetchJson(Task\List\Response::class)
             ;
         });
+    }
+
+    public function task(string $id): Task\Get\Response
+    {
+        return $this->http
+            ->get('api/v3/tasks/{id}', ['id' => $id])
+            ->fetchJson(Task\Get\Response::class)
+        ;
     }
 
     public function scoreTask(string $id, Task\ScoreDirection $direction): void

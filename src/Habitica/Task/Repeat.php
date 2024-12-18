@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Habitica\Task\Create;
+namespace App\Habitica\Task;
 
-final readonly class RequestRepeat
+final readonly class Repeat
 {
     public function __construct(
         public bool $su,

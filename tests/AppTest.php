@@ -37,6 +37,7 @@ final class AppTest extends AppTestCase
                  task
                   task:create  Create a new task
                   task:delete  Delete a task
+                  task:info    Show task details
                   task:list    List tasks
                   task:score   Score task up or down
                   task:tag     Manage tags for a task

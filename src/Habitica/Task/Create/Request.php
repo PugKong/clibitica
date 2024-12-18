@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace App\Habitica\Task\Create;
 
 use App\Habitica\Task\Attribute;
+use App\Habitica\Task\Difficulty;
 use App\Habitica\Task\Frequency;
+use App\Habitica\Task\Repeat;
 use App\Habitica\Task\Type;
+use Symfony\Component\Serializer\Attribute\SerializedName;
 
 use function count;
 
@@ -22,7 +25,7 @@ final readonly class Request
         public Type $type,
         public string $text,
         array $tags = [],
-        int|float|null $priority = null,
+        ?Difficulty $difficulty = null,
         ?float $value = null,
         ?string $notes = null,
         ?string $date = null,
@@ -30,7 +33,7 @@ final readonly class Request
         ?bool $collapseChecklist = null,
         ?Attribute $attribute = null,
         ?Frequency $frequency = null,
-        ?RequestRepeat $repeat = null,
+        ?Repeat $repeat = null,
         ?int $everyX = null,
         array $daysOfMonth = [],
         array $weeksOfMonth = [],
@@ -40,8 +43,8 @@ final readonly class Request
             $this->tags = $tags;
         }
 
-        if (null !== $priority) {
-            $this->priority = $priority;
+        if (null !== $difficulty) {
+            $this->difficulty = $difficulty;
         }
 
         if (null !== $value) {
@@ -95,7 +98,8 @@ final readonly class Request
 
     /** @var string[] */
     public array $tags;
-    public int|float|null $priority;
+    #[SerializedName('priority')]
+    public ?Difficulty $difficulty;
     public float $value;
     public string $notes;
     public string $date;
@@ -104,7 +108,7 @@ final readonly class Request
     public bool $collapseChecklist;
     public Attribute $attribute;
     public Frequency $frequency;
-    public RequestRepeat $repeat;
+    public Repeat $repeat;
     public int $everyX;
     /** @var int[] */
     public array $daysOfMonth;

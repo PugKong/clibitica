@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\Command\Task;
 
 use App\Command\Suggestions;
-use App\Command\TaskDifficulty;
 use App\Habitica\Habitica;
 use App\Habitica\Task\Attribute;
 use App\Habitica\Task\Create\Request;
 use App\Habitica\Task\Create\RequestChecklist;
-use App\Habitica\Task\Create\RequestRepeat;
+use App\Habitica\Task\Difficulty;
 use App\Habitica\Task\Frequency;
+use App\Habitica\Task\Repeat;
 use App\Habitica\Task\Type;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -173,7 +173,7 @@ final class CreateCommand extends Command
             type: Type::from($type),
             text: $text,
             tags: $tags,
-            priority: null !== $difficulty ? TaskDifficulty::from($difficulty)->toPriority() : null,
+            difficulty: null !== $difficulty ? Difficulty::from($difficulty) : null,
             value: null !== $cost ? (float) $cost : null,
             notes: $notes,
             date: $date,
@@ -193,7 +193,7 @@ final class CreateCommand extends Command
         return self::SUCCESS;
     }
 
-    private function getRepeat(InputInterface $input): ?RequestRepeat
+    private function getRepeat(InputInterface $input): ?Repeat
     {
         Assert::isArray($repeat = $input->getOption('repeat'));
         if (0 === count($repeat)) {
@@ -202,7 +202,7 @@ final class CreateCommand extends Command
 
         Assert::allInArray($repeat, self::REPEAT);
 
-        return new RequestRepeat(
+        return new Repeat(
             su: in_array('su', $repeat, true),
             m: in_array('mo', $repeat, true),
             t: in_array('tu', $repeat, true),
