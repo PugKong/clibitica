@@ -125,7 +125,7 @@ final class CreateCommand extends Command
         $this->addOption(
             name: 'every',
             mode: InputOption::VALUE_OPTIONAL,
-            description: 'Value of frequency must be "daily", the number of days until this daily task is available again',
+            description: 'Only valid for type "daily", the number of days/weeks/months/years (depends on frequency) until this task is available again',
         );
 
         $this->addOption(
