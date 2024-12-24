@@ -7,7 +7,6 @@ namespace App\Tests\Command\InputMapper\Example\Argument;
 use App\Command\InputMapper\Argument;
 use App\Command\InputMapper\Suggestions;
 use App\Tests\Command\InputMapper\Example\Example;
-use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 
 final readonly class Description implements Example
@@ -33,11 +32,6 @@ final readonly class Description implements Example
 
     public static function cases(): array
     {
-        return [
-            'argument description' => [
-                new ArrayInput(['string' => 'foo']),
-                new self('foo'),
-            ],
-        ];
+        return [];
     }
 }

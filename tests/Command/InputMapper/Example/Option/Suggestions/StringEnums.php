@@ -8,7 +8,6 @@ use App\Command\InputMapper\Option;
 use App\Command\InputMapper\Suggestions;
 use App\Tests\Command\InputMapper\Example\Example;
 use App\Tests\Command\InputMapper\Example\StringEnum;
-use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputOption;
 
 final readonly class StringEnums implements Example
@@ -35,11 +34,6 @@ final readonly class StringEnums implements Example
 
     public static function cases(): array
     {
-        return [
-            'string enum option suggestion: array' => [
-                new ArrayInput(['--enum' => 'foo']),
-                new self(StringEnum::FOO),
-            ],
-        ];
+        return [];
     }
 }

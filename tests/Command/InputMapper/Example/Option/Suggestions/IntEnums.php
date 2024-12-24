@@ -8,7 +8,6 @@ use App\Command\InputMapper\Option;
 use App\Command\InputMapper\Suggestions;
 use App\Tests\Command\InputMapper\Example\Example;
 use App\Tests\Command\InputMapper\Example\IntEnum;
-use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputOption;
 
 final readonly class IntEnums implements Example
@@ -35,11 +34,6 @@ final readonly class IntEnums implements Example
 
     public static function cases(): array
     {
-        return [
-            'int enum option suggestion: array' => [
-                new ArrayInput(['--enum' => '42']),
-                new self(IntEnum::FORTY_TWO),
-            ],
-        ];
+        return [];
     }
 }

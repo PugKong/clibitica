@@ -7,7 +7,6 @@ namespace App\Tests\Command\InputMapper\Example\Argument\Suggestions;
 use App\Command\InputMapper\Argument;
 use App\Command\InputMapper\Suggestions;
 use App\Tests\Command\InputMapper\Example\Example;
-use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 
 final readonly class Floats implements Example
@@ -35,11 +34,6 @@ final readonly class Floats implements Example
 
     public static function cases(): array
     {
-        return [
-            'float argument suggestion: array' => [
-                new ArrayInput(['float' => '42.42']),
-                new self(42.42),
-            ],
-        ];
+        return [];
     }
 }

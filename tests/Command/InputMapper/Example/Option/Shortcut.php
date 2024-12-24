@@ -7,7 +7,6 @@ namespace App\Tests\Command\InputMapper\Example\Option;
 use App\Command\InputMapper\Option;
 use App\Command\InputMapper\Suggestions;
 use App\Tests\Command\InputMapper\Example\Example;
-use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputOption;
 
 final readonly class Shortcut implements Example
@@ -34,11 +33,6 @@ final readonly class Shortcut implements Example
 
     public static function cases(): array
     {
-        return [
-            'option shortcut' => [
-                new ArrayInput(['--string' => 'bar']),
-                new self('bar'),
-            ],
-        ];
+        return [];
     }
 }

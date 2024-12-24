@@ -14,116 +14,78 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\TypeInfo\TypeResolver\TypeResolver;
+
+use function strlen;
 
 class MapperTest extends TestCase
 {
-    #[DataProvider('mappingProvider')]
-    public function testMapping(ArrayInput $input, Example\Example $expected): void
+    /**
+     * @param class-string<Example\Example> $example
+     */
+    #[DataProvider('configureProvider')]
+    public function testConfigure(string $example): void
     {
         $suggestions = new FakeSuggestions();
-        $mapper = new Mapper(TypeResolver::create(), $suggestions);
-        $command = new FakeCommand($mapper, $expected::class);
+
+        $command = new FakeCommand(new Mapper(TypeResolver::create(), $suggestions), $example);
+        $definition = $command->getDefinition();
+
+        self::assertInput(
+            $example::expectedInput($suggestions),
+            [...$definition->getArguments(), ...$definition->getOptions()],
+        );
+    }
+
+    /**
+     * @return iterable<string, mixed>
+     */
+    public static function configureProvider(): iterable
+    {
+        foreach (self::examples() as $example) {
+            yield $example => [$example];
+        }
+    }
+
+    #[DataProvider('mapProvider')]
+    public function testMap(ArrayInput $input, Example\Example $expected): void
+    {
+        $command = new FakeCommand(new Mapper(TypeResolver::create(), new FakeSuggestions()), $expected::class);
 
         $command->run($input, new NullOutput());
 
-        $definition = $command->getDefinition();
-        self::assertInput(
-            $expected::expectedInput($suggestions),
-            [...$definition->getArguments(), ...$definition->getOptions()],
-        );
         self::assertObjectsSame($expected, $command->result);
     }
 
     /**
-     * @return array<string, mixed>
+     * @return iterable<string, mixed>
      */
-    public static function mappingProvider(): iterable
+    public static function mapProvider(): iterable
     {
-        yield from Example\Argument\String\Required::cases();
-        yield from Example\Argument\String\Optional::cases();
-        yield from Example\Argument\String\OptionalNullable::cases();
+        foreach (self::examples() as $example) {
+            yield from $example::cases();
+        }
+    }
 
-        yield from Example\Argument\Int\Required::cases();
-        yield from Example\Argument\Int\Optional::cases();
-        yield from Example\Argument\Int\OptionalNullable::cases();
+    /**
+     * @return iterable<class-string<Example\Example>>
+     */
+    private static function examples(): iterable
+    {
+        $finder = new Finder();
+        $finder->in(__DIR__.'/Example')->name('*.php');
+        foreach ($finder as $file) {
+            $class = $file->getRelativePathname();
+            $class = substr($class, 0, -strlen('.php'));
+            $class = __NAMESPACE__.'\\Example\\'.strtr($class, '/', '\\');
 
-        yield from Example\Argument\Float\Required::cases();
-        yield from Example\Argument\Float\Optional::cases();
-        yield from Example\Argument\Float\OptionalNullable::cases();
+            if (!is_subclass_of($class, Example\Example::class)) {
+                continue;
+            }
 
-        yield from Example\Argument\StringEnum\Required::cases();
-        yield from Example\Argument\StringEnum\Optional::cases();
-        yield from Example\Argument\StringEnum\OptionalNullable::cases();
-
-        yield from Example\Argument\IntEnum\Required::cases();
-        yield from Example\Argument\IntEnum\Optional::cases();
-        yield from Example\Argument\IntEnum\OptionalNullable::cases();
-
-        yield from Example\Argument\Array\StringRequired::cases();
-        yield from Example\Argument\Array\StringOptional::cases();
-        yield from Example\Argument\Array\IntRequired::cases();
-        yield from Example\Argument\Array\IntOptional::cases();
-        yield from Example\Argument\Array\FloatRequired::cases();
-        yield from Example\Argument\Array\FloatOptional::cases();
-        yield from Example\Argument\Array\StringEnumRequired::cases();
-        yield from Example\Argument\Array\StringEnumOptional::cases();
-        yield from Example\Argument\Array\IntEnumRequired::cases();
-        yield from Example\Argument\Array\IntEnumOptional::cases();
-
-        yield from Example\Argument\Suggestions\Strings::cases();
-        yield from Example\Argument\Suggestions\Service::cases();
-        yield from Example\Argument\Suggestions\Integers::cases();
-        yield from Example\Argument\Suggestions\Floats::cases();
-        yield from Example\Argument\Suggestions\StringEnums::cases();
-        yield from Example\Argument\Suggestions\IntEnums::cases();
-
-        yield from Example\Argument\Description::cases();
-
-        yield from Example\Option\String\Required::cases();
-        yield from Example\Option\String\Optional::cases();
-        yield from Example\Option\String\OptionalNullable::cases();
-
-        yield from Example\Option\Int\Required::cases();
-        yield from Example\Option\Int\Optional::cases();
-        yield from Example\Option\Int\OptionalNullable::cases();
-
-        yield from Example\Option\Float\Required::cases();
-        yield from Example\Option\Float\Optional::cases();
-        yield from Example\Option\Float\OptionalNullable::cases();
-
-        yield from Example\Option\StringEnum\Required::cases();
-        yield from Example\Option\StringEnum\Optional::cases();
-        yield from Example\Option\StringEnum\OptionalNullable::cases();
-
-        yield from Example\Option\IntEnum\Required::cases();
-        yield from Example\Option\IntEnum\Optional::cases();
-        yield from Example\Option\IntEnum\OptionalNullable::cases();
-
-        yield from Example\Option\Bool\Required::cases();
-        yield from Example\Option\Bool\Optional::cases();
-        yield from Example\Option\Bool\OptionalNullable::cases();
-
-        yield from Example\Option\Array\StringRequired::cases();
-        yield from Example\Option\Array\StringOptional::cases();
-        yield from Example\Option\Array\IntRequired::cases();
-        yield from Example\Option\Array\IntOptional::cases();
-        yield from Example\Option\Array\FloatRequired::cases();
-        yield from Example\Option\Array\FloatOptional::cases();
-        yield from Example\Option\Array\StringEnumRequired::cases();
-        yield from Example\Option\Array\StringEnumOptional::cases();
-        yield from Example\Option\Array\IntEnumRequired::cases();
-        yield from Example\Option\Array\IntEnumOptional::cases();
-
-        yield from Example\Option\Suggestions\Service::cases();
-        yield from Example\Option\Suggestions\Strings::cases();
-        yield from Example\Option\Suggestions\Integers::cases();
-        yield from Example\Option\Suggestions\Floats::cases();
-        yield from Example\Option\Suggestions\StringEnums::cases();
-        yield from Example\Option\Suggestions\IntEnums::cases();
-
-        yield from Example\Option\Description::cases();
-        yield from Example\Option\Shortcut::cases();
+            yield $class;
+        }
     }
 
     /**
