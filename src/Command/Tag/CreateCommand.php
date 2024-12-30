@@ -4,19 +4,18 @@ declare(strict_types=1);
 
 namespace App\Command\Tag;
 
+use App\Command\InputMapper\Mapper;
 use App\Habitica\Habitica;
 use App\Habitica\Tag\Create\Request;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Webmozart\Assert\Assert;
 
 #[AsCommand(name: 'tag:create', description: 'Create a new tag')]
 final class CreateCommand extends Command
 {
-    public function __construct(private readonly Habitica $habitica)
+    public function __construct(private readonly Mapper $mapper, private readonly Habitica $habitica)
     {
         parent::__construct();
     }
@@ -25,18 +24,14 @@ final class CreateCommand extends Command
     {
         parent::configure();
 
-        $this->addArgument(
-            name: 'name',
-            mode: InputArgument::REQUIRED,
-            description: 'The name of the tag to be added',
-        );
+        $this->mapper->configure($this, CreateInput::class);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        Assert::string($name = $input->getArgument('name'));
+        $data = $this->mapper->map($input, CreateInput::class);
 
-        $response = $this->habitica->createTag(new Request(name: $name));
+        $response = $this->habitica->createTag(new Request(name: $data->name));
 
         $output->writeln($response->data->id);
 

@@ -5,52 +5,32 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Habitica\Habitica;
-use App\Habitica\Task;
+use Closure;
+use RuntimeException;
 use Symfony\Component\Console\Completion\CompletionInput;
 use Symfony\Component\Console\Completion\Suggestion;
 
-final readonly class Suggestions
+use function sprintf;
+
+final readonly class Suggestions implements InputMapper\Suggestions
 {
     public function __construct(private Habitica $habitica)
     {
     }
 
-    /**
-     * @return list<string>
-     */
-    public function taskType(): array
+    public function suggester(string $name): Closure
     {
-        return array_map(fn (Task\Type $type) => $type->value, Task\Type::cases());
-    }
-
-    /**
-     * @return list<string>
-     */
-    public function taskDifficulty(): array
-    {
-        return array_map(fn (Task\Difficulty $difficulty) => $difficulty->value, Task\Difficulty::cases());
-    }
-
-    /**
-     * @return list<string>
-     */
-    public function attribute(): array
-    {
-        return array_map(fn (Task\Attribute $attribute) => $attribute->value, Task\Attribute::cases());
-    }
-
-    /**
-     * @return list<string>
-     */
-    public function frequency(): array
-    {
-        return array_map(fn (Task\Frequency $frequency) => $frequency->value, Task\Frequency::cases());
+        return match ($name) {
+            'tagId' => $this->tagId(...),
+            'taskId' => $this->taskId(...),
+            default => throw new RuntimeException(sprintf('Unknown suggester: %s', $name)),
+        };
     }
 
     /**
      * @return list<Suggestion>
      */
-    public function tagId(CompletionInput $input): array
+    private function tagId(CompletionInput $input): array
     {
         $response = $this->habitica->listTags();
 
@@ -68,7 +48,7 @@ final readonly class Suggestions
     /**
      * @return list<Suggestion>
      */
-    public function taskId(CompletionInput $input): array
+    private function taskId(CompletionInput $input): array
     {
         $response = $this->habitica->listTasks();
 

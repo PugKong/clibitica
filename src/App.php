@@ -8,6 +8,7 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Console\CommandLoader\FactoryCommandLoader;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\TypeInfo\TypeResolver\TypeResolver;
 
 final class App
 {
@@ -31,15 +32,15 @@ final class App
     private function commandLoader(): FactoryCommandLoader
     {
         return new FactoryCommandLoader([
-            'task:create' => fn () => new Command\Task\CreateCommand($this->habitica(), $this->suggestions()),
-            'task:delete' => fn () => new Command\Task\DeleteCommand($this->habitica(), $this->suggestions()),
-            'task:list' => fn () => new Command\Task\ListCommand($this->habitica(), $this->suggestions()),
-            'task:info' => fn () => new Command\Task\InfoCommand($this->habitica(), $this->suggestions()),
-            'task:score' => fn () => new Command\Task\ScoreCommand($this->habitica(), $this->suggestions()),
-            'task:tag' => fn () => new Command\Task\TagCommand($this->habitica(), $this->suggestions()),
+            'task:create' => fn () => new Command\Task\CreateCommand($this->mapper(), $this->habitica()),
+            'task:delete' => fn () => new Command\Task\DeleteCommand($this->mapper(), $this->habitica()),
+            'task:list' => fn () => new Command\Task\ListCommand($this->mapper(), $this->habitica()),
+            'task:info' => fn () => new Command\Task\InfoCommand($this->mapper(), $this->habitica()),
+            'task:score' => fn () => new Command\Task\ScoreCommand($this->mapper(), $this->habitica()),
+            'task:tag' => fn () => new Command\Task\TagCommand($this->mapper(), $this->habitica()),
 
-            'tag:create' => fn () => new Command\Tag\CreateCommand($this->habitica()),
-            'tag:delete' => fn () => new Command\Tag\DeleteCommand($this->habitica(), $this->suggestions()),
+            'tag:create' => fn () => new Command\Tag\CreateCommand($this->mapper(), $this->habitica()),
+            'tag:delete' => fn () => new Command\Tag\DeleteCommand($this->mapper(), $this->habitica()),
             'tag:list' => fn () => new Command\Tag\ListCommand($this->habitica()),
 
             'user:stats' => fn () => new Command\User\StatsCommand($this->habitica()),
@@ -60,6 +61,20 @@ final class App
         ]);
     }
 
+    private ?Command\InputMapper\Mapper $mapper = null;
+
+    private function mapper(): Command\InputMapper\Mapper
+    {
+        if (null === $this->mapper) {
+            $this->mapper = new Command\InputMapper\Mapper(
+                typeResolver: TypeResolver::create(),
+                suggestions: new Command\Suggestions($this->habitica()),
+            );
+        }
+
+        return $this->mapper;
+    }
+
     private ?Habitica\Habitica $habitica = null;
 
     private function habitica(): Habitica\Habitica
@@ -74,17 +89,6 @@ final class App
         }
 
         return $this->habitica;
-    }
-
-    private ?Command\Suggestions $suggestions = null;
-
-    private function suggestions(): Command\Suggestions
-    {
-        if (null === $this->suggestions) {
-            $this->suggestions = new Command\Suggestions($this->habitica());
-        }
-
-        return $this->suggestions;
     }
 
     private ?WireMock\WireMock $wireMock = null;

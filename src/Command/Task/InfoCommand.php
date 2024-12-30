@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command\Task;
 
-use App\Command\Suggestions;
+use App\Command\InputMapper\Mapper;
 use App\Habitica\Habitica;
 use App\Habitica\Tag;
 use App\Habitica\Task\Daily;
@@ -15,11 +15,9 @@ use App\Habitica\Task\Task;
 use App\Habitica\Task\Todo;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Webmozart\Assert\Assert;
 
 use function count;
 
@@ -28,7 +26,7 @@ use const PHP_EOL;
 #[AsCommand(name: 'task:info', description: 'Show task details')]
 final class InfoCommand extends Command
 {
-    public function __construct(private readonly Habitica $habitica, private readonly Suggestions $suggestions)
+    public function __construct(private readonly Mapper $mapper, private readonly Habitica $habitica)
     {
         parent::__construct();
     }
@@ -37,19 +35,14 @@ final class InfoCommand extends Command
     {
         parent::configure();
 
-        $this->addArgument(
-            name: 'id',
-            mode: InputArgument::REQUIRED,
-            description: 'The task id or alias',
-            suggestedValues: $this->suggestions->taskId(...),
-        );
+        $this->mapper->configure($this, InfoInput::class);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        Assert::string($id = $input->getArgument('id'));
+        $data = $this->mapper->map($input, InfoInput::class);
 
-        $task = $this->habitica->task($id)->data;
+        $task = $this->habitica->task($data->task)->data;
         $tags = $this->makeTagsMap($this->habitica->listTags()->data);
 
         $list = [];
