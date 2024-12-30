@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Command\Task;
 
+use App\Command\Command;
 use App\Command\InputMapper\Mapper;
 use App\Habitica\Habitica;
 use App\Habitica\Tag;
 use App\Habitica\Task;
 use Symfony\Component\Console\Attribute\AsCommand;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -29,7 +29,7 @@ final class ListCommand extends Command
         $this->mapper->configure($this, ListInput::class);
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    protected function do(InputInterface $input, OutputInterface $output): int
     {
         $tasks = $this->filterTasks($input, $this->habitica->listTasks()->data);
         $tags = $this->makeTagsMap($this->habitica->listTags()->data);
