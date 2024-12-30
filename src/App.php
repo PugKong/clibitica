@@ -25,6 +25,7 @@ final class App
         $application->setAutoExit($autoExit);
 
         $application->setCommandLoader($this->commandLoader());
+        $application->setDefaultCommand('task:list');
 
         return $application->run($input, $output);
     }

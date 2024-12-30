@@ -8,7 +8,7 @@ final class AppTest extends AppTestCase
 {
     public function testUsage(): void
     {
-        $actual = CommandTester::command('');
+        $actual = CommandTester::command('list');
 
         $expected = new CommandResult(
             output: <<<'EOF'
@@ -18,7 +18,7 @@ final class AppTest extends AppTestCase
                   command [options] [arguments]
 
                 Options:
-                  -h, --help            Display help for the given command. When no command is given display help for the list command
+                  -h, --help            Display help for the given command. When no command is given display help for the task:list command
                       --silent          Do not output any message
                   -q, --quiet           Only errors are displayed. All other output is suppressed
                   -V, --version         Display this application version

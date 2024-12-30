@@ -18,7 +18,7 @@ Download the prebuilt binary from [Releases](https://github.com/PugKong/clibitic
 
 Set the `CLIBITICA_API_KEY` and `CLIBITICA_API_USER` environment variables.
 
-Run `clibitica` to see the available commands:
+Run `clibitica list` to see the available commands:
 
 ```
 $ clibitica
@@ -28,7 +28,7 @@ Usage:
   command [options] [arguments]
 
 Options:
-  -h, --help            Display help for the given command. When no command is given display help for the list command
+  -h, --help            Display help for the given command. When no command is given display help for the task:list command
       --silent          Do not output any message
   -q, --quiet           Only errors are displayed. All other output is suppressed
   -V, --version         Display this application version
