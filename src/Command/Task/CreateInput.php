@@ -6,6 +6,7 @@ namespace App\Command\Task;
 
 use App\Command\InputMapper\Attribute\Argument;
 use App\Command\InputMapper\Attribute\Option;
+use App\Command\Suggestions;
 use App\Habitica\Task\Attribute;
 use App\Habitica\Task\Difficulty;
 use App\Habitica\Task\Frequency;
@@ -25,7 +26,7 @@ final readonly class CreateInput
         public string $text,
         #[Option('type', 'Task type, options are: "habit", "daily", "todo", "reward"')]
         public Type $type = Type::TODO,
-        #[Option('tags', 'UUID of tag', suggestions: 'tagId')]
+        #[Option('tags', 'UUID of tag', suggestions: Suggestions::TAG_ID)]
         public array $tags = [],
         #[Option('difficulty', 'Task difficulty, options are: "trivial", "easy", "medium", "hard"')]
         public ?Difficulty $difficulty = null,

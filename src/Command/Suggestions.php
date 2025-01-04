@@ -14,6 +14,9 @@ use function sprintf;
 
 final readonly class Suggestions implements InputMapper\Suggestions
 {
+    public const string TAG_ID = 'tagId';
+    public const string TASK_ID = 'taskId';
+
     public function __construct(private Habitica $habitica)
     {
     }
@@ -21,8 +24,8 @@ final readonly class Suggestions implements InputMapper\Suggestions
     public function suggester(string $name): Closure
     {
         return match ($name) {
-            'tagId' => $this->tagId(...),
-            'taskId' => $this->taskId(...),
+            self::TAG_ID => $this->tagId(...),
+            self::TASK_ID => $this->taskId(...),
             default => throw new RuntimeException(sprintf('Unknown suggester: %s', $name)),
         };
     }
