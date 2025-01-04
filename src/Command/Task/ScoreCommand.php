@@ -6,6 +6,7 @@ namespace App\Command\Task;
 
 use App\Command\Command;
 use App\Command\InputMapper\Mapper;
+use App\Command\Suggestions;
 use App\Habitica\Habitica;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,8 +15,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'task:score', description: 'Score task up or down')]
 final class ScoreCommand extends Command
 {
-    public function __construct(private readonly Mapper $mappper, private readonly Habitica $habitica)
-    {
+    public function __construct(
+        private readonly Mapper $mappper,
+        private readonly Habitica $habitica,
+        private readonly Suggestions $suggestions,
+    ) {
         parent::__construct();
     }
 
@@ -30,7 +34,7 @@ final class ScoreCommand extends Command
     {
         $data = $this->mappper->map($input, ScoreInput::class);
 
-        $this->habitica->scoreTask($data->task, $data->direction);
+        $this->habitica->scoreTask($this->suggestions->reverseTaskId($data->task), $data->direction);
 
         return self::SUCCESS;
     }

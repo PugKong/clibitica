@@ -12,18 +12,23 @@ use PHPUnit\Framework\Attributes\DataProvider;
 
 final class ScoreCommandTest extends AppTestCase
 {
-    public function testUp(): void
+    #[DataProvider('idProvider')]
+    public function testUp(string $id): void
     {
+        $this->wireMock->addMappingFromFile(__DIR__.'/wiremock/score/list.json');
         $this->wireMock->addMappingFromFile(__DIR__.'/wiremock/score/up.json');
 
         $actual = CommandTester::command('task:score', [
             'direction' => 'up',
-            'id' => $id = '7f2d8f8d-36f2-48f1-8e85-6366b0ab4903',
+            'id' => $id,
         ]);
 
         self::assertEquals(new CommandResult(), $actual);
         self::assertSame(
-            [['method' => 'POST', 'url' => "/api/v3/tasks/$id/score/up"]],
+            [
+                ['method' => 'POST', 'url' => '/api/v3/tasks/7f2d8f8d-36f2-48f1-8e85-6366b0ab4903/score/up'],
+                ['method' => 'GET', 'url' => '/api/v3/tasks/user'],
+            ],
             array_map(
                 fn (ResponseRequest $request) => [
                     'method' => $request->request->method,
@@ -34,18 +39,23 @@ final class ScoreCommandTest extends AppTestCase
         );
     }
 
-    public function testDown(): void
+    #[DataProvider('idProvider')]
+    public function testDown(string $id): void
     {
+        $this->wireMock->addMappingFromFile(__DIR__.'/wiremock/score/list.json');
         $this->wireMock->addMappingFromFile(__DIR__.'/wiremock/score/down.json');
 
         $actual = CommandTester::command('task:score', [
             'direction' => 'down',
-            'id' => $id = '7f2d8f8d-36f2-48f1-8e85-6366b0ab4903',
+            'id' => $id,
         ]);
 
         self::assertEquals(new CommandResult(), $actual);
         self::assertSame(
-            [['method' => 'POST', 'url' => "/api/v3/tasks/$id/score/down"]],
+            [
+                ['method' => 'POST', 'url' => '/api/v3/tasks/7f2d8f8d-36f2-48f1-8e85-6366b0ab4903/score/down'],
+                ['method' => 'GET', 'url' => '/api/v3/tasks/user'],
+            ],
             array_map(
                 fn (ResponseRequest $request) => [
                     'method' => $request->request->method,
@@ -54,6 +64,17 @@ final class ScoreCommandTest extends AppTestCase
                 $this->wireMock->listRequests()->requests,
             ),
         );
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public static function idProvider(): array
+    {
+        return [
+            'full id' => ['7f2d8f8d-36f2-48f1-8e85-6366b0ab4903'],
+            'suggested id' => ['7f2d-habit'],
+        ];
     }
 
     public function testSuggestDirection(): void
@@ -90,25 +111,32 @@ final class ScoreCommandTest extends AppTestCase
             'no filter' => [
                 '',
                 <<<'EOF'
-                    22c23065-84c1-4f4f-aede-2509a692eeb5	habit
-                    bda4bfdd-c38b-493b-8b2a-5dcad06034ba	daily
-                    e3e8614c-9758-4b78-b154-067586e7a06f	todo
-                    594980f9-f9da-4087-9bea-d7c48bb9ced1	default
-                    60d8c0ae-07d2-44f1-8d48-4bdf57e6f59e	reward
+                    22c2-habit	habit
+                    bda4-daily	daily
+                    e3e8-todo	todo
+                    5949-default	default
+                    60d8-reward	reward
 
                     EOF,
             ],
             '"def" filter' => [
                 'def',
                 <<<'EOF'
-                    594980f9-f9da-4087-9bea-d7c48bb9ced1	default
+                    5949-default	default
 
                     EOF,
             ],
             '"60d8c0ae" filter' => [
                 '60d8c0ae',
                 <<<'EOF'
-                    60d8c0ae-07d2-44f1-8d48-4bdf57e6f59e	reward
+                    60d8-reward	reward
+
+                    EOF,
+            ],
+            '"22c2-h" filter' => [
+                '22c2-h',
+                <<<'EOF'
+                    22c2-habit	habit
 
                     EOF,
             ],

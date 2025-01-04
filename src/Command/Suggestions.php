@@ -27,6 +27,32 @@ final readonly class Suggestions implements InputMapper\Suggestions
         };
     }
 
+    public function reverseTagId(string $id): string
+    {
+        $response = $this->habitica->listTags();
+
+        foreach ($response->data as $tag) {
+            if ($this->humanId($tag->id, $tag->name) === $id) {
+                return $tag->id;
+            }
+        }
+
+        return $id;
+    }
+
+    public function reverseTaskId(string $id): string
+    {
+        $response = $this->habitica->listTasks();
+
+        foreach ($response->data as $task) {
+            if ($this->humanId($task->id, $task->text) === $id) {
+                return $task->id;
+            }
+        }
+
+        return $id;
+    }
+
     /**
      * @return list<Suggestion>
      */
@@ -36,9 +62,12 @@ final readonly class Suggestions implements InputMapper\Suggestions
 
         $suggestions = [];
         foreach ($response->data as $tag) {
-            $needle = mb_strtolower($input->getCompletionValue());
-            if (str_contains(mb_strtolower($tag->id), $needle) || str_contains(mb_strtolower($tag->name), $needle)) {
-                $suggestions[] = new Suggestion($tag->id, $tag->name);
+            $id = $tag->id;
+            $title = $tag->name;
+            $humanId = $this->humanId($id, $title);
+
+            if ($this->contains($input->getCompletionValue(), $id, $title, $humanId)) {
+                $suggestions[] = new Suggestion($humanId, $title);
             }
         }
 
@@ -54,12 +83,33 @@ final readonly class Suggestions implements InputMapper\Suggestions
 
         $suggestions = [];
         foreach ($response->data as $task) {
-            $needle = mb_strtolower($input->getCompletionValue());
-            if (str_contains(mb_strtolower($task->id), $needle) || str_contains(mb_strtolower($task->text), $needle)) {
-                $suggestions[] = new Suggestion($task->id, $task->text);
+            $id = $task->id;
+            $title = $task->text;
+            $humanId = $this->humanId($id, $title);
+
+            if ($this->contains($input->getCompletionValue(), $id, $title, $humanId)) {
+                $suggestions[] = new Suggestion($humanId, $title);
             }
         }
 
         return $suggestions;
+    }
+
+    private function humanId(string $id, string $title): string
+    {
+        return substr($id, 0, 4).'-'.strtolower(strtr($title, ' ', '-'));
+    }
+
+    private function contains(string $needle, string ...$subjects): bool
+    {
+        $needle = mb_strtolower($needle);
+
+        foreach ($subjects as $subject) {
+            if (str_contains(mb_strtolower($subject), $needle)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

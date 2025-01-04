@@ -6,6 +6,7 @@ namespace App\Command\Task;
 
 use App\Command\Command;
 use App\Command\InputMapper\Mapper;
+use App\Command\Suggestions;
 use App\Habitica\Habitica;
 use App\Habitica\Tag;
 use App\Habitica\Task\Daily;
@@ -26,8 +27,11 @@ use const PHP_EOL;
 #[AsCommand(name: 'task:info', description: 'Show task details')]
 final class InfoCommand extends Command
 {
-    public function __construct(private readonly Mapper $mapper, private readonly Habitica $habitica)
-    {
+    public function __construct(
+        private readonly Mapper $mapper,
+        private readonly Habitica $habitica,
+        private readonly Suggestions $suggestions,
+    ) {
         parent::__construct();
     }
 
@@ -42,7 +46,7 @@ final class InfoCommand extends Command
     {
         $data = $this->mapper->map($input, InfoInput::class);
 
-        $task = $this->habitica->task($data->task)->data;
+        $task = $this->habitica->task($this->suggestions->reverseTaskId($data->task))->data;
         $tags = $this->makeTagsMap($this->habitica->listTags()->data);
 
         $list = [];

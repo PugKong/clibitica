@@ -6,6 +6,7 @@ namespace App\Command\Task;
 
 use App\Command\Command;
 use App\Command\InputMapper\Mapper;
+use App\Command\Suggestions;
 use App\Habitica\Habitica;
 use App\Habitica\Task\Create\Request;
 use App\Habitica\Task\Create\RequestChecklist;
@@ -20,8 +21,11 @@ use function in_array;
 #[AsCommand(name: 'task:create', description: 'Create a new task')]
 final class CreateCommand extends Command
 {
-    public function __construct(private readonly Mapper $mapper, private readonly Habitica $habitica)
-    {
+    public function __construct(
+        private readonly Mapper $mapper,
+        private readonly Habitica $habitica,
+        private readonly Suggestions $suggestions,
+    ) {
         parent::__construct();
     }
 
@@ -39,7 +43,7 @@ final class CreateCommand extends Command
         $response = $this->habitica->createTask(new Request(
             type: $data->type,
             text: $data->text,
-            tags: $data->tags,
+            tags: array_map(fn ($tag) => $this->suggestions->reverseTagId($tag), $data->tags),
             difficulty: $data->difficulty,
             value: $data->cost,
             notes: $data->notes,

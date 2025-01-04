@@ -6,6 +6,7 @@ namespace App\Command\Tag;
 
 use App\Command\Command;
 use App\Command\InputMapper\Mapper;
+use App\Command\Suggestions;
 use App\Habitica\Habitica;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,8 +15,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'tag:delete', description: 'Delete a tag')]
 final class DeleteCommand extends Command
 {
-    public function __construct(private readonly Mapper $mapper, private readonly Habitica $habitica)
-    {
+    public function __construct(
+        private readonly Mapper $mapper,
+        private readonly Habitica $habitica,
+        private readonly Suggestions $suggestions,
+    ) {
         parent::__construct();
     }
 
@@ -30,7 +34,7 @@ final class DeleteCommand extends Command
     {
         $data = $this->mapper->map($input, DeleteInput::class);
 
-        $this->habitica->deleteTag($data->id);
+        $this->habitica->deleteTag($this->suggestions->reverseTagId($data->id));
 
         return self::SUCCESS;
     }

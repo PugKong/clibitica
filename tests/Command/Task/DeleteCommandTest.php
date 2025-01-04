@@ -12,15 +12,20 @@ use PHPUnit\Framework\Attributes\DataProvider;
 
 final class DeleteCommandTest extends AppTestCase
 {
-    public function testSuccess(): void
+    #[DataProvider('successProvider')]
+    public function testSuccess(string $id): void
     {
+        $this->wireMock->addMappingFromFile(__DIR__.'/wiremock/list.json');
         $this->wireMock->addMappingFromFile(__DIR__.'/wiremock/delete.json');
 
-        $actual = CommandTester::command('task:delete', ['id' => $id = '60d8c0ae-07d2-44f1-8d48-4bdf57e6f59e']);
+        $actual = CommandTester::command('task:delete', ['id' => $id]);
 
         self::assertEquals(new CommandResult(), $actual);
         self::assertSame(
-            [['method' => 'DELETE', 'url' => "/api/v3/tasks/$id"]],
+            [
+                ['method' => 'DELETE', 'url' => '/api/v3/tasks/60d8c0ae-07d2-44f1-8d48-4bdf57e6f59e'],
+                ['method' => 'GET', 'url' => '/api/v3/tasks/user'],
+            ],
             array_map(
                 fn (ResponseRequest $request) => [
                     'method' => $request->request->method,
@@ -29,6 +34,17 @@ final class DeleteCommandTest extends AppTestCase
                 $this->wireMock->listRequests()->requests,
             ),
         );
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public static function successProvider(): array
+    {
+        return [
+            'full id' => ['60d8c0ae-07d2-44f1-8d48-4bdf57e6f59e'],
+            'suggested id' => ['60d8-reward'],
+        ];
     }
 
     #[DataProvider('suggestIdProvider')]
@@ -50,25 +66,32 @@ final class DeleteCommandTest extends AppTestCase
             'no filter' => [
                 '',
                 <<<'EOF'
-                    22c23065-84c1-4f4f-aede-2509a692eeb5	habit
-                    bda4bfdd-c38b-493b-8b2a-5dcad06034ba	daily
-                    e3e8614c-9758-4b78-b154-067586e7a06f	todo
-                    594980f9-f9da-4087-9bea-d7c48bb9ced1	default
-                    60d8c0ae-07d2-44f1-8d48-4bdf57e6f59e	reward
+                    22c2-habit	habit
+                    bda4-daily	daily
+                    e3e8-todo	todo
+                    5949-default	default
+                    60d8-reward	reward
 
                     EOF,
             ],
             '"re" filter' => [
                 're',
                 <<<'EOF'
-                    60d8c0ae-07d2-44f1-8d48-4bdf57e6f59e	reward
+                    60d8-reward	reward
 
                     EOF,
             ],
             '"e3e8614c" filter' => [
                 'e3e8614c',
                 <<<'EOF'
-                    e3e8614c-9758-4b78-b154-067586e7a06f	todo
+                    e3e8-todo	todo
+
+                    EOF,
+            ],
+            '"22c2-h" filter' => [
+                '22c2-h',
+                <<<'EOF'
+                    22c2-habit	habit
 
                     EOF,
             ],

@@ -17,6 +17,7 @@ final class CreateCommandTest extends AppTestCase
     #[DataProvider('successProvider')]
     public function testSuccess(string $fixture, array $args, string $uuid): void
     {
+        $this->wireMock->addMappingFromFile(__DIR__.'/wiremock/tag/list.json');
         $this->wireMock->addMappingFromFile($fixture);
 
         $actual = CommandTester::command('task:create', $args);
@@ -67,6 +68,11 @@ final class CreateCommandTest extends AppTestCase
             'tagged' => [
                 __DIR__.'/wiremock/create/tagged.json',
                 ['text' => 'tagged', '--tags' => ['b0f04338-8666-4db8-8d0b-faa375748cf7']],
+                'cc5d3501-0e09-4769-ba9f-a74fc9b0dc33',
+            ],
+            'tagged (suggested id)' => [
+                __DIR__.'/wiremock/create/tagged.json',
+                ['text' => 'tagged', '--tags' => ['b0f0-first']],
                 'cc5d3501-0e09-4769-ba9f-a74fc9b0dc33',
             ],
 
@@ -271,22 +277,29 @@ final class CreateCommandTest extends AppTestCase
             'no filter' => [
                 '',
                 <<<'EOF'
-                    b0f04338-8666-4db8-8d0b-faa375748cf7	first
-                    103dffda-0c51-49b8-bc25-6a387b5e28e8	second
+                    b0f0-first	first
+                    103d-second	second
 
                     EOF,
             ],
             '"con" filter' => [
                 'second',
                 <<<'EOF'
-                    103dffda-0c51-49b8-bc25-6a387b5e28e8	second
+                    103d-second	second
 
                     EOF,
             ],
             '"b0f04338" filter' => [
                 'b0f04338',
                 <<<'EOF'
-                    b0f04338-8666-4db8-8d0b-faa375748cf7	first
+                    b0f0-first	first
+
+                    EOF,
+            ],
+            '"103d-s" filter' => [
+                '103d-s',
+                <<<'EOF'
+                    103d-second	second
 
                     EOF,
             ],

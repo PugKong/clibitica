@@ -2,7 +2,7 @@
   "id": "2c2cc3d4-3738-4ae5-87fe-372a018f2588",
   "name": "tag/add",
   "request": {
-    "url": "/api/v3/tasks/0e2f79f8-26e6-49da-bd63-f83326179dd3/tags/8a43dcd2-ed0a-44c9-80e0-cf8dd122f631",
+    "url": "/api/v3/tasks/0e2f79f8-26e6-49da-bd63-f83326179dd3/tags/b0f04338-8666-4db8-8d0b-faa375748cf7",
     "method": "POST",
     "headers": {
       "Accept": { "equalTo": "application/json", "caseInsensitive": true },
@@ -30,7 +30,7 @@
         "type": "habit",
         "text": "Some text",
         "notes": "",
-        "tags": ["8a43dcd2-ed0a-44c9-80e0-cf8dd122f631"],
+        "tags": ["b0f04338-8666-4db8-8d0b-faa375748cf7"],
         "value": 19.47281818752027,
         "priority": 1.5,
         "attribute": "str",

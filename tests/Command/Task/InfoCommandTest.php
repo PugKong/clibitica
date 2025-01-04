@@ -15,6 +15,7 @@ final class InfoCommandTest extends AppTestCase
     public function testSuccess(string $fixture, string $id, CommandResult $expected): void
     {
         $this->wireMock->addMappingFromFile(__DIR__.'/wiremock/tag/list.json');
+        $this->wireMock->addMappingFromFile(__DIR__.'/wiremock/info/list.json');
         $this->wireMock->addMappingFromFile($fixture);
 
         $actual = CommandTester::command('task:info', ['id' => $id]);
@@ -31,6 +32,30 @@ final class InfoCommandTest extends AppTestCase
             'habit' => [
                 __DIR__.'/wiremock/info/habit.json',
                 '596ba471-b87f-41b2-be45-c5977d30ea9f',
+                new CommandResult(
+                    output: <<<'EOF'
+                         ------------- --------------------------------------
+                          ID            596ba471-b87f-41b2-be45-c5977d30ea9f
+                          Type          habit
+                          Attribute     str
+                          Difficulty    easy
+                          Frequency     daily
+                          Ups / Downs   10 / 5
+                          Tags          first, second
+                          Text          habit
+                          Notes         some
+                                        note
+                          Created       2024-12-18 12:52:24
+                          Updated       2024-12-18 12:52:24
+                         ------------- --------------------------------------
+
+
+                        EOF,
+                ),
+            ],
+            'habit by suggested id' => [
+                __DIR__.'/wiremock/info/habit.json',
+                '596b-habit',
                 new CommandResult(
                     output: <<<'EOF'
                          ------------- --------------------------------------
@@ -286,25 +311,32 @@ final class InfoCommandTest extends AppTestCase
             'no filter' => [
                 '',
                 <<<'EOF'
-                    22c23065-84c1-4f4f-aede-2509a692eeb5	habit
-                    bda4bfdd-c38b-493b-8b2a-5dcad06034ba	daily
-                    e3e8614c-9758-4b78-b154-067586e7a06f	todo
-                    594980f9-f9da-4087-9bea-d7c48bb9ced1	default
-                    60d8c0ae-07d2-44f1-8d48-4bdf57e6f59e	reward
+                    22c2-habit	habit
+                    bda4-daily	daily
+                    e3e8-todo	todo
+                    5949-default	default
+                    60d8-reward	reward
 
                     EOF,
             ],
             '"def" filter' => [
                 'def',
                 <<<'EOF'
-                    594980f9-f9da-4087-9bea-d7c48bb9ced1	default
+                    5949-default	default
 
                     EOF,
             ],
             '"bda4bfdd" filter' => [
                 'bda4bfdd',
                 <<<'EOF'
-                    bda4bfdd-c38b-493b-8b2a-5dcad06034ba	daily
+                    bda4-daily	daily
+
+                    EOF,
+            ],
+            '"22c2-h" filter' => [
+                '22c2-h',
+                <<<'EOF'
+                    22c2-habit	habit
 
                     EOF,
             ],
