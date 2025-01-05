@@ -19,6 +19,7 @@ final readonly class ResponseStats
         public int $con,
         public int $int,
         public int $per,
+        public float $gp,
     ) {
     }
 }

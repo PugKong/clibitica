@@ -26,6 +26,8 @@ class StatsCommandTest extends AppTestCase
 
                 str: 17 con: 10 int: 0 per: 0
 
+                gold: 740.79
+
                 EOF,
         );
 

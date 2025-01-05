@@ -10,6 +10,8 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use function sprintf;
+
 #[AsCommand(name: 'user:stats', description: 'Show user stats')]
 final class StatsCommand extends Command
 {
@@ -37,6 +39,9 @@ final class StatsCommand extends Command
             "int: <fg=blue>$stats->int</>",
             "per: <fg=yellow>$stats->per</>",
         ]));
+        $output->writeln('');
+
+        $output->writeln(sprintf('gold: <fg=yellow>%.2f</>', $stats->gp));
 
         return self::SUCCESS;
     }
