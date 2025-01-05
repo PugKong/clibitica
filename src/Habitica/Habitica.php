@@ -190,10 +190,23 @@ final readonly class Habitica
         }
     }
 
+    public function updateTag(Tag\Update\Request $request): void
+    {
+        try {
+            $this->http
+                ->put('api/v3/tags/{id}', ['id' => $request->id])
+                ->bodyJson($request)
+                ->fetch()
+            ;
+        } finally {
+            $this->cache->delete(self::CACHE_TAGS);
+        }
+    }
+
     public function listTags(): Tag\List\Response
     {
         return $this->cache->get(self::CACHE_TAGS, function (CacheItemInterface $item): Tag\List\Response {
-            $item->expiresAfter(1 * 60 * 60);
+            $item->expiresAfter(60 * 60);
 
             return $this->http
                 ->get('api/v3/tags')

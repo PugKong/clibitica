@@ -44,6 +44,7 @@ Available commands:
   tag:create   Create a new tag
   tag:delete   Delete a tag
   tag:list     Get tags
+  tag:update   Update a tag
  task
   task:create  Create a new task
   task:delete  Delete a task

@@ -66,6 +66,11 @@ final class App
                 $this->habitica(),
                 $this->suggestions(),
             ),
+            'tag:update' => fn () => new Command\Tag\UpdateCommand(
+                $this->mapper(),
+                $this->habitica(),
+                $this->suggestions(),
+            ),
             'tag:list' => fn () => new Command\Tag\ListCommand($this->habitica()),
 
             'user:stats' => fn () => new Command\User\StatsCommand($this->habitica()),

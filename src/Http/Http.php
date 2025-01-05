@@ -42,6 +42,14 @@ final class Http
     /**
      * @param array<string, string> $params
      */
+    public function put(string $path, array $params = []): self
+    {
+        return $this->endpoint('PUT', $path, $params);
+    }
+
+    /**
+     * @param array<string, string> $params
+     */
     public function delete(string $path, array $params = []): self
     {
         return $this->endpoint('DELETE', $path, $params);
