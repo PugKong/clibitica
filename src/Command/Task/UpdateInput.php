@@ -10,24 +10,19 @@ use App\Command\Suggestions;
 use App\Habitica\Task\Attribute;
 use App\Habitica\Task\Difficulty;
 use App\Habitica\Task\Frequency;
-use App\Habitica\Task\Type;
 
-final readonly class CreateInput
+final readonly class UpdateInput
 {
     /**
-     * @param string[] $tags
-     * @param string[] $checklist
      * @param Repeat[] $repeat
      * @param int[]    $daysOfMonth
      * @param int[]    $weeksOfMonth
      */
     public function __construct(
-        #[Argument('text', 'The text to be displayed for the task')]
-        public string $text,
-        #[Option('type', 'Task type, options are: "habit", "daily", "todo", "reward"')]
-        public Type $type = Type::TODO,
-        #[Option('tags', 'UUID of tag', suggestions: Suggestions::TAG_ID)]
-        public array $tags = [],
+        #[Argument('id', 'The task id or alias', Suggestions::TASK_ID)]
+        public string $task,
+        #[Option('text', 'The text to be displayed for the task')]
+        public ?string $text = null,
         #[Option('difficulty', 'Task difficulty, options are: "trivial", "easy", "medium", "hard"')]
         public ?Difficulty $difficulty = null,
         #[Option('cost', 'Only valid for type "reward." The cost in gold of the reward')]
@@ -36,8 +31,6 @@ final readonly class CreateInput
         public ?string $notes = null,
         #[Option('date', 'Due date in Y-m-d format to be shown in task list. Only valid for type "todo"')]
         public ?string $date = null,
-        #[Option('checklist', 'Checklist items')]
-        public array $checklist = [],
         #[Option('checklist-collapse', 'Determines if a checklist will be displayed')]
         public ?bool $checklistCollapse = null,
         #[Option('attribute', 'User\'s attribute to use, options are: "str", "int", "per", "con"')]

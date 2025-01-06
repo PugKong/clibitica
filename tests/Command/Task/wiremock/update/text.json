@@ -1,0 +1,51 @@
+{
+  "id": "2fe5ee78-8a26-43e2-b8a9-4674dbff71f7",
+  "name": "update/text",
+  "request": {
+    "url": "/api/v3/tasks/5b5a273a-8a81-4750-88f7-a7698bd2a226",
+    "method": "PUT",
+    "headers": {
+      "Accept": { "equalTo": "application/json", "caseInsensitive": true },
+      "Content-Type": { "equalTo": "application/json", "caseInsensitive": true },
+      "X-Client": { "equalTo": "49de7a0b-cad8-4788-830b-8299c34e96a1 - clibitica", "caseInsensitive": true },
+      "X-Api-Key": { "equalTo": "api key", "caseInsensitive": true },
+      "X-Api-User": { "equalTo": "49de7a0b-cad8-4788-830b-8299c34e96a1", "caseInsensitive": true }
+    },
+    "bodyPatterns": [{ "equalToJson": { "text": "My habit" } }]
+  },
+  "response": {
+    "status": 200,
+    "headers": { "Content-Type": "application/json; charset=utf-8" },
+    "jsonBody": {
+      "success": true,
+      "data": {
+        "challenge": [],
+        "group": { "completedBy": [], "assignedUsers": [] },
+        "_id": "5b5a273a-8a81-4750-88f7-a7698bd2a226",
+        "up": true,
+        "down": true,
+        "counterUp": 0,
+        "counterDown": 0,
+        "frequency": "daily",
+        "history": [],
+        "type": "habit",
+        "text": "My habbit",
+        "notes": "",
+        "tags": [],
+        "value": 0,
+        "priority": 1,
+        "attribute": "str",
+        "reminders": [],
+        "byHabitica": false,
+        "createdAt": "2025-01-06T05:43:12.425Z",
+        "updatedAt": "2025-01-06T05:49:00.245Z",
+        "userId": "49de7a0b-cad8-4788-830b-8299c34e96a1",
+        "id": "5b5a273a-8a81-4750-88f7-a7698bd2a226"
+      },
+      "notifications": [],
+      "userV": 3030,
+      "appVersion": "5.32.3"
+    }
+  },
+  "uuid": "2fe5ee78-8a26-43e2-b8a9-4674dbff71f7"
+}

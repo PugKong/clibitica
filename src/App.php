@@ -43,6 +43,11 @@ final class App
                 $this->habitica(),
                 $this->suggestions(),
             ),
+            'task:update' => fn () => new Command\Task\UpdateCommand(
+                $this->mapper(),
+                $this->habitica(),
+                $this->suggestions(),
+            ),
             'task:list' => fn () => new Command\Task\ListCommand($this->mapper(), $this->habitica()),
             'task:info' => fn () => new Command\Task\InfoCommand(
                 $this->mapper(),

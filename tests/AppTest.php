@@ -42,6 +42,7 @@ final class AppTest extends AppTestCase
                   task:list    List tasks
                   task:score   Score task up or down
                   task:tag     Manage tags for a task
+                  task:update  Update a task
                  user
                   user:stats   Show user stats
 

@@ -21,7 +21,7 @@ Set the `CLIBITICA_API_KEY` and `CLIBITICA_API_USER` environment variables.
 Run `clibitica list` to see the available commands:
 
 ```
-$ clibitica
+$ clibitica list
 clibitica 0.0.12
 
 Usage:
@@ -52,6 +52,7 @@ Available commands:
   task:list    List tasks
   task:score   Score task up or down
   task:tag     Manage tags for a task
+  task:update  Update a task
  user
   user:stats   Show user stats
 ```

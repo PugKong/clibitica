@@ -107,6 +107,19 @@ final readonly class Habitica
         }
     }
 
+    public function updateTask(Task\Update\Request $request): Task\Update\Response
+    {
+        try {
+            return $this->http
+                ->put('/api/v3/tasks/{id}', ['id' => $request->id])
+                ->bodyJson($request)
+                ->fetchJson(Task\Update\Response::class)
+            ;
+        } finally {
+            $this->cache->delete(self::CACHE_TASKS);
+        }
+    }
+
     public function listTasks(): Task\List\Response
     {
         return $this->cache->get(self::CACHE_TASKS, function (CacheItemInterface $item): Task\List\Response {

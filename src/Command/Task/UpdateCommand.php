@@ -8,14 +8,13 @@ use App\Command\Command;
 use App\Command\InputMapper\Mapper;
 use App\Command\Suggestions;
 use App\Habitica\Habitica;
-use App\Habitica\Task\Create\Request;
-use App\Habitica\Task\Create\RequestChecklist;
+use App\Habitica\Task\Update\Request;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand(name: 'task:create', description: 'Create a new task')]
-final class CreateCommand extends Command
+#[AsCommand(name: 'task:update', description: 'Update a task')]
+final class UpdateCommand extends Command
 {
     public function __construct(
         private readonly Mapper $mapper,
@@ -29,22 +28,20 @@ final class CreateCommand extends Command
     {
         parent::configure();
 
-        $this->mapper->configure($this, CreateInput::class);
+        $this->mapper->configure($this, UpdateInput::class);
     }
 
     protected function do(InputInterface $input, OutputInterface $output): int
     {
-        $data = $this->mapper->map($input, CreateInput::class);
+        $data = $this->mapper->map($input, UpdateInput::class);
 
-        $response = $this->habitica->createTask(new Request(
-            type: $data->type,
+        $this->habitica->updateTask(new Request(
+            id: $this->suggestions->reverseTaskId($data->task),
             text: $data->text,
-            tags: array_map(fn ($tag) => $this->suggestions->reverseTagId($tag), $data->tags),
             difficulty: $data->difficulty,
             value: $data->cost,
             notes: $data->notes,
             date: $data->date,
-            checklist: array_map(fn (string $text) => new RequestChecklist($text), $data->checklist),
             collapseChecklist: $data->checklistCollapse,
             attribute: $data->attribute,
             frequency: $data->frequency,
@@ -54,8 +51,6 @@ final class CreateCommand extends Command
             weeksOfMonth: $data->weeksOfMonth,
             startDate: $data->startDate,
         ));
-
-        $output->writeln($response->data->id);
 
         return self::SUCCESS;
     }
