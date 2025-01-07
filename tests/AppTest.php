@@ -27,24 +27,25 @@ final class AppTest extends AppTestCase
                   -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
 
                 Available commands:
-                  completion   Dump the shell completion script
-                  help         Display help for a command
-                  list         List commands
+                  completion      Dump the shell completion script
+                  help            Display help for a command
+                  list            List commands
                  tag
-                  tag:create   Create a new tag
-                  tag:delete   Delete a tag
-                  tag:list     Get tags
-                  tag:update   Update a tag
+                  tag:create      Create a new tag
+                  tag:delete      Delete a tag
+                  tag:list        Get tags
+                  tag:update      Update a tag
                  task
-                  task:create  Create a new task
-                  task:delete  Delete a task
-                  task:info    Show task details
-                  task:list    List tasks
-                  task:score   Score task up or down
-                  task:tag     Manage tags for a task
-                  task:update  Update a task
+                  task:checklist  Manage checklist for a task
+                  task:create     Create a new task
+                  task:delete     Delete a task
+                  task:info       Show task details
+                  task:list       List tasks
+                  task:score      Score task up or down
+                  task:tag        Manage tags for a task
+                  task:update     Update a task
                  user
-                  user:stats   Show user stats
+                  user:stats      Show user stats
 
                 EOF,
         );

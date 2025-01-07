@@ -1,0 +1,51 @@
+{
+  "id": "1b192891-6417-4c02-8c1e-1aae049154e2",
+  "name": "checklist/toggle/uncheck",
+  "request": {
+    "url": "/api/v3/tasks/8d9ed79a-ff65-4894-9da5-291e313e776b/checklist/ec97ebb3-cf1a-45be-84db-e6e4797a8f0d",
+    "method": "PUT",
+    "headers": {
+      "Accept": { "equalTo": "application/json", "caseInsensitive": true },
+      "Content-Type": { "equalTo": "application/json", "caseInsensitive": true },
+      "X-Client": { "equalTo": "49de7a0b-cad8-4788-830b-8299c34e96a1 - clibitica", "caseInsensitive": true },
+      "X-Api-Key": { "equalTo": "api key", "caseInsensitive": true },
+      "X-Api-User": { "equalTo": "49de7a0b-cad8-4788-830b-8299c34e96a1", "caseInsensitive": true }
+    },
+    "bodyPatterns": [{ "equalToJson": { "completed": false } }]
+  },
+  "response": {
+    "status": 200,
+    "headers": { "Content-Type": "application/json; charset=utf-8" },
+    "jsonBody": {
+      "success": true,
+      "data": {
+        "challenge": [],
+        "group": { "completedBy": [], "assignedUsers": [] },
+        "_id": "8d9ed79a-ff65-4894-9da5-291e313e776b",
+        "completed": false,
+        "collapseChecklist": false,
+        "checklist": [
+          { "completed": true, "text": "first", "id": "bea2f47f-e852-4607-93eb-3f04cbea440c" },
+          { "completed": false, "text": "second", "id": "ec97ebb3-cf1a-45be-84db-e6e4797a8f0d" }
+        ],
+        "type": "todo",
+        "text": "todo",
+        "notes": "",
+        "tags": [],
+        "value": 0,
+        "priority": 1,
+        "attribute": "str",
+        "reminders": [],
+        "byHabitica": false,
+        "createdAt": "2025-01-08T05:40:10.618Z",
+        "updatedAt": "2025-01-08T05:44:04.598Z",
+        "userId": "49de7a0b-cad8-4788-830b-8299c34e96a1",
+        "id": "8d9ed79a-ff65-4894-9da5-291e313e776b"
+      },
+      "notifications": [],
+      "userV": 3053,
+      "appVersion": "5.32.4"
+    }
+  },
+  "uuid": "1b192891-6417-4c02-8c1e-1aae049154e2"
+}

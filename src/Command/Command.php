@@ -15,7 +15,7 @@ abstract class Command extends \Symfony\Component\Console\Command\Command
     {
         try {
             return $this->do($input, $output);
-        } catch (MapException $e) {
+        } catch (InputException|MapException $e) {
             $io = new SymfonyStyle($input, $output);
             $io->error($e->getMessage());
 

@@ -176,6 +176,51 @@ final readonly class Habitica
         }
     }
 
+    public function addChecklistItem(Task\Checklist\Add\Request $request): Task\Checklist\Add\Response
+    {
+        try {
+            return $this->http
+                ->post('api/v3/tasks/{id}/checklist', ['id' => $request->task])
+                ->bodyJson($request)
+                ->fetchJson(Task\Checklist\Add\Response::class)
+            ;
+        } finally {
+            $this->cache->delete(self::CACHE_TASKS);
+        }
+    }
+
+    public function deleteChecklistItem(Task\Checklist\Delete\Request $request): Task\Checklist\Delete\Response
+    {
+        try {
+            return $this->http
+                ->delete('api/v3/tasks/{task}/checklist/{item}', [
+                    'task' => $request->task,
+                    'item' => $request->item,
+                ])
+                ->bodyJson($request)
+                ->fetchJson(Task\Checklist\Delete\Response::class)
+            ;
+        } finally {
+            $this->cache->delete(self::CACHE_TASKS);
+        }
+    }
+
+    public function updateChecklistItem(Task\Checklist\Update\Request $request): Task\Checklist\Update\Response
+    {
+        try {
+            return $this->http
+                ->put('api/v3/tasks/{task}/checklist/{item}', [
+                    'task' => $request->task,
+                    'item' => $request->item,
+                ])
+                ->bodyJson($request)
+                ->fetchJson(Task\Checklist\Update\Response::class)
+            ;
+        } finally {
+            $this->cache->delete(self::CACHE_TASKS);
+        }
+    }
+
     public function createTag(Tag\Create\Request $request): Tag\Create\Response
     {
         try {

@@ -1,0 +1,133 @@
+{
+  "id": "62228b6b-31a1-4352-babe-edf36cd9a6aa",
+  "name": "checklist/toggle/uncheck_tasks",
+  "request": {
+    "url": "/api/v3/tasks/user",
+    "method": "GET",
+    "headers": {
+      "Accept": { "equalTo": "application/json", "caseInsensitive": true },
+      "Content-Type": { "equalTo": "application/json", "caseInsensitive": true },
+      "X-Client": { "equalTo": "49de7a0b-cad8-4788-830b-8299c34e96a1 - clibitica", "caseInsensitive": true },
+      "X-Api-Key": { "equalTo": "api key", "caseInsensitive": true },
+      "X-Api-User": { "equalTo": "49de7a0b-cad8-4788-830b-8299c34e96a1", "caseInsensitive": true }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": { "Content-Type": "application/json; charset=utf-8" },
+    "jsonBody": {
+      "success": true,
+      "data": [
+        {
+          "_id": "221aafc4-8caf-4af7-8f90-fe2fc0368410",
+          "up": true,
+          "down": true,
+          "counterUp": 0,
+          "counterDown": 0,
+          "frequency": "daily",
+          "history": [],
+          "type": "habit",
+          "text": "habit",
+          "notes": "",
+          "tags": [],
+          "value": 0,
+          "priority": 1,
+          "attribute": "str",
+          "challenge": [],
+          "group": { "completedBy": [], "assignedUsers": [] },
+          "reminders": [],
+          "byHabitica": false,
+          "createdAt": "2025-01-08T05:40:05.407Z",
+          "updatedAt": "2025-01-08T05:40:05.407Z",
+          "userId": "49de7a0b-cad8-4788-830b-8299c34e96a1",
+          "id": "221aafc4-8caf-4af7-8f90-fe2fc0368410"
+        },
+        {
+          "_id": "38e50bb8-1ebf-4665-b1c3-2737d6c86fcb",
+          "frequency": "weekly",
+          "everyX": 1,
+          "startDate": "2025-01-07T21:00:00.000Z",
+          "repeat": { "m": true, "t": true, "w": true, "th": true, "f": true, "s": true, "su": true },
+          "streak": 0,
+          "daysOfMonth": [],
+          "weeksOfMonth": [],
+          "nextDue": [
+            "2025-01-08T21:00:00.000Z",
+            "2025-01-09T21:00:00.000Z",
+            "2025-01-10T21:00:00.000Z",
+            "2025-01-12T21:00:00.000Z",
+            "2025-01-13T21:00:00.000Z",
+            "2025-01-14T21:00:00.000Z"
+          ],
+          "yesterDaily": true,
+          "history": [],
+          "completed": false,
+          "collapseChecklist": false,
+          "checklist": [],
+          "type": "daily",
+          "text": "daily",
+          "notes": "",
+          "tags": [],
+          "value": 0,
+          "priority": 1,
+          "attribute": "str",
+          "challenge": [],
+          "group": { "completedBy": [], "assignedUsers": [] },
+          "reminders": [],
+          "byHabitica": false,
+          "createdAt": "2025-01-08T05:40:07.938Z",
+          "updatedAt": "2025-01-08T05:40:07.938Z",
+          "userId": "49de7a0b-cad8-4788-830b-8299c34e96a1",
+          "isDue": true,
+          "id": "38e50bb8-1ebf-4665-b1c3-2737d6c86fcb"
+        },
+        {
+          "_id": "8d9ed79a-ff65-4894-9da5-291e313e776b",
+          "completed": false,
+          "collapseChecklist": false,
+          "checklist": [
+            { "completed": true, "text": "first", "id": "bea2f47f-e852-4607-93eb-3f04cbea440c" },
+            { "completed": true, "text": "second", "id": "ec97ebb3-cf1a-45be-84db-e6e4797a8f0d" }
+          ],
+          "type": "todo",
+          "text": "todo",
+          "notes": "",
+          "tags": [],
+          "value": 0,
+          "priority": 1,
+          "attribute": "str",
+          "challenge": [],
+          "group": { "completedBy": [], "assignedUsers": [] },
+          "reminders": [],
+          "byHabitica": false,
+          "createdAt": "2025-01-08T05:40:10.618Z",
+          "updatedAt": "2025-01-08T05:44:10.981Z",
+          "userId": "49de7a0b-cad8-4788-830b-8299c34e96a1",
+          "id": "8d9ed79a-ff65-4894-9da5-291e313e776b"
+        },
+        {
+          "_id": "8cd7ebc5-ee69-446a-adc1-62a1185043f4",
+          "type": "reward",
+          "text": "reward",
+          "notes": "",
+          "tags": [],
+          "value": 10,
+          "priority": 1,
+          "attribute": "str",
+          "challenge": [],
+          "group": { "completedBy": [], "assignedUsers": [] },
+          "reminders": [],
+          "byHabitica": false,
+          "createdAt": "2025-01-08T05:40:13.348Z",
+          "updatedAt": "2025-01-08T05:40:13.348Z",
+          "userId": "49de7a0b-cad8-4788-830b-8299c34e96a1",
+          "id": "8cd7ebc5-ee69-446a-adc1-62a1185043f4"
+        }
+      ],
+      "notifications": [],
+      "userV": 3053,
+      "appVersion": "5.32.4"
+    }
+  },
+  "uuid": "62228b6b-31a1-4352-babe-edf36cd9a6aa"
+}

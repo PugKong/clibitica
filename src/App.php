@@ -64,6 +64,11 @@ final class App
                 $this->habitica(),
                 $this->suggestions(),
             ),
+            'task:checklist' => fn () => new Command\Task\ChecklistCommand(
+                $this->mapper(),
+                $this->habitica(),
+                $this->suggestions(),
+            ),
 
             'tag:create' => fn () => new Command\Tag\CreateCommand($this->mapper(), $this->habitica()),
             'tag:delete' => fn () => new Command\Tag\DeleteCommand(
