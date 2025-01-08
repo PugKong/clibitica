@@ -9,10 +9,16 @@ use App\Command\InputMapper\Mapper;
 use App\Habitica\Habitica;
 use App\Habitica\Tag;
 use App\Habitica\Task;
+use App\Habitica\Task\Daily;
+use App\Habitica\Task\Todo;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+
+use function count;
+
+use const PHP_EOL;
 
 #[AsCommand('task:list', description: 'List tasks')]
 final class ListCommand extends Command
@@ -86,7 +92,7 @@ final class ListCommand extends Command
                 continue;
             }
 
-            if (!$data->all && $task instanceof Task\Daily && ($task->completed || false === $task->isDue)) {
+            if (!$data->all && $task instanceof Daily && ($task->completed || false === $task->isDue)) {
                 continue;
             }
 
@@ -108,13 +114,20 @@ final class ListCommand extends Command
         $row[] = substr($task->id, 0, 8);
         $row[] = $task->type->value;
         $row[] = $task instanceof Task\Task ? $task->difficulty->value : null;
-        $row[] = $task instanceof Task\Todo ? $task->date?->format('Y-m-d') : null;
+        $row[] = $task instanceof Todo ? $task->date?->format('Y-m-d') : null;
         $row[] = implode(', ', array_map(fn (string $id) => $tags[$id] ?? $id, $task->tags));
-        $row[] = $task->text.match ($task::class) {
-            Task\Habit::class => " (up: $task->counterUp; down: $task->counterDown)",
-            Task\Daily::class => " (streak: $task->streak)",
-            default => '',
-        };
+
+        $text = $task->text;
+        if ($task instanceof Task\Habit) {
+            $text .= " (up: $task->counterUp; down: $task->counterDown)";
+        }
+        if ($task instanceof Daily) {
+            $text .= " (streak: $task->streak)";
+        }
+        if (($task instanceof Daily || $task instanceof Todo) && !$task->collapseChecklist && count($task->checklist) > 0) {
+            $text .= PHP_EOL.Util::formatChecklist($task);
+        }
+        $row[] = $text;
 
         return $row;
     }

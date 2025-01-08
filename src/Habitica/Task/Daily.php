@@ -30,6 +30,7 @@ final readonly class Daily extends Task
         public bool $completed,
         public int $streak,
         public array $checklist,
+        public bool $collapseChecklist,
         public int $everyX,
         public Repeat $repeat,
         public array $daysOfMonth,

@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace App\Command\Task;
 
+use App\Habitica\Task\Daily;
 use App\Habitica\Task\Repeat as TaskRepeat;
+use App\Habitica\Task\Todo;
 
 use function count;
 use function in_array;
+
+use const PHP_EOL;
 
 final readonly class Util
 {
@@ -29,5 +33,16 @@ final readonly class Util
             f: in_array(Repeat::FRIDAY, $repeat, true),
             s: in_array(Repeat::SATURDAY, $repeat, true),
         );
+    }
+
+    public static function formatChecklist(Todo|Daily $task): string
+    {
+        $items = [];
+        foreach ($task->checklist as $item) {
+            $status = $item->completed ? 'x' : ' ';
+            $items[] = "[$status] $item->text";
+        }
+
+        return implode(PHP_EOL, $items);
     }
 }

@@ -24,6 +24,7 @@ final readonly class Todo extends Task
         DateTimeInterface $updatedAt,
         public ?DateTimeInterface $date,
         public array $checklist,
+        public bool $collapseChecklist,
     ) {
         parent::__construct($id, $type, $tags, $text, $notes, $attribute, $difficulty, $createdAt, $updatedAt);
     }

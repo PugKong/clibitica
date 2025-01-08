@@ -1,0 +1,160 @@
+{
+  "id": "10a4f40c-071c-41e0-9793-6cbddabacae8",
+  "name": "list/checklist",
+  "request": {
+    "url": "/api/v3/tasks/user",
+    "method": "GET",
+    "headers": {
+      "Accept": { "equalTo": "application/json", "caseInsensitive": true },
+      "Content-Type": { "equalTo": "application/json", "caseInsensitive": true },
+      "X-Client": { "equalTo": "49de7a0b-cad8-4788-830b-8299c34e96a1 - clibitica", "caseInsensitive": true },
+      "X-Api-Key": { "equalTo": "api key", "caseInsensitive": true },
+      "X-Api-User": { "equalTo": "49de7a0b-cad8-4788-830b-8299c34e96a1", "caseInsensitive": true }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": { "Content-Type": "application/json; charset=utf-8" },
+    "jsonBody": {
+      "success": true,
+      "data": [
+        {
+          "_id": "e2838a14-cf7b-4315-8028-b8f0770566ec",
+          "frequency": "weekly",
+          "everyX": 1,
+          "repeat": { "m": true, "t": true, "w": true, "th": true, "f": true, "s": true, "su": true },
+          "streak": 0,
+          "nextDue": [
+            "2025-01-08T21:00:00.000Z",
+            "2025-01-09T21:00:00.000Z",
+            "2025-01-10T21:00:00.000Z",
+            "2025-01-12T21:00:00.000Z",
+            "2025-01-13T21:00:00.000Z",
+            "2025-01-14T21:00:00.000Z"
+          ],
+          "yesterDaily": true,
+          "history": [],
+          "completed": false,
+          "collapseChecklist": false,
+          "checklist": [
+            { "completed": false, "text": "first", "id": "2ce4cdea-ad9d-4068-91a0-b17757755c60" },
+            { "completed": false, "text": "second", "id": "52c3debc-3bc9-4216-b428-796cee4b2c10" }
+          ],
+          "type": "daily",
+          "text": "daily no collapse",
+          "notes": "",
+          "tags": [],
+          "value": 0,
+          "priority": 1,
+          "attribute": "str",
+          "challenge": [],
+          "group": { "completedBy": [], "assignedUsers": [] },
+          "byHabitica": false,
+          "startDate": "2025-01-07T21:00:00.000Z",
+          "daysOfMonth": [],
+          "weeksOfMonth": [],
+          "reminders": [],
+          "createdAt": "2025-01-08T10:48:02.082Z",
+          "updatedAt": "2025-01-08T10:48:02.082Z",
+          "userId": "49de7a0b-cad8-4788-830b-8299c34e96a1",
+          "isDue": true,
+          "id": "e2838a14-cf7b-4315-8028-b8f0770566ec"
+        },
+        {
+          "_id": "22967a5e-499e-4835-92a6-b0ff78d900e1",
+          "frequency": "weekly",
+          "everyX": 1,
+          "repeat": { "m": true, "t": true, "w": true, "th": true, "f": true, "s": true, "su": true },
+          "streak": 0,
+          "nextDue": [
+            "2025-01-08T21:00:00.000Z",
+            "2025-01-09T21:00:00.000Z",
+            "2025-01-10T21:00:00.000Z",
+            "2025-01-12T21:00:00.000Z",
+            "2025-01-13T21:00:00.000Z",
+            "2025-01-14T21:00:00.000Z"
+          ],
+          "yesterDaily": true,
+          "history": [],
+          "completed": false,
+          "collapseChecklist": true,
+          "checklist": [
+            { "completed": false, "text": "first", "id": "dc8cca77-d8d3-48af-a0a2-d83360d28a3d" },
+            { "completed": false, "text": "second", "id": "e691022d-44e0-4682-aaa3-d79bdeb4b45d" }
+          ],
+          "type": "daily",
+          "text": "daily collapse",
+          "notes": "",
+          "tags": [],
+          "value": 0,
+          "priority": 1,
+          "attribute": "str",
+          "challenge": [],
+          "group": { "completedBy": [], "assignedUsers": [] },
+          "byHabitica": false,
+          "startDate": "2025-01-07T21:00:00.000Z",
+          "daysOfMonth": [],
+          "weeksOfMonth": [],
+          "reminders": [],
+          "createdAt": "2025-01-08T10:47:46.352Z",
+          "updatedAt": "2025-01-08T10:47:46.352Z",
+          "userId": "49de7a0b-cad8-4788-830b-8299c34e96a1",
+          "isDue": true,
+          "id": "22967a5e-499e-4835-92a6-b0ff78d900e1"
+        },
+        {
+          "_id": "33b24e11-6c07-4781-9ba3-7e80aa878e87",
+          "completed": false,
+          "collapseChecklist": true,
+          "checklist": [
+            { "completed": false, "text": "first", "id": "0fcc735a-b92a-411f-9b8a-2e2d93bd5120" },
+            { "completed": false, "text": "second", "id": "c07c074c-f2a0-4e72-be22-f94cb4f865b4" }
+          ],
+          "type": "todo",
+          "text": "todo collapse",
+          "notes": "",
+          "tags": [],
+          "value": 0,
+          "priority": 1,
+          "attribute": "str",
+          "challenge": [],
+          "group": { "completedBy": [], "assignedUsers": [] },
+          "byHabitica": false,
+          "reminders": [],
+          "createdAt": "2025-01-08T10:48:23.537Z",
+          "updatedAt": "2025-01-08T10:48:23.537Z",
+          "userId": "49de7a0b-cad8-4788-830b-8299c34e96a1",
+          "id": "33b24e11-6c07-4781-9ba3-7e80aa878e87"
+        },
+        {
+          "_id": "4c7a20c4-f9b3-40aa-b4ab-470b0d00fcba",
+          "completed": false,
+          "collapseChecklist": false,
+          "checklist": [
+            { "completed": false, "text": "first", "id": "ab0290f2-1c37-4eed-a987-8936af1ffb90" },
+            { "completed": false, "text": "second", "id": "e60bcb6e-2a03-4043-8cd1-2f266162dce6" }
+          ],
+          "type": "todo",
+          "text": "todo no collapse",
+          "notes": "",
+          "tags": [],
+          "value": 0,
+          "priority": 1,
+          "attribute": "str",
+          "challenge": [],
+          "group": { "completedBy": [], "assignedUsers": [] },
+          "byHabitica": false,
+          "reminders": [],
+          "createdAt": "2025-01-08T10:48:16.794Z",
+          "updatedAt": "2025-01-08T10:48:16.794Z",
+          "userId": "49de7a0b-cad8-4788-830b-8299c34e96a1",
+          "id": "4c7a20c4-f9b3-40aa-b4ab-470b0d00fcba"
+        }
+      ],
+      "notifications": [],
+      "userV": 3063,
+      "appVersion": "5.32.4"
+    }
+  },
+  "uuid": "10a4f40c-071c-41e0-9793-6cbddabacae8"
+}

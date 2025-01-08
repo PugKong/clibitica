@@ -12,13 +12,15 @@ use PHPUnit\Framework\Attributes\DataProvider;
 final class ListCommandTest extends AppTestCase
 {
     /**
+     * @param string[]             $fixtures
      * @param array<string, mixed> $args
      */
     #[DataProvider('successProvider')]
-    public function testSuccess(array $args, string $output): void
+    public function testSuccess(array $fixtures, array $args, string $output): void
     {
-        $this->wireMock->addMappingFromFile(__DIR__.'/wiremock/list/list.json');
-        $this->wireMock->addMappingFromFile(__DIR__.'/wiremock/tag/list.json');
+        foreach ($fixtures as $fixture) {
+            $this->wireMock->addMappingFromFile($fixture);
+        }
 
         $actual = CommandTester::command('task:list', $args);
 
@@ -32,6 +34,7 @@ final class ListCommandTest extends AppTestCase
     {
         return [
             'default' => [
+                [__DIR__.'/wiremock/list/list.json', __DIR__.'/wiremock/tag/list.json'],
                 [],
                 <<<'EOF'
                      ---------- ------- ------------ ------------ --------------- -------------------------
@@ -47,6 +50,7 @@ final class ListCommandTest extends AppTestCase
                     EOF,
             ],
             'all' => [
+                [__DIR__.'/wiremock/list/list.json', __DIR__.'/wiremock/tag/list.json'],
                 ['--all' => true],
                 <<<'EOF'
                      ---------- -------- ------------ ------------ --------------- -------------------------
@@ -65,6 +69,7 @@ final class ListCommandTest extends AppTestCase
                     EOF,
             ],
             'habit' => [
+                [__DIR__.'/wiremock/list/list.json', __DIR__.'/wiremock/tag/list.json'],
                 ['--type' => 'habit'],
                 <<<'EOF'
                      ---------- ------- ------------ ----- ------ -------------------------
@@ -77,6 +82,7 @@ final class ListCommandTest extends AppTestCase
                     EOF,
             ],
             'daily' => [
+                [__DIR__.'/wiremock/list/list.json', __DIR__.'/wiremock/tag/list.json'],
                 ['--type' => 'daily'],
                 <<<'EOF'
                      ---------- ------- ------------ ----- ------ --------------------
@@ -89,6 +95,7 @@ final class ListCommandTest extends AppTestCase
                     EOF,
             ],
             'all daily' => [
+                [__DIR__.'/wiremock/list/list.json', __DIR__.'/wiremock/tag/list.json'],
                 ['--type' => 'daily', '--all' => true],
                 <<<'EOF'
                      ---------- ------- ------------ ----- ------ ---------------------
@@ -103,6 +110,7 @@ final class ListCommandTest extends AppTestCase
                     EOF,
             ],
             'todo' => [
+                [__DIR__.'/wiremock/list/list.json', __DIR__.'/wiremock/tag/list.json'],
                 ['--type' => 'todo'],
                 <<<'EOF'
                      ---------- ------ ------------ ------------ --------------- ---------
@@ -116,6 +124,7 @@ final class ListCommandTest extends AppTestCase
                     EOF,
             ],
             'reward' => [
+                [__DIR__.'/wiremock/list/list.json', __DIR__.'/wiremock/tag/list.json'],
                 ['--type' => 'reward'],
                 <<<'EOF'
                      ---------- -------- ------------ ----- ------ --------
@@ -123,6 +132,26 @@ final class ListCommandTest extends AppTestCase
                      ---------- -------- ------------ ----- ------ --------
                       60d8c0ae   reward                             reward
                      ---------- -------- ------------ ----- ------ --------
+
+
+                    EOF,
+            ],
+            'checklist' => [
+                [__DIR__.'/wiremock/list/checklist.json', __DIR__.'/wiremock/tag/list.json'],
+                [],
+                <<<'EOF'
+                     ---------- ------- ------------ ----- ------ -------------------------------
+                      id         type    difficulty   due   tags   text
+                     ---------- ------- ------------ ----- ------ -------------------------------
+                      e2838a14   daily   easy                      daily no collapse (streak: 0)
+                                                                   [ ] first
+                                                                   [ ] second
+                      22967a5e   daily   easy                      daily collapse (streak: 0)
+                      33b24e11   todo    easy                      todo collapse
+                      4c7a20c4   todo    easy                      todo no collapse
+                                                                   [ ] first
+                                                                   [ ] second
+                     ---------- ------- ------------ ----- ------ -------------------------------
 
 
                     EOF,

@@ -22,8 +22,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 use function count;
 
-use const PHP_EOL;
-
 #[AsCommand(name: 'task:info', description: 'Show task details')]
 final class InfoCommand extends Command
 {
@@ -118,13 +116,7 @@ final class InfoCommand extends Command
         $list[] = ['Text' => $task->text];
 
         if (($task instanceof Daily || $task instanceof Todo) && count($task->checklist) > 0) {
-            $items = [];
-            foreach ($task->checklist as $item) {
-                $status = $item->completed ? 'x' : ' ';
-                $items[] = "[$status] $item->text";
-            }
-
-            $list[] = ['Checklist' => implode(PHP_EOL, $items)];
+            $list[] = ['Checklist' => Util::formatChecklist($task)];
         }
 
         if ('' !== $task->notes) {
