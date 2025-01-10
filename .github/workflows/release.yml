@@ -3,21 +3,167 @@ name: Release
 permissions:
   contents: write
 
+env:
+  PHP_VERSION: "8.3.15"
+  PHP_EXTENSIONS: "phar,curl,filter,tokenizer,mbstring"
+  SPC_VERSION: "2.4.3"
+
 on:
-  push: { tags: ["*"] }
+  push:
+    tags: ["*"]
+    branches: ["*"]
 
 jobs:
-  build:
+  phar:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: shivammathur/setup-php@v2
-        with: { php-version: "8.3", tools: box }
-      - run: composer install
-      - run: bin/release "${GITHUB_REF#refs/tags/}"
-      - uses: softprops/action-gh-release@v2
+      - { name: Checkout repository, uses: actions/checkout@v4 }
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with: { php-version: "${{ env.PHP_VERSION }}", tools: box }
+      - { name: Install composer dependencies, run: composer install --no-dev }
+      - { name: Compile PHAR, run: box compile }
+      - name: Upload PHAR artifact
+        uses: actions/upload-artifact@v4
+        with: { name: clibitica.phar, path: dist/clibitica.phar, if-no-files-found: "error" }
+
+  cache:
+    runs-on: ubuntu-latest
+    outputs: { php_version: "${{ steps.php_version.outputs.hash }}" }
+    steps:
+      - name: Compute PHP version hash
+        id: php_version
+        run: |
+          PHP_HASH=$(echo "${{ env.PHP_VERSION }}-${{ env.PHP_EXTENSIONS }}-${{ env.SPC_VERSION }}" | sha256sum | awk '{print $1}')
+          echo "hash=${PHP_HASH}" >> "$GITHUB_OUTPUT"
+      - name: Checkout SPC repository
+        uses: actions/checkout@v4
+        with: { repository: crazywhalecc/static-php-cli, ref: "${{ env.SPC_VERSION }}" }
+      - name: Setup PHP dependencies cache
+        id: cache-downloads
+        uses: actions/cache@v4
+        with: { path: downloads, key: "downloads-${{ steps.php_version.outputs.hash }}" }
+      - name: Setup composer dependencies cache
+        id: cache-vendor
+        uses: actions/cache@v4
+        with: { path: vendor, key: "composer-${{ hashFiles('composer.lock') }}" }
+      - name: Setup PHP
+        if: steps.cache-vendor.outputs.cache-hit != 'true'
+        uses: shivammathur/setup-php@v2
+        with: { php-version: "${{ env.PHP_VERSION }}" }
+      - name: Download composer dependencies
+        if: steps.cache-vendor.outputs.cache-hit != 'true'
+        run: composer install --no-dev
+      - name: Upload composer dependencies artifact
+        uses: actions/upload-artifact@v4
+        with: { name: vendor, path: vendor, include-hidden-files: true, if-no-files-found: "error" }
+      - name: Download PHP dependencies
+        if: steps.cache-downloads.outputs.cache-hit != 'true'
+        run: |
+          ./bin/spc-alpine-docker download --with-php="$PHP_VERSION" --for-extensions="$PHP_EXTENSIONS"
+      - name: Upload PHP dependencies artifact
+        uses: actions/upload-artifact@v4
+        with: { name: downloads, path: downloads, include-hidden-files: true, if-no-files-found: "error" }
+
+  micro:
+    strategy:
+      matrix:
+        platform: ["linux-x86_64", "linux-aarch64", "macos-x86_64", "macos-aarch64", "windows-x86_64"]
+        include:
+          - { platform: "linux-x86_64", os: "ubuntu-latest", arch: "x86_64" }
+          - { platform: "linux-aarch64", os: "ubuntu-latest", arch: "aarch64" }
+          - { platform: "macos-x86_64", os: "macos-13" }
+          - { platform: "macos-aarch64", os: "macos-14" }
+          - { platform: "windows-x86_64", os: "windows-latest" }
+    runs-on: "${{ matrix.os }}"
+    needs: [cache]
+    steps:
+      - name: Setup micro.sfx cache
+        id: cache-micro
+        uses: actions/cache@v4
         with:
-          files: |
-            dist/*.phar
-            dist/*.tar.gz
-            dist/*.zip
+          path: buildroot/bin/micro.sfx
+          key: "micro-${{ needs.cache.outputs.php_version }}-${{ matrix.platform }}"
+      - name: Checkout SPC repository
+        if: steps.cache-micro.outputs.cache-hit != 'true'
+        uses: actions/checkout@v4
+        with: { repository: crazywhalecc/static-php-cli, ref: "${{ env.SPC_VERSION }}" }
+      - name: Download PHP dependencies
+        if: steps.cache-micro.outputs.cache-hit != 'true'
+        uses: actions/download-artifact@v4
+        with: { name: downloads, path: downloads }
+      - name: "Download composer dependencies"
+        if: steps.cache-micro.outputs.cache-hit != 'true'
+        uses: actions/download-artifact@v4
+        with: { name: vendor, path: vendor }
+      - name: "Setup PHP"
+        if: runner.os == 'macOS' && steps.cache-micro.outputs.cache-hit != 'true'
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "${{ env.PHP_VERSION }}"
+          tools: pecl, composer
+          extensions: curl, openssl, mbstring, tokenizer
+          ini-values: memory_limit=-1
+      - name: "Build Linux micro.sfx"
+        if: runner.os == 'Linux' && steps.cache-micro.outputs.cache-hit != 'true'
+        env: { SPC_USE_ARCH: "${{ matrix.arch }}" }
+        run: |
+          ./bin/spc-alpine-docker install-pkg upx
+          ./bin/spc-alpine-docker build "$PHP_EXTENSIONS" --build-micro --with-upx-pack
+      - name: "Build MacOS micro.sfx"
+        if: runner.os == 'macOS' && steps.cache-micro.outputs.cache-hit != 'true'
+        env: { SPC_BUILD_OS: macos }
+        run: |
+          brew install automake gzip
+          ./bin/spc build "$PHP_EXTENSIONS" --build-micro
+      - name: "Build Windows micro.sfx"
+        if: runner.os == 'Windows' && steps.cache-micro.outputs.cache-hit != 'true'
+        run: |
+          ./bin/spc doctor
+          ./bin/spc install-pkg upx
+          ./bin/spc build "${{ env.PHP_EXTENSIONS }}" --build-micro --with-upx-pack
+      - name: Upload micro.sfx artifact
+        uses: actions/upload-artifact@v4
+        with: { name: "micro.sfx.${{ matrix.platform }}", path: buildroot/bin/micro.sfx, if-no-files-found: "error" }
+
+  binaries:
+    runs-on: ubuntu-latest
+    needs: [phar, micro]
+    steps:
+      - { name: Download PHAR artifact, uses: actions/download-artifact@v4, with: { name: clibitica.phar } }
+      - { name: Download micro.sfx artifacts, uses: actions/download-artifact@v4, with: { pattern: "micro.sfx.*" } }
+      - name: Package binaries
+        run: |
+          mkdir -p dist
+          tar -czf "dist/clibitica-phar.tar.gz" clibitica.phar
+
+          SFX_DIRS=($(find . -type f -name "micro.sfx" -exec dirname {} \; | sort -u))
+          for SFX_DIR in "${SFX_DIRS[@]}"; do
+            OS_ARCH=$(basename "$SFX_DIR" | sed -E 's/micro\.sfx\.//')
+            OS=$(echo "$OS_ARCH" | cut -d'-' -f1)
+            ARCH=$(echo "$OS_ARCH" | cut -d'-' -f2)
+
+            OUTPUT_FILE="clibitica"
+            if [[ "$OS" == "windows" ]]; then
+              OUTPUT_FILE="clibitica.exe"
+            fi
+
+            cat "$SFX_DIR/micro.sfx" clibitica.phar > "$OUTPUT_FILE"
+            chmod +x "$OUTPUT_FILE"
+
+            if [[ "$OS" == "windows" ]]; then
+              zip -q "dist/clibitica-$OS-$ARCH.zip" "$OUTPUT_FILE"
+            else
+              tar -czf "dist/clibitica-$OS-$ARCH.tar.gz" "$OUTPUT_FILE"
+            fi
+
+            rm -f "$OUTPUT_FILE"
+          done
+      - name: Upload result artifacts
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+        uses: actions/upload-artifact@v4
+        with: { name: dist, path: dist }
+      - name: Create release
+        if: ${{ startsWith(github.ref, 'refs/tags/') }}
+        uses: softprops/action-gh-release@v2
+        with: { files: "dist/*" }
