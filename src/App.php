@@ -21,7 +21,7 @@ final class App
         ?OutputInterface $output = null,
         bool $autoExit = true,
     ): int {
-        $application = new Application(name: 'clibitica', version: '0.0.14');
+        $application = new Application(name: 'clibitica', version: '0.0.15');
         $application->setAutoExit($autoExit);
 
         $application->setCommandLoader($this->commandLoader());
