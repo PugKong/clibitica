@@ -40,6 +40,8 @@ Available commands:
   completion      Dump the shell completion script
   help            Display help for a command
   list            List commands
+ cron
+  cron:run        This causes cron to run, it will immediately apply damage for incomplete due Dailies
  tag
   tag:create      Create a new tag
   tag:delete      Delete a tag

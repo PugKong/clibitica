@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests;
 
+use App\WireMock\Request\List\ResponseRequest;
 use App\WireMock\WireMock;
 use PHPUnit\Framework\TestCase;
 
@@ -22,5 +23,19 @@ abstract class AppTestCase extends TestCase
     protected function tearDown(): void
     {
         unset($this->wireMock);
+    }
+
+    /**
+     * @param string[] $requests
+     */
+    public function assertRequests(array $requests): void
+    {
+        self::assertSame(
+            $requests,
+            array_map(
+                fn (ResponseRequest $request) => $request->request->method.' '.$request->request->url,
+                $this->wireMock->listRequests()->requests,
+            ),
+        );
     }
 }

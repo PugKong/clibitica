@@ -280,4 +280,16 @@ final readonly class Habitica
             ->fetchJson(User\Get\Response::class)
         ;
     }
+
+    public function runCron(): void
+    {
+        try {
+            $this->http
+                ->post('api/v3/cron')
+                ->fetch()
+            ;
+        } finally {
+            $this->cache->delete(self::CACHE_TASKS);
+        }
+    }
 }

@@ -85,6 +85,8 @@ final class App
 
             'user:stats' => fn () => new Command\User\StatsCommand($this->habitica()),
 
+            'cron:run' => fn () => new Command\Cron\RunCommand($this->habitica()),
+
             'wiremock:reset' => fn () => new Command\WireMock\ResetCommand($this->wireMock(), !$this->config->dev),
             'wiremock:recording:start' => fn () => new Command\WireMock\Recording\StartCommand(
                 $this->wireMock(),
