@@ -7,7 +7,6 @@ namespace App\Tests\Command\Task;
 use App\Tests\AppTestCase;
 use App\Tests\CommandResult;
 use App\Tests\CommandTester;
-use App\WireMock\Request\List\ResponseRequest;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 final class ScoreCommandTest extends AppTestCase
@@ -24,19 +23,11 @@ final class ScoreCommandTest extends AppTestCase
         ]);
 
         self::assertEquals(new CommandResult(), $actual);
-        self::assertSame(
-            [
-                ['method' => 'POST', 'url' => '/api/v3/tasks/7f2d8f8d-36f2-48f1-8e85-6366b0ab4903/score/up'],
-                ['method' => 'GET', 'url' => '/api/v3/tasks/user'],
-            ],
-            array_map(
-                fn (ResponseRequest $request) => [
-                    'method' => $request->request->method,
-                    'url' => $request->request->url,
-                ],
-                $this->wireMock->listRequests()->requests,
-            ),
-        );
+
+        $this->assertRequests([
+            'POST /api/v3/tasks/7f2d8f8d-36f2-48f1-8e85-6366b0ab4903/score/up',
+            'GET /api/v3/tasks/user',
+        ]);
     }
 
     #[DataProvider('idProvider')]
@@ -51,19 +42,11 @@ final class ScoreCommandTest extends AppTestCase
         ]);
 
         self::assertEquals(new CommandResult(), $actual);
-        self::assertSame(
-            [
-                ['method' => 'POST', 'url' => '/api/v3/tasks/7f2d8f8d-36f2-48f1-8e85-6366b0ab4903/score/down'],
-                ['method' => 'GET', 'url' => '/api/v3/tasks/user'],
-            ],
-            array_map(
-                fn (ResponseRequest $request) => [
-                    'method' => $request->request->method,
-                    'url' => $request->request->url,
-                ],
-                $this->wireMock->listRequests()->requests,
-            ),
-        );
+
+        $this->assertRequests([
+            'POST /api/v3/tasks/7f2d8f8d-36f2-48f1-8e85-6366b0ab4903/score/down',
+            'GET /api/v3/tasks/user',
+        ]);
     }
 
     /**

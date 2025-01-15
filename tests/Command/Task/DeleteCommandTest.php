@@ -7,7 +7,6 @@ namespace App\Tests\Command\Task;
 use App\Tests\AppTestCase;
 use App\Tests\CommandResult;
 use App\Tests\CommandTester;
-use App\WireMock\Request\List\ResponseRequest;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 final class DeleteCommandTest extends AppTestCase
@@ -21,19 +20,11 @@ final class DeleteCommandTest extends AppTestCase
         $actual = CommandTester::command('task:delete', ['id' => $id]);
 
         self::assertEquals(new CommandResult(), $actual);
-        self::assertSame(
-            [
-                ['method' => 'DELETE', 'url' => '/api/v3/tasks/60d8c0ae-07d2-44f1-8d48-4bdf57e6f59e'],
-                ['method' => 'GET', 'url' => '/api/v3/tasks/user'],
-            ],
-            array_map(
-                fn (ResponseRequest $request) => [
-                    'method' => $request->request->method,
-                    'url' => $request->request->url,
-                ],
-                $this->wireMock->listRequests()->requests,
-            ),
-        );
+
+        $this->assertRequests([
+            'DELETE /api/v3/tasks/60d8c0ae-07d2-44f1-8d48-4bdf57e6f59e',
+            'GET /api/v3/tasks/user',
+        ]);
     }
 
     /**

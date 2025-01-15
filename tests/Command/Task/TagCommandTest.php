@@ -7,7 +7,6 @@ namespace App\Tests\Command\Task;
 use App\Tests\AppTestCase;
 use App\Tests\CommandResult;
 use App\Tests\CommandTester;
-use App\WireMock\Request\List\ResponseRequest;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 final class TagCommandTest extends AppTestCase
@@ -26,23 +25,12 @@ final class TagCommandTest extends AppTestCase
         ]);
 
         self::assertEquals(new CommandResult(), $actual);
-        self::assertSame(
-            [
-                [
-                    'method' => 'POST',
-                    'url' => '/api/v3/tasks/0e2f79f8-26e6-49da-bd63-f83326179dd3/tags/b0f04338-8666-4db8-8d0b-faa375748cf7',
-                ],
-                ['method' => 'GET', 'url' => '/api/v3/tags'],
-                ['method' => 'GET', 'url' => '/api/v3/tasks/user'],
-            ],
-            array_map(
-                fn (ResponseRequest $request) => [
-                    'method' => $request->request->method,
-                    'url' => $request->request->url,
-                ],
-                $this->wireMock->listRequests()->requests,
-            ),
-        );
+
+        $this->assertRequests([
+            'POST /api/v3/tasks/0e2f79f8-26e6-49da-bd63-f83326179dd3/tags/b0f04338-8666-4db8-8d0b-faa375748cf7',
+            'GET /api/v3/tags',
+            'GET /api/v3/tasks/user',
+        ]);
     }
 
     #[DataProvider('idProvider')]
@@ -59,23 +47,12 @@ final class TagCommandTest extends AppTestCase
         ]);
 
         self::assertEquals(new CommandResult(), $actual);
-        self::assertSame(
-            [
-                [
-                    'method' => 'DELETE',
-                    'url' => '/api/v3/tasks/0e2f79f8-26e6-49da-bd63-f83326179dd3/tags/b0f04338-8666-4db8-8d0b-faa375748cf7',
-                ],
-                ['method' => 'GET', 'url' => '/api/v3/tags'],
-                ['method' => 'GET', 'url' => '/api/v3/tasks/user'],
-            ],
-            array_map(
-                fn (ResponseRequest $request) => [
-                    'method' => $request->request->method,
-                    'url' => $request->request->url,
-                ],
-                $this->wireMock->listRequests()->requests,
-            ),
-        );
+
+        $this->assertRequests([
+            'DELETE /api/v3/tasks/0e2f79f8-26e6-49da-bd63-f83326179dd3/tags/b0f04338-8666-4db8-8d0b-faa375748cf7',
+            'GET /api/v3/tags',
+            'GET /api/v3/tasks/user',
+        ]);
     }
 
     /**

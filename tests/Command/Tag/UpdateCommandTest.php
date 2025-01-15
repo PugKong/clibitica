@@ -7,7 +7,6 @@ namespace App\Tests\Command\Tag;
 use App\Tests\AppTestCase;
 use App\Tests\CommandResult;
 use App\Tests\CommandTester;
-use App\WireMock\Request\List\ResponseRequest;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 final class UpdateCommandTest extends AppTestCase
@@ -24,19 +23,11 @@ final class UpdateCommandTest extends AppTestCase
         $actual = CommandTester::command('tag:update', $args);
 
         self::assertEquals(new CommandResult(), $actual);
-        self::assertSame(
-            [
-                ['method' => 'PUT', 'url' => '/api/v3/tags/b0f04338-8666-4db8-8d0b-faa375748cf7'],
-                ['method' => 'GET', 'url' => '/api/v3/tags'],
-            ],
-            array_map(
-                fn (ResponseRequest $request) => [
-                    'method' => $request->request->method,
-                    'url' => $request->request->url,
-                ],
-                $this->wireMock->listRequests()->requests,
-            ),
-        );
+
+        $this->assertRequests([
+            'PUT /api/v3/tags/b0f04338-8666-4db8-8d0b-faa375748cf7',
+            'GET /api/v3/tags',
+        ]);
     }
 
     /**

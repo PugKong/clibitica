@@ -8,7 +8,6 @@ use App\Command\Task\ChecklistAction;
 use App\Tests\AppTestCase;
 use App\Tests\CommandResult;
 use App\Tests\CommandTester;
-use App\WireMock\Request\List\ResponseRequest;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Console\Command\Command;
 
@@ -31,13 +30,8 @@ final class ChecklistCommandTest extends AppTestCase
         $actual = CommandTester::command('task:checklist', $args);
 
         self::assertEquals(new CommandResult(), $actual);
-        self::assertSame(
-            $requests,
-            array_map(
-                fn (ResponseRequest $request) => $request->request->method.' '.$request->request->url,
-                $this->wireMock->listRequests()->requests,
-            ),
-        );
+
+        $this->assertRequests($requests);
     }
 
     /**
