@@ -12,7 +12,7 @@ of your Habitica account directly from the terminal.
 
 ## Installation
 
-Download the prebuilt binary from [Releases](https://github.com/PugKong/clibitica/releases) page.
+Download the prebuilt binary from [Releases](https://github.com/PugKong/clibitica/releases) page or use `ghcr.io/pugkong/clibitica` docker image.
 
 ## Usage
 
