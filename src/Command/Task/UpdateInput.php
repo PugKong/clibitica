@@ -38,9 +38,9 @@ final readonly class UpdateInput
         #[Option(
             'frequency',
             'Values "weekly" and "monthly" enable use of the "--repeat" flag.'
-            .'All frequency values enable use of the "--every" flag.'
-            .'Value "monthly" enables use of the "--weeks-of-month" and "--days-of-month" flags.'
-            .'Frequency is only valid for type "daily"',
+            .' All frequency values enable use of the "--every" flag.'
+            .' Value "monthly" enables use of the "--weeks-of-month" and "--days-of-month" flags.'
+            .' Frequency is only valid for type "daily"',
         )]
         public ?Frequency $frequency = null,
         #[Option(
