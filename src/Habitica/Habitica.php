@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Habitica;
 
-use App\Http\Http;
 use DateInterval;
 use Psr\Cache\CacheItemInterface;
+use Pugkong\Symfony\Requests\Request;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\HttpClient\ThrottlingHttpClient;
+use Symfony\Component\HttpClient\UriTemplateHttpClient;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\Store\FlockStore;
 use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
@@ -31,22 +33,12 @@ final readonly class Habitica
     private const string CACHE_TASKS = 'tasks';
     private const string CACHE_TAGS = 'tags';
 
-    public function __construct(private Http $http, private CacheInterface $cache)
+    public function __construct(private Request $request, private CacheInterface $cache)
     {
     }
 
     public static function create(string $baseUrl, string $apiKey, string $apiUser, ?string $cacheDir = null): self
     {
-        $client = HttpClient::createForBaseUri($baseUrl, [
-            'headers' => [
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/json',
-                'X-Client' => '49de7a0b-cad8-4788-830b-8299c34e96a1 - clibitica',
-                'X-Api-Key' => $apiKey,
-                'X-Api-User' => $apiUser,
-            ],
-        ]);
-
         $classMetadataFactory = new ClassMetadataFactory(new AttributeLoader());
 
         $serializer = new Serializer(
@@ -75,20 +67,31 @@ final readonly class Habitica
             lock: $lockFactory->createLock('api'),
         );
 
-        return new self(
-            http: new Http($client, $serializer, $rateLimiter),
-            cache: new FilesystemAdapter(directory: $cacheDir.'/cache'),
-        );
+        $http = new ThrottlingHttpClient(new UriTemplateHttpClient(HttpClient::create()), $rateLimiter);
+
+        $request = Request::create($http, $serializer)
+            ->base($baseUrl)
+            ->headers([
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+                'X-Client' => '49de7a0b-cad8-4788-830b-8299c34e96a1 - clibitica',
+                'X-Api-Key' => $apiKey,
+                'X-Api-User' => $apiUser,
+            ])
+        ;
+
+        return new self($request, new FilesystemAdapter(directory: $cacheDir.'/cache'));
     }
 
     public function createTask(Task\Create\Request $request): Task\Create\Response
     {
         try {
-            return $this->http
+            return $this->request
                 ->post('api/v3/tasks/user')
-                ->status(201)
-                ->bodyJson($request)
-                ->fetchJson(Task\Create\Response::class)
+                ->body($request)
+                ->response()
+                ->checkStatus(201)
+                ->object(Task\Create\Response::class)
             ;
         } finally {
             $this->cache->delete(self::CACHE_TASKS);
@@ -98,9 +101,11 @@ final readonly class Habitica
     public function deleteTask(string $id): void
     {
         try {
-            $this->http
-                ->delete('api/v3/tasks/{id}', ['id' => $id])
-                ->fetch()
+            $this->request
+                ->delete('api/v3/tasks/{id}')
+                ->var('id', $id)
+                ->response()
+                ->checkStatus(200)
             ;
         } finally {
             $this->cache->delete(self::CACHE_TASKS);
@@ -110,10 +115,13 @@ final readonly class Habitica
     public function updateTask(Task\Update\Request $request): Task\Update\Response
     {
         try {
-            return $this->http
-                ->put('/api/v3/tasks/{id}', ['id' => $request->id])
-                ->bodyJson($request)
-                ->fetchJson(Task\Update\Response::class)
+            return $this->request
+                ->put('/api/v3/tasks/{id}')
+                ->var('id', $request->id)
+                ->body($request)
+                ->response()
+                ->checkStatus(200)
+                ->object(Task\Update\Response::class)
             ;
         } finally {
             $this->cache->delete(self::CACHE_TASKS);
@@ -125,27 +133,35 @@ final readonly class Habitica
         return $this->cache->get(self::CACHE_TASKS, function (CacheItemInterface $item): Task\List\Response {
             $item->expiresAfter(60 * 60);
 
-            return $this->http
+            return $this->request
                 ->get('api/v3/tasks/user')
-                ->fetchJson(Task\List\Response::class)
+                ->response()
+                ->checkStatus(200)
+                ->object(Task\List\Response::class)
             ;
         });
     }
 
     public function task(string $id): Task\Get\Response
     {
-        return $this->http
-            ->get('api/v3/tasks/{id}', ['id' => $id])
-            ->fetchJson(Task\Get\Response::class)
+        return $this->request
+            ->get('api/v3/tasks/{id}')
+            ->var('id', $id)
+            ->response()
+            ->checkStatus(200)
+            ->object(Task\Get\Response::class)
         ;
     }
 
     public function scoreTask(string $id, Task\ScoreDirection $direction): void
     {
         try {
-            $this->http
-                ->post('api/v3/tasks/{id}/score/{direction}', ['id' => $id, 'direction' => $direction->value])
-                ->fetch()
+            $this->request
+                ->post('api/v3/tasks/{id}/score/{direction}')
+                ->var('id', $id)
+                ->var('direction', $direction->value)
+                ->response()
+                ->checkStatus(200)
             ;
         } finally {
             $this->cache->delete(self::CACHE_TASKS);
@@ -155,9 +171,12 @@ final readonly class Habitica
     public function addTagToTask(string $taskId, string $tagId): void
     {
         try {
-            $this->http
-                ->post('api/v3/tasks/{taskId}/tags/{tagId}', ['taskId' => $taskId, 'tagId' => $tagId])
-                ->fetch()
+            $this->request
+                ->post('api/v3/tasks/{taskId}/tags/{tagId}')
+                ->var('taskId', $taskId)
+                ->var('tagId', $tagId)
+                ->response()
+                ->checkStatus(200)
             ;
         } finally {
             $this->cache->delete(self::CACHE_TASKS);
@@ -167,9 +186,12 @@ final readonly class Habitica
     public function deleteTagFromTask(string $taskId, string $tagId): void
     {
         try {
-            $this->http
-                ->delete('api/v3/tasks/{taskId}/tags/{tagId}', ['taskId' => $taskId, 'tagId' => $tagId])
-                ->fetch()
+            $this->request
+                ->delete('api/v3/tasks/{taskId}/tags/{tagId}')
+                ->var('taskId', $taskId)
+                ->var('tagId', $tagId)
+                ->response()
+                ->checkStatus(200)
             ;
         } finally {
             $this->cache->delete(self::CACHE_TASKS);
@@ -179,10 +201,13 @@ final readonly class Habitica
     public function addChecklistItem(Task\Checklist\Add\Request $request): Task\Checklist\Add\Response
     {
         try {
-            return $this->http
-                ->post('api/v3/tasks/{id}/checklist', ['id' => $request->task])
-                ->bodyJson($request)
-                ->fetchJson(Task\Checklist\Add\Response::class)
+            return $this->request
+                ->post('api/v3/tasks/{id}/checklist')
+                ->var('id', $request->task)
+                ->body($request)
+                ->response()
+                ->checkStatus(200)
+                ->object(Task\Checklist\Add\Response::class)
             ;
         } finally {
             $this->cache->delete(self::CACHE_TASKS);
@@ -192,13 +217,14 @@ final readonly class Habitica
     public function deleteChecklistItem(Task\Checklist\Delete\Request $request): Task\Checklist\Delete\Response
     {
         try {
-            return $this->http
-                ->delete('api/v3/tasks/{task}/checklist/{item}', [
-                    'task' => $request->task,
-                    'item' => $request->item,
-                ])
-                ->bodyJson($request)
-                ->fetchJson(Task\Checklist\Delete\Response::class)
+            return $this->request
+                ->delete('api/v3/tasks/{task}/checklist/{item}')
+                ->var('task', $request->task)
+                ->var('item', $request->item)
+                ->body($request)
+                ->response()
+                ->checkStatus(200)
+                ->object(Task\Checklist\Delete\Response::class)
             ;
         } finally {
             $this->cache->delete(self::CACHE_TASKS);
@@ -208,13 +234,14 @@ final readonly class Habitica
     public function updateChecklistItem(Task\Checklist\Update\Request $request): Task\Checklist\Update\Response
     {
         try {
-            return $this->http
-                ->put('api/v3/tasks/{task}/checklist/{item}', [
-                    'task' => $request->task,
-                    'item' => $request->item,
-                ])
-                ->bodyJson($request)
-                ->fetchJson(Task\Checklist\Update\Response::class)
+            return $this->request
+                ->put('api/v3/tasks/{task}/checklist/{item}')
+                ->var('task', $request->task)
+                ->var('item', $request->item)
+                ->body($request)
+                ->response()
+                ->checkStatus(200)
+                ->object(Task\Checklist\Update\Response::class)
             ;
         } finally {
             $this->cache->delete(self::CACHE_TASKS);
@@ -224,11 +251,12 @@ final readonly class Habitica
     public function createTag(Tag\Create\Request $request): Tag\Create\Response
     {
         try {
-            return $this->http
+            return $this->request
                 ->post('api/v3/tags')
-                ->status(201)
-                ->bodyJson($request)
-                ->fetchJson(Tag\Create\Response::class)
+                ->body($request)
+                ->response()
+                ->checkStatus(201)
+                ->object(Tag\Create\Response::class)
             ;
         } finally {
             $this->cache->delete(self::CACHE_TAGS);
@@ -238,9 +266,11 @@ final readonly class Habitica
     public function deleteTag(string $id): void
     {
         try {
-            $this->http
-                ->delete('api/v3/tags/{id}', ['id' => $id])
-                ->fetch()
+            $this->request
+                ->delete('api/v3/tags/{id}')
+                ->var('id', $id)
+                ->response()
+                ->checkStatus(200)
             ;
         } finally {
             $this->cache->delete(self::CACHE_TAGS);
@@ -251,10 +281,12 @@ final readonly class Habitica
     public function updateTag(Tag\Update\Request $request): void
     {
         try {
-            $this->http
-                ->put('api/v3/tags/{id}', ['id' => $request->id])
-                ->bodyJson($request)
-                ->fetch()
+            $this->request
+                ->put('api/v3/tags/{id}')
+                ->var('id', $request->id)
+                ->body($request)
+                ->response()
+                ->checkStatus(200)
             ;
         } finally {
             $this->cache->delete(self::CACHE_TAGS);
@@ -266,27 +298,32 @@ final readonly class Habitica
         return $this->cache->get(self::CACHE_TAGS, function (CacheItemInterface $item): Tag\List\Response {
             $item->expiresAfter(60 * 60);
 
-            return $this->http
+            return $this->request
                 ->get('api/v3/tags')
-                ->fetchJson(Tag\List\Response::class)
+                ->response()
+                ->checkStatus(200)
+                ->object(Tag\List\Response::class)
             ;
         });
     }
 
     public function getUser(): User\Get\Response
     {
-        return $this->http
+        return $this->request
             ->get('api/v3/user')
-            ->fetchJson(User\Get\Response::class)
+            ->response()
+            ->checkStatus(200)
+            ->object(User\Get\Response::class)
         ;
     }
 
     public function runCron(): void
     {
         try {
-            $this->http
+            $this->request
                 ->post('api/v3/cron')
-                ->fetch()
+                ->response()
+                ->checkStatus(200)
             ;
         } finally {
             $this->cache->delete(self::CACHE_TASKS);

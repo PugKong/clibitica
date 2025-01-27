@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\WireMock;
 
-use App\Http\Http;
+use Pugkong\Symfony\Requests\Request;
 use RuntimeException;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
@@ -17,18 +17,13 @@ use function sprintf;
 
 final readonly class WireMock
 {
-    public function __construct(private Http $http)
+    public function __construct(private Request $request)
     {
     }
 
     public static function create(string $baseUrl): self
     {
-        $client = HttpClient::createForBaseUri($baseUrl, [
-            'headers' => [
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/json',
-            ],
-        ]);
+        $client = HttpClient::create();
 
         $serializer = new Serializer(
             normalizers: [
@@ -38,22 +33,31 @@ final readonly class WireMock
             encoders: [new JsonEncoder()],
         );
 
-        return new self(new Http($client, $serializer));
+        $request = Request::create($client, $serializer)
+            ->base($baseUrl)
+            ->headers([
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+            ])
+        ;
+
+        return new self($request);
     }
 
     public function reset(): void
     {
-        $this->http
+        $this->request
             ->post('__admin/reset')
-            ->fetch()
+            ->response()
+            ->checkStatus(200)
         ;
     }
 
     public function startRecording(): void
     {
-        $this->http
+        $this->request
             ->post('__admin/recordings/start')
-            ->bodyJson([
+            ->body([
                 'targetBaseUrl' => 'https://habitica.com',
                 'captureHeaders' => [
                     'Accept' => ['caseInsensitive' => true],
@@ -65,23 +69,27 @@ final readonly class WireMock
                 'requestBodyPattern' => ['matcher' => 'equalToJson'],
                 'repeatsAsScenarios' => false,
             ])
-            ->fetch()
+            ->response()
+            ->checkStatus(200)
         ;
     }
 
     public function stopRecording(): void
     {
-        $this->http
+        $this->request
             ->post('__admin/recordings/stop')
-            ->fetch()
+            ->response()
+            ->checkStatus(200)
         ;
     }
 
-    public function listRequests(): Request\List\Response
+    public function listRequests(): Api\List\Response
     {
-        return $this->http
+        return $this->request
             ->get('__admin/requests')
-            ->fetchJson(Request\List\Response::class)
+            ->response()
+            ->checkStatus(200)
+            ->object(Api\List\Response::class)
         ;
     }
 
@@ -92,11 +100,11 @@ final readonly class WireMock
             throw new RuntimeException(sprintf('Failed to open "%s" file', $filename));
         }
 
-        $this->http
+        $this->request
             ->post('__admin/mappings')
-            ->status(201)
-            ->body($content)
-            ->fetch()
+            ->body(json_decode($content, true))
+            ->response()
+            ->checkStatus(201)
         ;
     }
 }

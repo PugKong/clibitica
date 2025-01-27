@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests;
 
-use App\WireMock\Request\List\ResponseRequest;
+use App\WireMock\Api\List\ResponseRequest;
 use App\WireMock\WireMock;
 use PHPUnit\Framework\TestCase;
 
