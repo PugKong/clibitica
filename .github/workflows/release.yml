@@ -72,7 +72,7 @@ jobs:
         platform: ["linux-x86_64", "linux-aarch64", "macos-x86_64", "macos-aarch64", "windows-x86_64"]
         include:
           - { platform: "linux-x86_64", os: "ubuntu-latest", arch: "x86_64" }
-          - { platform: "linux-aarch64", os: "ubuntu-latest", arch: "aarch64" }
+          - { platform: "linux-aarch64", os: "ubuntu-24.04-arm", arch: "aarch64" }
           - { platform: "macos-x86_64", os: "macos-13" }
           - { platform: "macos-aarch64", os: "macos-14" }
           - { platform: "windows-x86_64", os: "windows-latest" }
