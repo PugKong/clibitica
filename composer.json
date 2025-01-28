@@ -20,7 +20,7 @@
     "symfony/cache": "^7.2",
     "symfony/type-info": "^7.2",
     "phpstan/phpdoc-parser": "^2.0",
-    "pugkong/symfony-requests": "^0.0.1",
+    "pugkong/symfony-requests": "^0.0.2",
     "guzzlehttp/uri-template": "^1.0"
   },
   "require-dev": {

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9067cb61f61a188a67633a344a67f20d",
+    "content-hash": "ea165f7663c658b83de23e367c59b05b",
     "packages": [
         {
             "name": "doctrine/deprecations",
@@ -513,16 +513,16 @@
         },
         {
             "name": "pugkong/symfony-requests",
-            "version": "v0.0.1",
+            "version": "v0.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PugKong/symfony-requests.git",
-                "reference": "e1ff2c7d5cf9dd9e2b6e65d2f6fce9d7f2dc6e94"
+                "reference": "3c5340e30c98dd4860d1e140b3ad509bdc2d3f0e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PugKong/symfony-requests/zipball/e1ff2c7d5cf9dd9e2b6e65d2f6fce9d7f2dc6e94",
-                "reference": "e1ff2c7d5cf9dd9e2b6e65d2f6fce9d7f2dc6e94",
+                "url": "https://api.github.com/repos/PugKong/symfony-requests/zipball/3c5340e30c98dd4860d1e140b3ad509bdc2d3f0e",
+                "reference": "3c5340e30c98dd4860d1e140b3ad509bdc2d3f0e",
                 "shasum": ""
             },
             "require": {
@@ -558,9 +558,9 @@
             ],
             "support": {
                 "issues": "https://github.com/PugKong/symfony-requests/issues",
-                "source": "https://github.com/PugKong/symfony-requests/tree/v0.0.1"
+                "source": "https://github.com/PugKong/symfony-requests/tree/v0.0.2"
             },
-            "time": "2025-01-27T14:39:31+00:00"
+            "time": "2025-01-28T13:34:57+00:00"
         },
         {
             "name": "symfony/cache",
