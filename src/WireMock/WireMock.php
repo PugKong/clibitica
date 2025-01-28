@@ -102,7 +102,7 @@ final readonly class WireMock
 
         $this->request
             ->post('__admin/mappings')
-            ->body(json_decode($content, true))
+            ->rawBody($content)
             ->response()
             ->checkStatus(201)
         ;
