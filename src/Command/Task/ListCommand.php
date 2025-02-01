@@ -39,9 +39,14 @@ final class ListCommand extends Command
     protected function do(InputInterface $input, OutputInterface $output): int
     {
         $tasks = $this->filterTasks($input, $this->habitica->listTasks()->data);
-        $tags = $this->makeTagsMap($this->habitica->listTags()->data);
+        $tags = $this->hasTags($tasks) ? $this->makeTagsMap($this->habitica->listTags()->data) : [];
 
-        $headers = ['id', 'type', 'difficulty', 'tags', 'text'];
+        $headers = ['id', 'type', 'difficulty'];
+        if (count($tags) > 0) {
+            $headers[] = 'tags';
+        }
+        $headers[] = 'text';
+
         $rows = [];
         foreach ($tasks as $task) {
             $rows[] = $this->makeRow($tags, $task);
@@ -104,6 +109,20 @@ final class ListCommand extends Command
     }
 
     /**
+     * @param Task\Item[] $items
+     */
+    private function hasTags(array $items): bool
+    {
+        foreach ($items as $item) {
+            if (count($item->tags) > 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * @param array<string, string> $tags
      *
      * @return mixed[]
@@ -115,7 +134,10 @@ final class ListCommand extends Command
         $row[] = substr($task->id, 0, 8);
         $row[] = $task->type->value;
         $row[] = $task instanceof Task\Task ? $task->difficulty->value : null;
-        $row[] = implode(', ', array_map(fn (string $id) => $tags[$id] ?? $id, $task->tags));
+
+        if (count($tags) > 0) {
+            $row[] = implode(', ', array_map(fn (string $id) => $tags[$id] ?? $id, $task->tags));
+        }
 
         $text = $task->text;
         if ($task instanceof Task\Habit) {
