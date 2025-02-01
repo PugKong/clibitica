@@ -76,6 +76,7 @@ final class App
             ),
 
             'tag:create' => fn () => new Command\Tag\CreateCommand($this->mapper(), $this->habitica()),
+            'tag:add' => fn () => new Command\Tag\CreateCommand($this->mapper(), $this->habitica()),
             'tag:delete' => fn () => new Command\Tag\DeleteCommand(
                 $this->mapper(),
                 $this->habitica(),

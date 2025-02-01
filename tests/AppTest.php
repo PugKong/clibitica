@@ -33,7 +33,7 @@ final class AppTest extends AppTestCase
                  cron
                   cron:run        This causes cron to run, it will immediately apply damage for incomplete due Dailies
                  tag
-                  tag:create      Create a new tag
+                  tag:create      [tag:add] Create a new tag
                   tag:delete      Delete a tag
                   tag:list        Get tags
                   tag:update      Update a tag

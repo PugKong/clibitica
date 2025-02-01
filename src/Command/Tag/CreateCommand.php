@@ -12,7 +12,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand(name: 'tag:create', description: 'Create a new tag')]
+#[AsCommand(name: 'tag:create', description: 'Create a new tag', aliases: ['tag:add'])]
 final class CreateCommand extends Command
 {
     public function __construct(private readonly Mapper $mapper, private readonly Habitica $habitica)
