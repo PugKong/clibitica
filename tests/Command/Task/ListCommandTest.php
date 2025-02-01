@@ -37,14 +37,14 @@ final class ListCommandTest extends AppTestCase
                 [__DIR__.'/wiremock/list/list.json', __DIR__.'/wiremock/tag/list.json'],
                 [],
                 <<<'EOF'
-                     ---------- ------- ------------ ------------ --------------- -------------------------
-                      id         type    difficulty   due          tags            text
-                     ---------- ------- ------------ ------------ --------------- -------------------------
-                      22c23065   habit   trivial                                   habit (up: 10; down: 5)
-                      bda4bfdd   daily   easy                                      daily (streak: 10)
-                      e3e8614c   todo    medium       2024-12-28   first, second   todo
-                      594980f9   todo    hard                                      default
-                     ---------- ------- ------------ ------------ --------------- -------------------------
+                     ---------- ------- ------------ --------------- -------------------------
+                      id         type    difficulty   tags            text
+                     ---------- ------- ------------ --------------- -------------------------
+                      22c23065   habit   trivial                      habit (up: 10; down: 5)
+                      bda4bfdd   daily   easy                         daily (streak: 10)
+                      e3e8614c   todo    medium       first, second   todo (due: 2024-12-28)
+                      594980f9   todo    hard                         default
+                     ---------- ------- ------------ --------------- -------------------------
 
 
                     EOF,
@@ -53,17 +53,17 @@ final class ListCommandTest extends AppTestCase
                 [__DIR__.'/wiremock/list/list.json', __DIR__.'/wiremock/tag/list.json'],
                 ['--all' => true],
                 <<<'EOF'
-                     ---------- -------- ------------ ------------ --------------- -------------------------
-                      id         type     difficulty   due          tags            text
-                     ---------- -------- ------------ ------------ --------------- -------------------------
-                      22c23065   habit    trivial                                   habit (up: 10; down: 5)
-                      bda4bfdd   daily    easy                                      daily (streak: 10)
-                      967371bc   daily    easy                                      done (streak: 0)
-                      6694402e   daily    easy                                      not due (streak: 0)
-                      e3e8614c   todo     medium       2024-12-28   first, second   todo
-                      594980f9   todo     hard                                      default
-                      60d8c0ae   reward                                             reward
-                     ---------- -------- ------------ ------------ --------------- -------------------------
+                     ---------- -------- ------------ --------------- -------------------------
+                      id         type     difficulty   tags            text
+                     ---------- -------- ------------ --------------- -------------------------
+                      22c23065   habit    trivial                      habit (up: 10; down: 5)
+                      bda4bfdd   daily    easy                         daily (streak: 10)
+                      967371bc   daily    easy                         done (streak: 0)
+                      6694402e   daily    easy                         not due (streak: 0)
+                      e3e8614c   todo     medium       first, second   todo (due: 2024-12-28)
+                      594980f9   todo     hard                         default
+                      60d8c0ae   reward                                reward
+                     ---------- -------- ------------ --------------- -------------------------
 
 
                     EOF,
@@ -72,11 +72,11 @@ final class ListCommandTest extends AppTestCase
                 [__DIR__.'/wiremock/list/list.json', __DIR__.'/wiremock/tag/list.json'],
                 ['--type' => 'habit'],
                 <<<'EOF'
-                     ---------- ------- ------------ ----- ------ -------------------------
-                      id         type    difficulty   due   tags   text
-                     ---------- ------- ------------ ----- ------ -------------------------
-                      22c23065   habit   trivial                   habit (up: 10; down: 5)
-                     ---------- ------- ------------ ----- ------ -------------------------
+                     ---------- ------- ------------ ------ -------------------------
+                      id         type    difficulty   tags   text
+                     ---------- ------- ------------ ------ -------------------------
+                      22c23065   habit   trivial             habit (up: 10; down: 5)
+                     ---------- ------- ------------ ------ -------------------------
 
 
                     EOF,
@@ -85,11 +85,11 @@ final class ListCommandTest extends AppTestCase
                 [__DIR__.'/wiremock/list/list.json', __DIR__.'/wiremock/tag/list.json'],
                 ['--type' => 'daily'],
                 <<<'EOF'
-                     ---------- ------- ------------ ----- ------ --------------------
-                      id         type    difficulty   due   tags   text
-                     ---------- ------- ------------ ----- ------ --------------------
-                      bda4bfdd   daily   easy                      daily (streak: 10)
-                     ---------- ------- ------------ ----- ------ --------------------
+                     ---------- ------- ------------ ------ --------------------
+                      id         type    difficulty   tags   text
+                     ---------- ------- ------------ ------ --------------------
+                      bda4bfdd   daily   easy                daily (streak: 10)
+                     ---------- ------- ------------ ------ --------------------
 
 
                     EOF,
@@ -98,13 +98,13 @@ final class ListCommandTest extends AppTestCase
                 [__DIR__.'/wiremock/list/list.json', __DIR__.'/wiremock/tag/list.json'],
                 ['--type' => 'daily', '--all' => true],
                 <<<'EOF'
-                     ---------- ------- ------------ ----- ------ ---------------------
-                      id         type    difficulty   due   tags   text
-                     ---------- ------- ------------ ----- ------ ---------------------
-                      bda4bfdd   daily   easy                      daily (streak: 10)
-                      967371bc   daily   easy                      done (streak: 0)
-                      6694402e   daily   easy                      not due (streak: 0)
-                     ---------- ------- ------------ ----- ------ ---------------------
+                     ---------- ------- ------------ ------ ---------------------
+                      id         type    difficulty   tags   text
+                     ---------- ------- ------------ ------ ---------------------
+                      bda4bfdd   daily   easy                daily (streak: 10)
+                      967371bc   daily   easy                done (streak: 0)
+                      6694402e   daily   easy                not due (streak: 0)
+                     ---------- ------- ------------ ------ ---------------------
 
 
                     EOF,
@@ -113,12 +113,12 @@ final class ListCommandTest extends AppTestCase
                 [__DIR__.'/wiremock/list/list.json', __DIR__.'/wiremock/tag/list.json'],
                 ['--type' => 'todo'],
                 <<<'EOF'
-                     ---------- ------ ------------ ------------ --------------- ---------
-                      id         type   difficulty   due          tags            text
-                     ---------- ------ ------------ ------------ --------------- ---------
-                      e3e8614c   todo   medium       2024-12-28   first, second   todo
-                      594980f9   todo   hard                                      default
-                     ---------- ------ ------------ ------------ --------------- ---------
+                     ---------- ------ ------------ --------------- ------------------------
+                      id         type   difficulty   tags            text
+                     ---------- ------ ------------ --------------- ------------------------
+                      e3e8614c   todo   medium       first, second   todo (due: 2024-12-28)
+                      594980f9   todo   hard                         default
+                     ---------- ------ ------------ --------------- ------------------------
 
 
                     EOF,
@@ -127,11 +127,11 @@ final class ListCommandTest extends AppTestCase
                 [__DIR__.'/wiremock/list/list.json', __DIR__.'/wiremock/tag/list.json'],
                 ['--type' => 'reward'],
                 <<<'EOF'
-                     ---------- -------- ------------ ----- ------ --------
-                      id         type     difficulty   due   tags   text
-                     ---------- -------- ------------ ----- ------ --------
-                      60d8c0ae   reward                             reward
-                     ---------- -------- ------------ ----- ------ --------
+                     ---------- -------- ------------ ------ --------
+                      id         type     difficulty   tags   text
+                     ---------- -------- ------------ ------ --------
+                      60d8c0ae   reward                       reward
+                     ---------- -------- ------------ ------ --------
 
 
                     EOF,
@@ -140,18 +140,18 @@ final class ListCommandTest extends AppTestCase
                 [__DIR__.'/wiremock/list/checklist.json', __DIR__.'/wiremock/tag/list.json'],
                 [],
                 <<<'EOF'
-                     ---------- ------- ------------ ----- ------ -------------------------------
-                      id         type    difficulty   due   tags   text
-                     ---------- ------- ------------ ----- ------ -------------------------------
-                      e2838a14   daily   easy                      daily no collapse (streak: 0)
-                                                                   [ ] first
-                                                                   [ ] second
-                      22967a5e   daily   easy                      daily collapse (streak: 0)
-                      33b24e11   todo    easy                      todo collapse
-                      4c7a20c4   todo    easy                      todo no collapse
-                                                                   [ ] first
-                                                                   [ ] second
-                     ---------- ------- ------------ ----- ------ -------------------------------
+                     ---------- ------- ------------ ------ -------------------------------
+                      id         type    difficulty   tags   text
+                     ---------- ------- ------------ ------ -------------------------------
+                      e2838a14   daily   easy                daily no collapse (streak: 0)
+                                                             [ ] first
+                                                             [ ] second
+                      22967a5e   daily   easy                daily collapse (streak: 0)
+                      33b24e11   todo    easy                todo collapse
+                      4c7a20c4   todo    easy                todo no collapse
+                                                             [ ] first
+                                                             [ ] second
+                     ---------- ------- ------------ ------ -------------------------------
 
 
                     EOF,

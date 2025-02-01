@@ -17,6 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 use function count;
+use function sprintf;
 
 use const PHP_EOL;
 
@@ -40,7 +41,7 @@ final class ListCommand extends Command
         $tasks = $this->filterTasks($input, $this->habitica->listTasks()->data);
         $tags = $this->makeTagsMap($this->habitica->listTags()->data);
 
-        $headers = ['id', 'type', 'difficulty', 'due', 'tags', 'text'];
+        $headers = ['id', 'type', 'difficulty', 'tags', 'text'];
         $rows = [];
         foreach ($tasks as $task) {
             $rows[] = $this->makeRow($tags, $task);
@@ -114,7 +115,6 @@ final class ListCommand extends Command
         $row[] = substr($task->id, 0, 8);
         $row[] = $task->type->value;
         $row[] = $task instanceof Task\Task ? $task->difficulty->value : null;
-        $row[] = $task instanceof Todo ? $task->date?->format('Y-m-d') : null;
         $row[] = implode(', ', array_map(fn (string $id) => $tags[$id] ?? $id, $task->tags));
 
         $text = $task->text;
@@ -123,6 +123,9 @@ final class ListCommand extends Command
         }
         if ($task instanceof Daily) {
             $text .= " (streak: $task->streak)";
+        }
+        if ($task instanceof Todo && null !== $task->date) {
+            $text .= sprintf(' (due: %s)', $task->date->format('Y-m-d'));
         }
         if (($task instanceof Daily || $task instanceof Todo) && !$task->collapseChecklist && count($task->checklist) > 0) {
             $text .= PHP_EOL.Util::formatChecklist($task);
