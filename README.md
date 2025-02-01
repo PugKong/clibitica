@@ -22,7 +22,7 @@ Run `clibitica list` to see the available commands:
 
 ```
 $ clibitica list
-clibitica 0.1.1
+clibitica 0.1.2
 
 Usage:
   command [options] [arguments]
