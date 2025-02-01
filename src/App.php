@@ -38,6 +38,11 @@ final class App
                 $this->habitica(),
                 $this->suggestions(),
             ),
+            'task:add' => fn () => new Command\Task\CreateCommand(
+                $this->mapper(),
+                $this->habitica(),
+                $this->suggestions(),
+            ),
             'task:delete' => fn () => new Command\Task\DeleteCommand(
                 $this->mapper(),
                 $this->habitica(),

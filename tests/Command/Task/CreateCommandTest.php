@@ -15,12 +15,12 @@ final class CreateCommandTest extends AppTestCase
      * @param array<string, mixed> $args
      */
     #[DataProvider('successProvider')]
-    public function testSuccess(string $fixture, array $args, string $uuid): void
+    public function testSuccess(string $fixture, array $args, string $uuid, string $command = 'task:create'): void
     {
         $this->wireMock->addMappingFromFile(__DIR__.'/wiremock/tag/list.json');
         $this->wireMock->addMappingFromFile($fixture);
 
-        $actual = CommandTester::command('task:create', $args);
+        $actual = CommandTester::command($command, $args);
 
         $expected = new CommandResult(
             output: <<<EOF
@@ -42,6 +42,12 @@ final class CreateCommandTest extends AppTestCase
                 __DIR__.'/wiremock/create/default.json',
                 ['text' => 'default'],
                 '594980f9-f9da-4087-9bea-d7c48bb9ced1',
+            ],
+            'default (via task:add alias)' => [
+                __DIR__.'/wiremock/create/default.json',
+                ['text' => 'default'],
+                '594980f9-f9da-4087-9bea-d7c48bb9ced1',
+                'task:add',
             ],
 
             'todo' => [

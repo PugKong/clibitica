@@ -49,7 +49,7 @@ Available commands:
   tag:update      Update a tag
  task
   task:checklist  Manage checklist for a task
-  task:create     Create a new task
+  task:create     [task:add] Create a new task
   task:delete     Delete a task
   task:info       Show task details
   task:list       List tasks

@@ -14,7 +14,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand(name: 'task:create', description: 'Create a new task')]
+#[AsCommand(name: 'task:create', description: 'Create a new task', aliases: ['task:add'])]
 final class CreateCommand extends Command
 {
     public function __construct(
