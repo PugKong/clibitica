@@ -5,4 +5,9 @@
 run = ["vendor/bin/php-cs-fixer fix --diff", "prettier --write ."]
 
 [tasks.lint]
-run = ["composer validate", "vendor/bin/phpstan"]
+run = [
+    "composer validate",
+    "vendor/bin/phpstan",
+    "prettier --check .",
+    "vendor/bin/php-cs-fixer check",
+]
